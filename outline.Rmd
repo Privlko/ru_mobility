@@ -1,0 +1,9 @@
+---
+title: "Lit"
+author: "Ivan"
+date: "31 August 2018"
+output: html_document
+---
+
+
+This document outlines the key ideas for the RLMS paper. The basic premise tests the effect of promotions on men and women. There could also be a test comparing women with and without children, as cha did. 
