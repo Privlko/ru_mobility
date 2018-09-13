@@ -1,0 +1,233 @@
+library(ggplot2)
+library(scales)
+library(forcats)
+library(tidyverse)
+library(plm)
+
+
+load("C:/Users/00015/Desktop/data/econ/adult2015x.RData")
+
+ru15 <- x %>% 
+  select(round, 
+         id = idind, 
+         pay.sat = ixsatisp,
+         gender = ixgender, 
+         region = regionx, 
+         income = ixinclmo,
+         respect = ixresprk,
+         rank = ixeconrk,
+         power = ixpowrnk,
+         marr = ixmarist,
+         promo = ixpromot,
+         newjob= ixnewjob,
+         wage = ixwagelm) %>% 
+  filter(income < 610000) %>% 
+  filter(respect !=52) %>% 
+  mutate(gender = fct_recode(as.factor(gender),
+                             "M"="1",
+                             "F"="2")) %>% 
+  mutate(pay.sat = fct_recode(as.factor(pay.sat),
+                              "Absolutely satisfied"="1",
+                              "Satisfied"="2",
+                              "Neither" = "3",
+                              "Unsatisfied" = "4",
+                              "Absolutely unsatisfied" = "5")) %>% 
+  mutate(marr = fct_recode(as.factor(marr),
+                           "never married" = "1",
+                           "First" = "2",
+                           "Second"="3",
+                           "Divorced"="4",
+                           "widowed"="5",
+                           "separated"="6")) %>%
+  mutate(newjob = fct_recode(as.factor(newjob),
+                           "No change" = "1",
+                           "Change prof, not place" = "2",
+                           "Change place, not prof"="3",
+                           "Change both"="4",
+                           "Other" = "99999996")) %>%
+  mutate(promo =  as.numeric(promo == "1"))
+  
+  
+
+
+(ru15 <- as.tibble(ru15))
+
+ru15 %>% 
+  count(promo, gender)
+
+ru15 %>% 
+  count(promo, newjob)
+
+ru15 %>% 
+  count(rank)
+
+## 2014 data
+
+load("C:/Users/00015/Desktop/data/econ/adult2014w.RData")
+
+View(x)
+
+ru14 <- x %>% 
+  select(round, 
+         id = idind, 
+         pay.sat = iwsatisp,
+         gender = iwgender, 
+         region = regionw, 
+         income = iwinclmo,
+         respect = iwresprk,
+         rank = iweconrk,
+         power = iwpowrnk,
+         marr = iwmarist,
+         promo = iwpromot,
+         newjob= iwnewjob,
+         wage = iwwagelm) %>% 
+  filter(income < 610000) %>% 
+  filter(respect !=52) %>% 
+  mutate(gender = fct_recode(as.factor(gender),
+                             "M"="1",
+                             "F"="2")) %>% 
+  mutate(pay.sat = fct_recode(as.factor(pay.sat),
+                              "Absolutely satisfied"="1",
+                              "Satisfied"="2",
+                              "Neither" = "3",
+                              "Unsatisfied" = "4",
+                              "Absolutely unsatisfied" = "5")) %>% 
+  mutate(marr = fct_recode(as.factor(marr),
+                           "never married" = "1",
+                           "First" = "2",
+                           "Second"="3",
+                           "Divorced"="4",
+                           "widowed"="5",
+                           "separated"="6")) %>%
+  mutate(newjob = fct_recode(as.factor(newjob),
+                             "No change" = "1",
+                             "Change prof, not place" = "2",
+                             "Change place, not prof"="3",
+                             "Change both"="4",
+                             "Other" = "5")) %>%
+  mutate(promo =  as.numeric(promo == "1"))
+
+ru14 %>% 
+  count(newjob)
+
+
+(ru14 <- as.tibble(ru14))
+
+ru14 %>% 
+  count(promo, gender)
+
+ru14 %>% 
+  count(promo, newjob)
+
+ru14 %>% 
+  count(rank)
+
+q1 <- rbind(ru14, ru15)
+
+q1 %>% 
+  count(promo, newjob)
+q1 %>% count(rank)
+
+# super important section -------------------------------------------------
+
+q1$promo[is.na(q1$promo)] <- 0
+
+q1 %>% 
+  count(promo, newjob)
+
+
+q2 <- q1 %>% 
+  mutate(mob = case_when(promo== 0  & (newjob == "No change" | newjob== "Change prof, not place") ~ "No change",
+                         promo== 1 & (newjob == "No change" | newjob== "Change prof, not place") ~ "Promo",
+                         promo== 0 & (newjob == "Change place, not prof" | newjob== "Change both"|
+                                      newjob=="Other") ~ "Quit"))
+    
+
+
+q2 %>% 
+  count(mob)
+
+
+(p1 <- pdata.frame(q2, c("id","round"), drop.index = TRUE, row.names = TRUE))
+
+summary(p1$income)
+summary(p1$marr)
+summary(p1$promo)
+summary(p1$newjob)
+summary(p1$mob)
+summary(p1$region)
+
+head(as.matrix(p1$income))
+head(as.matrix(p1$quit))
+head(as.matrix(p1$promo))
+
+
+head(lag(p1$income, 0:1))
+head(Within(p1$income))
+
+p1$log.income <- log(p1$income)
+hist(p1$income, breaks=50)
+hist(p1$log.income, breaks =50)
+
+
+p1$log.wage <- log(p1$wage)
+hist(p1$wage, breaks = 50)
+hist(p1$log.wage, breaks =50)
+
+hist(p1$respect, breaks = 10)
+hist(p1$rank, breaks = 10)
+hist(p1$power, breaks = 10)
+##drop all of the Inf and NaN from log.income
+p1$log.income[which(!is.finite(p1$log.income))] = NA
+p1$log.wage[which(!is.finite(p1$log.wage))] = NA
+
+
+##create some dummy variables
+p1 %>% 
+count(mob)
+
+region1 <- p1 %>% 
+  count(region)
+
+View(region1)
+
+p1
+
+#est the model
+
+mod1 <- lm(respect ~ mob, data=p1)
+mod2 <- lm(power ~ mob, data = p1)
+mod3 <- lm(rank ~ mob, data = p1)
+
+summary(mod1)
+summary(mod2)
+summary(mod3)
+
+ru.fe <- plm(respect~mob, data = p1, model = "within")
+summary(ru.fe)
+
+ru.fe2 <- plm(log.income~mob, data = p1, model = "within")
+summary(ru.fe2)
+
+table(index(p1))
+
+levels(p1$newjob)
+View(p1)
+
+head(p1$respect)
+p1$lag.income <- lag(p1$income)
+p1
+
+
+ggplot(p1)+
+  geom_point(aes(x=log(lag.income),
+             y=log(income),
+             colour=gender))+
+  geom_smooth(aes(x=log(lag.income),
+                  y=log(income)))
+trans <- p1 %>% 
+  group_by(marr, lag(marr)) %>% 
+  summarise(n = n())
+trans
+
+View(trans)
