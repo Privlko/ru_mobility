@@ -4,7 +4,6 @@ library(forcats)
 library(tidyverse)
 library(plm)
 
-
 load("C:/Users/00015/Desktop/data/econ/adult2015x.RData")
 
 ru15 <- x %>% 
@@ -126,6 +125,7 @@ q1 <- rbind(ru14, ru15)
 
 q1 %>% 
   count(promo, newjob)
+
 q1 %>% count(rank)
 
 # super important section -------------------------------------------------
@@ -148,7 +148,11 @@ q2 %>%
   count(mob)
 
 
+
 (p1 <- pdata.frame(q2, c("id","round"), drop.index = TRUE, row.names = TRUE))
+
+p1 %>% 
+  count(marr, gender)
 
 summary(p1$income)
 summary(p1$marr)
@@ -203,12 +207,72 @@ summary(mod1)
 summary(mod2)
 summary(mod3)
 
-ru.fe <- plm(respect~mob, data = p1, model = "within")
+ru.fe <- plm(respect~mob+marr, data = p1, model = "within")
 summary(ru.fe)
 
-ru.fe2 <- plm(log.income~mob, data = p1, model = "within")
+# gendered models ---------------------------------------------------------
+(p1 <- pdata.frame(q2, c("id","round"), drop.index = TRUE, row.names = TRUE))
+View(q2)
+
+female <- q2 %>% 
+  filter(gender=='F') %>% 
+  pdata.frame(c("id", "round"),
+              drop.index=TRUE,
+              row.names=TRUE)
+  
+
+View(female)
+
+F.ru.fe <- plm(respect~mob+marr, data = female, model = "within")
+summary(ru.fe)
+
+female$log.wage <- log(female$wage)
+female$log.wage[which(!is.finite(female$log.wage))] = NA
+
+
+F.ru.fe2 <- plm(log.wage~mob+marr, data = female, model = "within")
 summary(ru.fe2)
 
+female$lag.marr <- lag(female$marr)
+
+trans_marr <- female %>% 
+  count(marr, lag.marr)
+
+View(trans_marr)
+
+female %>% 
+  count(marr)
+##################################################################################
+
+male <- q2 %>% 
+  filter(gender=='M') %>% 
+  pdata.frame(c("id", "round"),
+              drop.index=TRUE,
+              row.names=TRUE)
+
+male
+
+M.ru.fe <- plm(respect~mob+marr, data = male, model = "within")
+summary(M.ru.fe)
+
+male$log.wage <- log(male$wage)
+male$log.wage[which(!is.finite(male$log.wage))] = NA
+
+
+M.ru.fe2 <- plm(log.wage~mob+marr, data = male, model = "within")
+summary(M.ru.fe2)
+
+male$lag.marr <- lag(male$marr)
+
+trans_marr <- male %>% 
+  count(marr, lag.marr)
+
+View(trans_marr)
+
+female %>% 
+  count(marr)
+
+###################################################################################
 table(index(p1))
 
 levels(p1$newjob)
@@ -231,3 +295,5 @@ trans <- p1 %>%
 trans
 
 View(trans)
+
+
