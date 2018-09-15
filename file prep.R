@@ -357,12 +357,24 @@ q1 <- rbind(ru15, ru14, ru13, ru12, ru11, ru10, ru09)
 
 q1 %>% 
   count(marr)
+q1$promo[is.na(q1$promo)] <- 0
+
+q2 <- q1 %>% 
+  mutate(mob = case_when(promo== 0  & (newjob == "No change" | newjob== "Change prof, not place") ~ "No change",
+                         promo== 1 & (newjob == "No change" | newjob== "Change prof, not place") ~ "Promo",
+                         promo== 0 & (newjob == "Change place, not prof") ~ "Quit"))
 
 
 
+q2 %>% 
+  count(mob)
 # set to panel ------------------------------------------------------------
 
-(p1 <- pdata.frame(q1, c("id","round"), drop.index = TRUE, row.names = TRUE))
+(p1 <- pdata.frame(q2, c("id","round"), drop.index = FALSE, row.names = TRUE))
 
+##some clean up and variable coding?
+
+ggplot(p1, aes(round, ..count..)) + 
+         geom_bar(aes(fill = mob), position = "dodge")
 
 ##you're good to go
