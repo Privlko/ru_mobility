@@ -144,9 +144,9 @@ ru3 <- ru3 %>%
   filter(log_wage > 0)
 
 
-m1 <- lm(data= ru2, log_wage ~ newjob)
-m2 <- lm(data= ru2, log_wage ~ promotion+lateral)
-m3 <- lm(data= ru2, log_wage ~ gender+mob_final)
+m1 <- lm(data= ru3, log_wage ~ newjob)
+m2 <- lm(data= ru3, log_wage ~ promotion+lateral)
+m3 <- lm(data= ru3, log_wage ~ gender+mob_final)
 
 
 
@@ -176,4 +176,45 @@ ru2 %>%
 
 
 table(ru2$newjob, ru2$promotion, ru2$lateral, useNA= 'always')
+
+ru2
+
+ggplot(ru3, aes(x=round, y=wage))+
+  geom_jitter(alpha=0.1)+
+  geom_boxplot(aes(group=round))+
+   scale_y_log10(labels = scales::comma)
+  
+
+
+# sidenote: do not run, set to panel ------------------------------------------------------------
+library(plm)
+ru2
+(p1 <- pdata.frame(ru3, c("idind","round"), drop.index = FALSE, row.names = TRUE))
+
+head(p1)
+
+m1 <- plm(log_wage ~ factor(marr_stat) + mob_final + age, data = p1, model = "within")
+
+summary(m1)
+
+
+
+# balanced panel, everything is balanced ----------------------------------
+ru3$mob_final <- factor(ru3$mob_final, levels = rev(levels(ru3$mob_final)))
+levels(ru3$mob_final)
+
+x<- ru3 %>% 
+  filter(!is.na(marr_stat),
+         !is.na(log_wage),
+         !is.na(mob_final),
+         !is.na(gender),
+         !is.na(age),
+         n==5)
+(p2 <- pdata.frame(x, c("idind","round"), drop.index = FALSE, row.names = TRUE))
+
+head(p2)
+
+m1 <- plm(log_wage ~ factor(marr_stat) + mob_final + age+ age^2, data = p2, model = "within")
+
+summary(m1)
 
