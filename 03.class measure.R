@@ -1,12 +1,14 @@
+# use ru3, not ru2 --------------------------------------------------------
 
-# THIS FILE IS OUT OF DATE, UPDATE ----------------------------------------
+ru3 <- tbl_df(ru2)
 
+
+# you have to go back and include the measures below in 01 ----------------
 
 
 library(tidyverse)
 library(forcats)
 library(ggplot2)
-library(data.table)
 
 
 
