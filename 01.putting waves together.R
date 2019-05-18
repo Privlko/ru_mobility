@@ -1,5 +1,4 @@
 library(tidyverse)
-library(data.table)
 
 
 ##start with 2015
@@ -40,6 +39,14 @@ iu <- x %>%
          gender=iugender, promotion=iupromot, 
          lateral = iumovao, lower=iumovlp, newjob = iunewjob) 
 
+### open 2011
+it <- x %>% 
+  select(round, idind, wage = itwagelm,
+         income=itinclmo, marr_stat=itmarist, 
+         gender=itgender, promotion=itpromot, 
+         lateral = itmovao, lower=itmovlp, newjob = itnewjob) 
+
+
 
 ix <- tbl_df(ix)
 ix
@@ -49,9 +56,11 @@ iv <- tbl_df(iv)
 iv
 iu <- tbl_df(iu)
 iu
+it <- tbl_df(it)
+it
 
 
-ru1 <- bind_rows(ix, iw, iv, iu)
+ru1 <- bind_rows(it, iu, iv, iw, ix)
 
 
 
@@ -64,12 +73,43 @@ ru1 %>%
 ru1 %>% 
   count(promotion)
 
-ru1 %>% 
-  group_by(idind) %>% 
-  tally() %>% 
-  arrange(desc(n))
 
-ru1 %>% arrange(idind, round)
+
+ru1 <- ru1 %>% arrange(idind, round)
+View(ru1)
+
+ru1
+
+
+
+# create a measure for total number of waves experienced ------------------
+
+ru1 <- ru1 %>% 
+  group_by(idind) %>% 
+  mutate(n=n())
+
+
+# create a measure for ever promoted, lateral, or lower --------------------------------------
+
+ru1 <- ru1 %>% 
+  group_by(idind) %>% 
+  mutate(ever_promoted = min(promotion, na.rm=TRUE),
+         ever_lateral = min(lateral, na.rm=TRUE),
+         ever_lowered = min(lower, na.rm=TRUE),
+         never_moved = min(newjob, na.rm = TRUE))
+
+#check
+ru1 %>% 
+  filter(ever_promoted==1) %>% 
+  select(idind, round, promotion, ever_promoted)
+
+# set to panel ------------------------------------------------------------
+
+(p1 <- pdata.frame(q2, c("id","round"), drop.index = FALSE, row.names = TRUE))
+
+
+
+
 
 
 
