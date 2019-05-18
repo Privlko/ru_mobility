@@ -1,3 +1,40 @@
+
+ru3 %>% 
+  filter(!is.na(esec_simple)) %>% 
+  group_by(esec_simple) %>% 
+  summarise(mean_income= mean(income, na.rm=TRUE),
+            median_income = median(income,na.rm=TRUE),
+            count= n())
+
+
+ru3 %>% 
+  filter(!is.na(esec_simple)) %>% 
+  group_by(esec) %>% 
+  summarise(mean_wage= mean(wage, na.rm=TRUE),
+            median_wage = median(wage,na.rm=TRUE),
+            count= n())
+
+table(ru3$esec_simple,ru3$mob_final)
+
+prop.table(table(ru3$esec_simple,ru3$mob_final),1)
+prop.table(table(ru3$esec_simple,ru3$ever_promoted),1)
+prop.table(table(ru3$esec_simple,ru3$never_moved),1)
+
+ru3 %>% 
+  filter(!is.na(esec_simple),
+         ever_promoted<100) %>% 
+  group_by(esec_simple, ever_promoted) %>% 
+  summarise(median_wage= median(wage, na.rm=TRUE),
+            count= n())
+
+
+ru3 %>% 
+  filter(!is.na(esec_simple),
+         ever_promoted<100) %>% 
+  group_by(esec_simple, never_moved) %>% 
+  summarise(median_wage= median(wage, na.rm=TRUE),
+            count= n())
+
 # data table ideas --------------------------------------------------------
 
 set.seed(45L)

@@ -115,7 +115,7 @@ ru1 <- ru1 %>%
   mutate(ever_promoted = min(promotion, na.rm=TRUE),
          ever_lateral = min(lateral, na.rm=TRUE),
          ever_lowered = min(lower, na.rm=TRUE),
-         never_moved = min(newjob, na.rm = TRUE))
+         never_moved = max(newjob, na.rm = TRUE))
 
 #check
 ru1 %>% 
