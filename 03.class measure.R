@@ -177,3 +177,70 @@ ru3 %>%
   coord_flip()+
   facet_wrap(~esec_simple)
 
+
+
+ru3 %>% 
+  filter(age<65,
+         age>18,
+         !is.na(mob_final),
+         !is.na(esec_simple)) %>% 
+  ggplot(aes(x=age, fill=factor(mob_final)))+
+  geom_histogram(binwidth = 3, position = 'fill')+
+  geom_hline(yintercept=0.5, alpha=0.3, size=2)+
+  theme_minimal()+
+  facet_wrap(~esec_simple)+
+  labs(x='Age of respondent',
+       y='Share',
+       fill='Mobility type',
+       title='Mobility by age across social class groups',
+       subtitle='Upper class respondents experience more upper mobility across all ages, \nlower class groups experience more exit among older workers.',
+       caption='Source: RLMS, rounds 20-24. \nPlot: @privlko')
+
+
+ru3 %>% 
+  filter(age<65,
+         age>16,
+         !is.na(ever_promoted),
+         !is.na(esec_simple)) %>% 
+  ggplot(aes(x=ever_promoted, y=wage))+
+  geom_boxplot(alpha=0.5)+
+  scale_y_log10(labels= scales::comma)+
+  theme_minimal()+
+  facet_wrap(~esec_simple)
+
+ru3 %>% 
+  filter(age<65,
+         age>16,
+         !is.na(ever_lateral),
+         !is.na(esec_simple)) %>% 
+  ggplot(aes(x=ever_lateral, y=wage))+
+  geom_boxplot(alpha=0.5)+
+  scale_y_log10(labels= scales::comma)+
+  theme_minimal()+
+  facet_wrap(~esec_simple)
+
+
+ru3 %>% 
+  filter(age<65,
+         age>16,
+         !is.na(esec_simple)) %>% 
+  ggplot(aes(x=esec_simple, y=wage, fill=esec_simple))+
+  geom_jitter(alpha=0.05, aes(colour=esec_simple))+
+  geom_boxplot(alpha=0.5, aes(fill=esec_simple))+
+  scale_y_log10(labels= scales::comma)+
+  theme_minimal()
+
+
+
+ru3 %>% 
+  filter(age<65,
+         age>16,
+         !is.na(esec),
+         wage>500) %>% 
+  ggplot(aes(x=esec, y=wage, fill=esec))+
+  geom_jitter(alpha=0.05, aes(colour=esec))+
+  geom_boxplot(alpha=0.5, aes(fill=esec))+
+  scale_y_log10(labels= scales::comma)+
+  theme_minimal()+
+  coord_flip()+
+  theme(legend.position = "none") 

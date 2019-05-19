@@ -100,6 +100,25 @@ levels(ru2$mob_final)
 
 
 
+# refactor measures for "ever" moved and "never" moved --------------------
+ru2
+View(ru2)
+
+ru2 <- ru2 %>% 
+  mutate(ever_promoted= fct_recode(factor(ever_promoted),
+                                   'Yes' = '1',
+                                   'No' = '2'),
+         ever_lateral=fct_recode(factor(ever_lateral),
+                                  'Yes' = '1',
+                                  'No' = '2'),
+         ever_lowered=fct_recode(factor(ever_lowered),
+                                 'Yes' = '1',
+                                 'No' = '2'))
+
+ru2$ever_promoted <- factor(ru2$ever_promoted, levels = c('No', 'Yes'))
+ru2$ever_lateral <- factor(ru2$ever_lateral, levels = c('No', 'Yes'))
+ru2$ever_lowered <- factor(ru2$ever_lowered, levels = c('No', 'Yes'))
+
 # view and explore --------------------------------------------------------
 
 
@@ -108,6 +127,13 @@ ru2 %>%
   ggplot(aes(x=mob_final, fill=gender))+
   geom_bar(position = 'dodge', aes(y=..prop.., group=gender))+
   coord_flip()
+
+ru2 %>% 
+  filter( !is.na(ever_promoted)) %>% 
+  ggplot(aes(x=ever_promoted, fill=gender))+
+  geom_bar(position = 'dodge', aes(y=..prop.., group=gender))+
+  coord_flip()
+
 
 
 ru2 %>% 
@@ -135,6 +161,19 @@ ru2 %>%
   scale_y_log10(labels = scales::comma)+
   facet_wrap(~gender)
 
+##there's an issue here, you're looking
+##across individuals here.
+
+ru2 %>% 
+  filter( !is.na(ever_promoted),
+          income < 1000000) %>% 
+  ggplot(aes(x=factor(ever_promoted), 
+             fill=factor(ever_promoted)))+
+  geom_boxplot(aes(y=income))+
+  coord_flip()+
+  scale_y_log10(labels = scales::comma)+
+  facet_wrap(~gender)
+
 
 
 # model -------------------------------------------------------------------
@@ -153,6 +192,7 @@ m3 <- lm(data= ru3, log_wage ~ gender+mob_final)
 coef(m1)
 summary(m1)
 
+
 coef(m2)
 summary(m2)
 
@@ -160,8 +200,6 @@ coef(m3)
 summary(m3)
 ru2
 
-ru2$mob_final <- factor(ru2$mob_final, levels = rev(levels(ru2$mob_final)))
-levels(ru2$mob_final)
 
 ru2 %>% 
   filter(age<65,
@@ -177,11 +215,11 @@ ru2 %>%
 
 table(ru2$newjob, ru2$promotion, ru2$lateral, useNA= 'always')
 
-ru2
 
 ggplot(ru3, aes(x=round, y=wage))+
-  geom_jitter(alpha=0.1)+
-  geom_boxplot(aes(group=round))+
+  geom_jitter(alpha=0.5)+
+  geom_boxplot(alpha=0.1,
+               aes(group=round))+
    scale_y_log10(labels = scales::comma)
   
 

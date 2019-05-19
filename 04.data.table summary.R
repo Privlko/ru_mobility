@@ -1,7 +1,11 @@
+library(tidyverse)
+library(ggplot2)
+
+
 
 ru3 %>% 
   filter(!is.na(esec_simple)) %>% 
-  group_by(esec_simple) %>% 
+  group_by(esec_simple, ever_promoted) %>% 
   summarise(mean_income= mean(income, na.rm=TRUE),
             median_income = median(income,na.rm=TRUE),
             count= n())
@@ -21,8 +25,7 @@ prop.table(table(ru3$esec_simple,ru3$ever_promoted),1)
 prop.table(table(ru3$esec_simple,ru3$never_moved),1)
 
 ru3 %>% 
-  filter(!is.na(esec_simple),
-         ever_promoted<100) %>% 
+  filter(!is.na(esec_simple)) %>% 
   group_by(esec_simple, ever_promoted) %>% 
   summarise(median_wage= median(wage, na.rm=TRUE),
             count= n())

@@ -1,0 +1,45 @@
+---
+title: "4.Results"
+author: "Ivan"
+date: "19 May 2019"
+output: word_document
+---
+
+## Resutls
+
+This section outlines the main results of the paper. First, it oresents the prominence of mobility in the sample. Second it explores the class and mobility differences in wages. Third, it outlines the results of two fixed-effects models which estimate the effect of mobility for each social class group. 
+
+
+```{r cars}
+t1 <- ru3 %>%
+  filter(!is.na(mob_final)) %>% 
+  group_by(mob_final) %>% 
+  summarise(obs = n()) %>% 
+  mutate(obs_total = sum(obs),
+         freq = obs/sum(obs),
+         obs_pct=round(freq*100,2)) %>% 
+  select(mob_final, obs, obs_total, obs_pct)
+
+ru3 %>% 
+  filter(!is.na(mob_final)) %>%
+  mutate(resp_total = length(unique(idind))) %>% 
+  group_by(mob_final) %>% 
+  summarise(resp_total = min(resp_total),
+            resp= length(unique(idind))) %>%
+  mutate(freq=resp/resp_total,
+         resp_pct=round(freq*100,2)) %>% 
+  bind_cols(t1) %>% 
+  select(-mob_final1, -freq)
+
+
+``` 
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
