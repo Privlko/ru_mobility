@@ -5,7 +5,7 @@ date: "19 May 2019"
 output: word_document
 ---
 
-## Resutls
+## Results
 
 This section outlines the main results of the paper. First, it oresents the prominence of mobility in the sample. Second it explores the class and mobility differences in wages. Third, it outlines the results of two fixed-effects models which estimate the effect of mobility for each social class group. 
 
