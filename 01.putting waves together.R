@@ -95,9 +95,6 @@ ru1 %>%
 
 
 ru1 <- ru1 %>% arrange(idind, round)
-View(ru1)
-
-ru1
 
 
 

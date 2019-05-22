@@ -1,3 +1,5 @@
+library(forcats)
+
 
 # load the data, don't use ru1!! -----------------------------------------------------------
 ru2 <- tbl_df(ru1)
@@ -102,7 +104,6 @@ levels(ru2$mob_final)
 
 # refactor measures for "ever" moved and "never" moved --------------------
 ru2
-View(ru2)
 
 ru2 <- ru2 %>% 
   mutate(ever_promoted= fct_recode(factor(ever_promoted),

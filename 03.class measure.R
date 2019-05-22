@@ -1,7 +1,7 @@
 # use ru3, not ru2 --------------------------------------------------------
 
 ru3 <- tbl_df(ru2)
-View(ru3)
+ru3
 
 # you have to go back and include the measures below in 01 ----------------
 

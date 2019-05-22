@@ -38,9 +38,14 @@ ru3 %>%
   summarise(median_wage= median(wage, na.rm=TRUE),
             count= n())
 
+saveRDS(ru3, file = "ru_data.rds")
+# forcats::fct_explicit_na ------------------------------------------------
+
+forcats::fct_explicit_na(ru3$esec, na_level = "(Missing)")
+
 # data table ideas --------------------------------------------------------
 
-set.seed(45L)
+set.seed(420)
 
 DT <- data.table(ru1)
 

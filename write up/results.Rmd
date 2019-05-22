@@ -1,16 +1,30 @@
 ---
-title: "4.Results"
+title: "Class, mobility, and earnings"
 author: "Ivan"
 date: "19 May 2019"
-output: word_document
+output:
+  pdf_document: default
+  word_document: default
 ---
 
-## Results
+## 5.1 Results
 
-This section outlines the main results of the paper. First, it oresents the prominence of mobility in the sample. Second it explores the class and mobility differences in wages. Third, it outlines the results of two fixed-effects models which estimate the effect of mobility for each social class group. 
+This section outlines the main results of the paper. First, we will list prominence of mobility in the sample. Second we will outline class and mobility differences in wages. Third, we will present the results of two fixed-effects models which estimate the effect of mobility for each social class group. 
+
+### 5.1.1
+
+The table below considers two ways of thinking about mobility. Columns 1, 2, and 3 consider respondents, not observations. In total, 15,900+ respondents take part in the sample. Of these respondents, 10% receive a promotion, 3% move laterally within the firm, and 31% quit a job for another position, at elast once during the study. The percentage column adds up to more than 100% because respondents are able to experience more than one move during the study. Columns 4, 5, and 6 consder observations.
 
 
-```{r cars}
+
+Generally, the majority of respondents remain in the same job with the same employer. The most popula
+
+
+```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
+ru3 <- readRDS("~/ru_mobility/ru_data.rds")
+
+library(tidyverse)
+
 t1 <- ru3 %>%
   filter(!is.na(mob_final)) %>% 
   group_by(mob_final) %>% 
