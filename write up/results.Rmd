@@ -1,29 +1,25 @@
 ---
 title: "Class, mobility, and earnings"
-author: "Ivan"
+author: "Ivan Privalko"
 date: "19 May 2019"
 output:
   pdf_document: default
   word_document: default
 ---
 
-## 5.1 Results
+## Results
 
-This section outlines the main results of the paper. First, we will list prominence of mobility in the sample. Second we will outline class and mobility differences in wages. Third, we will present the results of two fixed-effects models which estimate the effect of mobility for each social class group. 
+This section outlines the main results of the paper. First, I explore the prominence of mobility in the sample. Second I outline the wage differences between movers and non-movers. Third, I present the results of two fixed-effects models which estimate the effect of mobility for each social class group. I conclude the section with a general discussion of the hypotheses.  
 
-### 5.1.1
+### Mobility types
 
-The table below considers two ways of thinking about mobility. Columns 1, 2, and 3 consider respondents, not observations. In total, 15,900+ respondents take part in the sample. Of these respondents, 10% receive a promotion, 3% move laterally within the firm, and 31% quit a job for another position, at elast once during the study. The percentage column adds up to more than 100% because respondents are able to experience more than one move during the study. Columns 4, 5, and 6 consder observations.
-
-
-
-Generally, the majority of respondents remain in the same job with the same employer. The most popula
-
+The table below presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses captured instances where people remained in the same job with the same employer. 4% of observations captured a promotion, 1% captured a lateral move, and 15% captured an exit from the firm, either voluntary or involuntary. Columns 4,5, and 6 consider respondents. Between respondents 88% experienced staying in the same job with the same employer at least once during the study. Further, 10% experienced a promotion at least once, and 3% experienced a lateral move at least once. Finally 31% of respondents experienced an exit from the firm, wither voluntary or involuntary at least once during the five-year period. 
 
 ```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
 ru3 <- readRDS("~/ru_mobility/ru_data.rds")
 
 library(tidyverse)
+library(knitr)
 
 t1 <- ru3 %>%
   filter(!is.na(mob_final)) %>% 
@@ -34,7 +30,7 @@ t1 <- ru3 %>%
          obs_pct=round(freq*100,2)) %>% 
   select(mob_final, obs, obs_total, obs_pct)
 
-ru3 %>% 
+t1 <- ru3 %>% 
   filter(!is.na(mob_final)) %>%
   mutate(resp_total = length(unique(idind))) %>% 
   group_by(mob_final) %>% 
@@ -43,17 +39,125 @@ ru3 %>%
   mutate(freq=resp/resp_total,
          resp_pct=round(freq*100,2)) %>% 
   bind_cols(t1) %>% 
-  select(-mob_final1, -freq)
+ select(mob_final, obs, obs_total, obs_pct,
+         resp, resp_total, resp_pct)
 
+
+t1 %>% 
+  rename('Mobility type'= mob_final,
+         'Total' = resp_total,
+         'Respondents' = resp,
+         'Percent' = resp_pct,
+         'Observations' = obs,
+         'Total' = obs_total,
+         'Percent' = obs_pct) %>%
+  kable(format.args = list(decimal.mark = '.', big.mark = ","))
 
 ``` 
 
-## Including Plots
+Three points are worth mentioning. First, the majority of respondents do not move jobs. Most workers remain in the same job with the same employer over the five year period. Second, when respondents do change jobs, they are most likely to change employers as well as jobs. The most common form of mobility in the sample is exit to a new employer. This type of mobility may be voluntary (quits to new opportunities) or involuntary (redundancy, dismissal, firm closure etc..) Lastly, Promotions, which are mostly volutnary forms of job mobility, occur rarely in the data, suggesting they are unique opportunities for earnings growth. 
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
+
+
+t1.5 <- ru3 %>%
+  filter(!is.na(mob_final),
+         !is.na(esec_simple)) %>% 
+  group_by(esec_simple, mob_final) %>% 
+  summarise(obs = n()) %>% 
+  mutate(obs_total = sum(obs),
+         freq = obs/sum(obs),
+         obs_pct=round(freq*100,2)) %>% 
+  select(mob_final, obs, obs_total, obs_pct)
+
+
+t1.5 <- ru3 %>% 
+  filter(!is.na(mob_final),
+         !is.na(esec_simple)) %>%
+  group_by(esec_simple) %>% 
+  mutate(resp_total = length(unique(idind))) %>% 
+  group_by(esec_simple, mob_final) %>% 
+  summarise(resp_total = min(resp_total),
+            resp= length(unique(idind))) %>%
+  mutate(freq=resp/resp_total,
+         resp_pct=round(freq*100,2)) %>% 
+  bind_cols(t1.5) %>% 
+ select(mob_final, obs, obs_total, obs_pct,
+         resp, resp_total, resp_pct)
+
+
+t1.5 %>% 
+  rename('Mobility type'= mob_final,
+         "Social class" = esec_simple,
+         'Total' = resp_total,
+         'Respondents' = resp,
+         'Percent' = resp_pct,
+         'Observations' = obs,
+         'Total' = obs_total,
+         'Percent' = obs_pct) %>%
+  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+
+``` 
+
+Regarding mobility between classes, the three 
+
+### Mobility and earnings
+
+This section consider the earnings of movers and non-movers. Although the paper mostly focuses on the effects of moving between positions, it is worth considering the earnings of movers overall 
+
+```{r warning=F, echo=FALSE, message=FALSE, error=FALSE}
+
+t2 <- ru3 %>%
+  filter(!is.na(ever_promoted),
+         !is.na(wage)) %>% 
+  group_by(ever_promoted) %>% 
+  summarise(ever_promoted_median = median(wage, na.rm=TRUE),
+            ever_promoted_mean_wage =mean(wage, na.rm=TRUE)) 
+
+t2 <- ru3 %>%
+  filter(!is.na(ever_exit),
+         !is.na(wage)) %>% 
+  group_by(ever_exit) %>% 
+  summarise(ever_exit_median = median(wage, na.rm=TRUE),
+            ever_exit_mean_wage =mean(wage, na.rm=TRUE)) %>% 
+  bind_cols(t2) %>% 
+  select(ever_promoted, ever_exit_mean_wage, ever_exit_median,
+         ever_promoted_mean_wage, ever_promoted_median)
+
+t2 %>%
+  select(ever_promoted, ever_exit_mean_wage, ever_promoted_mean_wage) %>%
+  rename("Change" = ever_promoted,
+         "Ever exited (mean wage)" = ever_exit_mean_wage,
+         "Ever promoted (mean wage)" = ever_promoted_mean_wage) %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Results suggest that earnings
+
+
+```{r warning=F, echo=FALSE, message=FALSE, error=FALSE}
+ru3 %>%
+  filter(!is.na(ever_promoted),
+         !is.na(ever_exit),
+         !is.na(esec_simple),
+         !is.na(wage)) %>% 
+  group_by(esec_simple, ever_promoted) %>% 
+  summarise(ever_promoted_median = median(wage, na.rm=TRUE),
+            ever_promoted_mean_wage =mean(wage, na.rm=TRUE)) %>% 
+  rename("Social class" = esec_simple,
+         "Ever promoted" = ever_promoted,
+         "Mean wage" = ever_promoted_mean_wage,
+         "Median wage" = ever_promoted_median) %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+
+
+```
+
+```{r}
+%>% 
+  
+  
+```
+

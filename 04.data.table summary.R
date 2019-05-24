@@ -1,7 +1,7 @@
 library(tidyverse)
 library(ggplot2)
 
-
+View(ru3)
 
 ru3 %>% 
   filter(!is.na(esec_simple)) %>% 

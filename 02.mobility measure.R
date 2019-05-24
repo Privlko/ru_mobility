@@ -225,35 +225,17 @@ ggplot(ru3, aes(x=round, y=wage))+
   
 
 
-# sidenote: do not run, set to panel ------------------------------------------------------------
-library(plm)
-ru2
-(p1 <- pdata.frame(ru3, c("idind","round"), drop.index = FALSE, row.names = TRUE))
 
-head(p1)
-
-m1 <- plm(log_wage ~ factor(marr_stat) + mob_final + age, data = p1, model = "within")
-
-summary(m1)
+# measure for ever quit ---------------------------------------------------
+ru2 <- tbl_df(ru2)
 
 
+ru2 <- ru2 %>% 
+  mutate(ever_exit= if_else(mob_final=='Exit', 1, 0)) %>% 
+  group_by(idind) %>% 
+  mutate(ever_exit = max(ever_exit))
 
-# balanced panel, everything is balanced ----------------------------------
-ru3$mob_final <- factor(ru3$mob_final, levels = rev(levels(ru3$mob_final)))
-levels(ru3$mob_final)
 
-x<- ru3 %>% 
-  filter(!is.na(marr_stat),
-         !is.na(log_wage),
-         !is.na(mob_final),
-         !is.na(gender),
-         !is.na(age),
-         n==5)
-(p2 <- pdata.frame(x, c("idind","round"), drop.index = FALSE, row.names = TRUE))
 
-head(p2)
 
-m1 <- plm(log_wage ~ factor(marr_stat) + mob_final + age+ age^2, data = p2, model = "within")
-
-summary(m1)
 
