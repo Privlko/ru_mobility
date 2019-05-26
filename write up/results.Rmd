@@ -5,18 +5,20 @@ date: "19 May 2019"
 output:
   pdf_document: default
   word_document: default
+  html_document:
+    df_print: paged
 ---
 
 ## Results
 
-This section outlines the main results of the paper. First, I explore the prominence of mobility in the sample. Second I outline the wage differences between movers and non-movers. Third, I present the results of two fixed-effects models which estimate the effect of mobility for each social class group. I conclude the section with a general discussion of the hypotheses.  
+This section outlines the main results of the paper. First, I explore the prominence of mobility in the sample. Second I outline the wage differences between movers and non-movers. Third, I present the results of two fixed-effects models which estimate the effect of mobility for each social class group. For each sectio, I also consider the social class differences in mobility, earnings, and both. I conclude the section with a general discussion of the hypotheses.  
 
 ### Mobility types
 
-The table below presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses captured instances where people remained in the same job with the same employer. 4% of observations captured a promotion, 1% captured a lateral move, and 15% captured an exit from the firm, either voluntary or involuntary. Columns 4,5, and 6 consider respondents. Between respondents 88% experienced staying in the same job with the same employer at least once during the study. Further, 10% experienced a promotion at least once, and 3% experienced a lateral move at least once. Finally 31% of respondents experienced an exit from the firm, wither voluntary or involuntary at least once during the five-year period. 
+The table below presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses captured instances where people remained in the same job with the same employer. 4% of observations captured a promotion, 1% captured a lateral move, and 15% captured an exit from the firm, either voluntary or involuntary. Columns 4,5, and 6 consider respondents. Between respondents 88% experienced staying in the same job with the same employer at least once during the study. Further, 10% experienced a promotion at least once, and 3% experienced a lateral move (within the firm) at least once. Finally 31% of respondents experienced an exit from the firm, wither voluntary or involuntary at least once during the five-year period. 
 
 ```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
-ru3 <- readRDS("~/ru_mobility/ru_data.rds")
+ru3 <- readRDS("~/RU mobility paper/ru_mobility/ru_data.rds")
 
 library(tidyverse)
 library(knitr)
@@ -55,7 +57,9 @@ t1 %>%
 
 ``` 
 
-Three points are worth mentioning. First, the majority of respondents do not move jobs. Most workers remain in the same job with the same employer over the five year period. Second, when respondents do change jobs, they are most likely to change employers as well as jobs. The most common form of mobility in the sample is exit to a new employer. This type of mobility may be voluntary (quits to new opportunities) or involuntary (redundancy, dismissal, firm closure etc..) Lastly, Promotions, which are mostly volutnary forms of job mobility, occur rarely in the data, suggesting they are unique opportunities for earnings growth. 
+Three points are worth mentioning. First, the majority of respondents do not move jobs. Most workers remain in the same job with the same employer over the five year period. Second, when respondents do change jobs, they are most likely to change employers as well as jobs. The most common form of mobility in the sample is exit to a new employer. This type of mobility likely contains a mix of voluntary (quits to new opportunities) and involuntary (redundancy, dismissal, firm closure etc.) changes to new employers. Lastly, Promotions, which are mostly voluntary forms of mobility, occur rarely in the data, suggesting they are unique opportunities for earnings growth.
+
+It's likely that social class groups experience unequal chances of exit, lateral changes, and promotions. As Goldthorpe (ref) suggests high social class groups will likely experience a "service relationship" with their employer, who sees them as an investment, than low social class groups who sees them as a "contractual agreement". For this reason, we split mobility across the three social class groups, mentioned previously. 
 
 
 ```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
@@ -100,11 +104,11 @@ t1.5 %>%
 
 ``` 
 
-Regarding mobility between classes, the three 
+In this section, we will focus only on class differences between respondents. Starting with the High social class group, 22% of these respondents experience employment exit at least once, and 15% of these respondents experience a promotion at least once. These changes are unique when compared to Middle class respondents. Here, just 7% of respondents experience a promotion, and 27% experience an exit. Among middle class respondents, promotion is less likely and exit is more likely than High class EsEC groups. Working class respondents have even starker differences, just 3% of these respondents experience a promotion, and 35% of respondents experience an employer exit to a new positions. Lateral moves within firms are eually unlikely for all respondents. Overall, there is a clear hierarchy to a worker's chances of experiencing promotion within a five year period. 
 
 ### Mobility and earnings
 
-This section consider the earnings of movers and non-movers. Although the paper mostly focuses on the effects of moving between positions, it is worth considering the earnings of movers overall 
+This section considers earnings differences between movers and non-movers. It also considers this difference between social class groups.  
 
 ```{r warning=F, echo=FALSE, message=FALSE, error=FALSE}
 
@@ -134,30 +138,43 @@ t2 %>%
 
 ```
 
-Results suggest that earnings
+The first column considers the mean wage between respondents who have experienced an early exit at least once, and those who have never experienced such a change. The second, considers the average earnings of those who were promoted even once, and the earnings of those who were never promoted. Two patterns emerge. First the earnings of movers, in both columns are typically higher than the earnings of non-movers. Second, the earnings of those who are promoted (even if only once) are higher than those never promoted. Although exits may contain a premium too, this premium is likely lower than the premium tied to promotions. As before, It's likely that there are class differences to the effect described above. We consider the preium of uits and promotions by class in the table below. 
+
 
 
 ```{r warning=F, echo=FALSE, message=FALSE, error=FALSE}
-ru3 %>%
+
+t3 <- ru3 %>%
   filter(!is.na(ever_promoted),
-         !is.na(ever_exit),
-         !is.na(esec_simple),
-         !is.na(wage)) %>% 
+         !is.na(wage),
+         !is.na(esec_simple)) %>% 
   group_by(esec_simple, ever_promoted) %>% 
   summarise(ever_promoted_median = median(wage, na.rm=TRUE),
-            ever_promoted_mean_wage =mean(wage, na.rm=TRUE)) %>% 
-  rename("Social class" = esec_simple,
-         "Ever promoted" = ever_promoted,
-         "Mean wage" = ever_promoted_mean_wage,
-         "Median wage" = ever_promoted_median) %>% 
+            ever_promoted_mean_wage =mean(wage, na.rm=TRUE)) 
+
+t3 <- ru3 %>%
+  filter(!is.na(ever_exit),
+         !is.na(wage),
+         !is.na(esec_simple)) %>% 
+  group_by(esec_simple, ever_exit) %>% 
+  summarise(ever_exit_median = median(wage, na.rm=TRUE),
+            ever_exit_mean_wage =mean(wage, na.rm=TRUE)) %>% 
+  bind_cols(t3) %>% 
+  select(ever_promoted, ever_exit_mean_wage, ever_promoted_mean_wage)
+
+t3 %>%
+  select(ever_promoted, ever_exit_mean_wage, ever_promoted_mean_wage) %>%
+  rename("Change" = ever_promoted,
+         "Ever exited (mean wage)" = ever_exit_mean_wage,
+         "Ever promoted (mean wage)" = ever_promoted_mean_wage) %>% 
   kable(format.args = list(decimal.mark = '.', big.mark = ","))
 
-
 ```
 
-```{r}
-%>% 
-  
-  
-```
+Thinking of exiters, high EsEc groups report higher earnings among "exiters" (27,000+) than "non-exiters" (24,000+).Middle and lower class groups see no differences in earnings between "exiters"" and "non-exiters", although lower class groups may see a small difference between those who leave (19,000+) and those who remain (18,000+). 
 
+The effect is different for respondents who receive promotions, and those who never receive promotions. In each group, those who receive at least one promotion typically report higher earnings than those never promoted (during the study). Further, this difference appears largest for high class groups (+7,000), than middle (+4,000) and low EsEC groups (+4,000). 
+
+### Mobility's effects on earnings
+
+Although the tables above point to interesting correlations, the difference between groups may be explained by other reasons. Job mobility is not a random event, and class differences may be capturing other, unmeasured characteristics of movers and non-movers. Further class-differences in earnings and premiums could account for other factors such as age, and managerial responsibilities, which typically fall on more senior respondents. However, the tables above suggest that mobility types differ in their effects on earnings, with promotions leading to premiums, and exits leading to minor change. Further, the tables suggest that upper class respondents are more likely to receive promotions, and receive higher benefits from promotions too. The next section considers the effects of mobility controlling for a range on factors tied to earnings inequality. 
