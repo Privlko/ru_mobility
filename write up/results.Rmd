@@ -1,6 +1,6 @@
 ---
 title: "Class, mobility, and earnings"
-author: "Ivan Privalko"
+author: ""
 date: "19 May 2019"
 output:
   pdf_document: default
@@ -9,11 +9,11 @@ output:
 
 ## Results
 
-This section outlines the main results of the paper. First, I explore the prominence of mobility in the sample. Second I outline the wage differences between movers and non-movers. Third, I present the results of two fixed-effects models which estimate the effect of mobility for each social class group. I conclude the section with a general discussion of the hypotheses.  
+This section outlines the main results of the paper. First, I explore the prominence of mobility in the sample. Second I outline the wage differences between movers and non-movers. Third, I present the results of four fixed-effects models which estimate the effect of mobility for each social class group. I conclude the section with a general discussion of the hypotheses.  
 
 ### Mobility types
 
-The table below presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses captured instances where people remained in the same job with the same employer. 4% of observations captured a promotion, 1% captured a lateral move, and 15% captured an exit from the firm, either voluntary or involuntary. Columns 4,5, and 6 consider respondents. Between respondents 88% experienced staying in the same job with the same employer at least once during the study. Further, 10% experienced a promotion at least once, and 3% experienced a lateral move at least once. Finally 31% of respondents experienced an exit from the firm, wither voluntary or involuntary at least once during the five-year period. 
+The table below presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses captured non-movement, instances where people remained in the same job with the same employer. 4% of observations captured a promotion, 1% captured a lateral move, and 15% captured an exit from the firm. Whether such exits are voluntary or involuntary, are unknow. Columns 4, 5, and 6 consider respondents. Between respondents 88% experienced staying in the same job with the same employer at least once during the study. Further, 10% experienced a promotion at least once, and 3% experienced a lateral move at least once. Finally 31% of respondents experienced an exit from the firm, wither voluntary or involuntary at least once during the five-year period. 
 
 ```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
 ru3 <- readRDS("~/ru_mobility/ru_data.rds")
@@ -155,9 +155,6 @@ ru3 %>%
 
 ```
 
-```{r}
-%>% 
-  
-  
-```
 
+
+there's more evidence of mobility premiums below
