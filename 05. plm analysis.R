@@ -1,6 +1,7 @@
 # sidenote: do not run, set to panel ------------------------------------------------------------
 library(plm)
 library(tidyverse)
+library(gtools)
 
 
 View(ru4)
@@ -23,7 +24,8 @@ ru3 %>%
   ggplot(aes(x=idind, y= wage)) +
   geom_point(aes(colour=factor(round)))+
   geom_hline(yintercept=mean(ru4$wage), linetype='dashed', 
-             color='darkred', size=2)
+             color='darkred', size=2)+
+  scale_y_log10(labels = scales::comma)
 
 ru4 %>% 
   count(round)
@@ -76,9 +78,8 @@ pHi <- p1 %>%
   filter(esec_simple=='High') %>% 
   pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
 
-View(q)
   
-  mHi  <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round,
+mHi  <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round,
              data=pHi, 
              model = "within")
 
@@ -90,7 +91,6 @@ View(q)
     filter(esec_simple=='Low') %>% 
     pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
   
-  View(pLo)
   
   mLo  <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round,
               data=pLo, 
@@ -105,12 +105,39 @@ pMid <- p1 %>%
     filter(esec_simple=='Medium') %>% 
     pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
   
-View(pMid)
-  
+
 mMid  <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round,
               data=pMid, 
               model = "within")
   
   
 summary(mMid)
-  
+
+
+# presenting models -------------------------------------------------------
+
+
+
+n1 <- broom::tidy(mHi) %>% 
+  select(-statistic, -std.error) %>% 
+  mutate(signif = stars.pval(p.value)) %>% 
+  mutate(estimate = round(estimate, 3),
+         p.value = round(p.value, 3))
+
+
+n1 <- broom::tidy(m5) %>% 
+  mutate(signif = stars.pval(p.value)) %>% 
+  mutate(estimate = round(estimate, 3),
+         p.value = round(p.value, 3)) %>%
+  bind_cols(n1) %>% 
+  select(term,
+         estimate, 
+         signif,
+         estimate1,
+         signif1) %>% 
+  rename("Est (High ESEC)"= estimate1,
+         "Sig (HighESEC)"= signif1)
+
+
+n1  
+
