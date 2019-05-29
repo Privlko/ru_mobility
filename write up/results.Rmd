@@ -11,11 +11,11 @@ output:
 ## Results
 
 
-This section outlines the main results of the paper. First, I explore the prominence of mobility in the sample. Second I outline the wage differences between movers and non-movers. Third, I present the results of two fixed-effects models which estimate the effect of mobility for each social class group. For each sectio, I also consider the social class differences in mobility, earnings, and both. I conclude the section with a general discussion of the hypotheses.  
+This section outlines the main results of the paper. First, I explore the prominence of mobility in the sample. Second I outline the wage differences between movers and non-movers. Third, I present the results of four fixed-effects linear models which estimate the effect of mobility on earnings, controlling for a range of time-variant measures. For each section, I consider the social class differences in mobility, earnings, and both, as well as the overall differences. I conclude the section with a brief discussion of the hypotheses.  
 
 ### Mobility types
 
-The table below presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses captured instances where people remained in the same job with the same employer. 4% of observations captured a promotion, 1% captured a lateral move, and 15% captured an exit from the firm, either voluntary or involuntary. Columns 4,5, and 6 consider respondents. Between respondents 88% experienced staying in the same job with the same employer at least once during the study. Further, 10% experienced a promotion at least once, and 3% experienced a lateral move (within the firm) at least once. Finally 31% of respondents experienced an exit from the firm, wither voluntary or involuntary at least once during the five-year period. 
+Table 1 presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses capture instances where people remain in the same job with the same employer. 4% of observations capture promotions, 1% capture a lateral move, and 15% capture an exit from the firm, either voluntary or involuntary. Columns 4,5, and 6 consider respondents. Between respondents 88% experience staying in the same job with the same employer at least once during the study. Further, 10% experience a promotion at least once, and 3% experience a lateral move (within the firm) at least once. Finally 31% of respondents experience an exit from the firm, wither voluntary or involuntary, at least once during the study. 
 
 
 ```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
@@ -54,13 +54,15 @@ t1 %>%
          'Observations' = obs,
          'Total' = obs_total,
          'Percent' = obs_pct) %>%
-  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+  kable(format.args = list(decimal.mark = '.', big.mark = ","),
+        caption = "Mobility types, overall")
 
 ``` 
 
-Three points are worth mentioning. First, the majority of respondents do not move jobs. Most workers remain in the same job with the same employer over the five year period. Second, when respondents do change jobs, they are most likely to change employers as well as jobs. The most common form of mobility in the sample is exit to a new employer. This type of mobility likely contains a mix of voluntary (quits to new opportunities) and involuntary (redundancy, dismissal, firm closure etc.) changes to new employers. Lastly, Promotions, which are mostly voluntary forms of mobility, occur rarely in the data, suggesting they are unique opportunities for earnings growth.
+Three points are worth mentioning about Table 1. First, the majority of respondents do not change jobs. Most workers remain in the same job with the same employer. Second, when respondents do change jobs, they are most likely to change employers as well as jobs. The most common form of mobility in the sample is exit to a new employer or firm. This mobility likely contains a mix of voluntary (quits to new opportunities) and involuntary (redundancy, dismissal, firm closure etc.) changes. Lastly, Promotions, which are voluntary forms of mobility, occur rarely in the data, suggesting they are unique opportunities for workers. This does not mean that exit to a new employer cannot provide earnings premiums to workers, the literature suggests that quits to a new employer, expecially when they are direct changes, can yield significant earnings growth and premiums. However, such changes are impossible to isolate in the RLMS survey. Instead these changes sit within the exit category.
 
-It's likely that social class groups experience unequal chances of exit, lateral changes, and promotions. As Goldthorpe (ref) suggests high social class groups will likely experience a "service relationship" with their employer, who sees them as an investment, than low social class groups who sees them as a "contractual agreement". For this reason, we split mobility across the three social class groups, mentioned previously. 
+Social class groups experience unequal chances of exit, lateral changes, and promotion. As Goldthorpe (ref) suggests, high social class groups are tied to "service relationships" with their employers, who sees these workers as an investment to be secured over the long-term. Meanwhile, employers see low social class groups as "contractual agreements", where compensation is tied to pay on a short-term basis. For this reason, we will split mobility across three broad social class groups, mentioned earlier. It should be noted that mobility between social class groups also exists, although it is generally rare. 
+\newpage
 
 
 ```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
@@ -93,19 +95,18 @@ t1.5 <- ru3 %>%
 
 
 t1.5 %>% 
+  select(esec_simple, mob_final, resp:resp_pct) %>% 
   rename('Mobility type'= mob_final,
          "Social class" = esec_simple,
          'Total' = resp_total,
          'Respondents' = resp,
-         'Percent' = resp_pct,
-         'Observations' = obs,
-         'Total' = obs_total,
-         'Percent' = obs_pct) %>%
-  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+         'Percent' = resp_pct) %>%
+  kable(format.args = list(decimal.mark = '.', big.mark = ","),
+        caption = "Mobility types, by social class")
 
 ``` 
 
-In this section, we will focus only on class differences between respondents. Starting with the High social class group, 22% of these respondents experience employment exit at least once, and 15% of these respondents experience a promotion at least once. These changes are unique when compared to Middle class respondents. Here, just 7% of respondents experience a promotion, and 27% experience an exit. Among middle class respondents, promotion is less likely and exit is more likely than High class EsEC groups. Working class respondents have even starker differences, just 3% of these respondents experience a promotion, and 35% of respondents experience an employer exit to a new positions. Lateral moves within firms are eually unlikely for all respondents. Overall, there is a clear hierarchy to a worker's chances of experiencing promotion within a five year period. 
+In this section, we will focus only on class differences between respondents, for clarity. Starting with the High social class group, 22% of these respondents experience employment exit at least once, and 15% of these respondents experience a promotion at least once. These changes are unique when compared to Middle class respondents. Here, just 7% of respondents experience a promotion, and 27% experience an exit. Among middle class respondents, promotion is less likely and exit is more likely than High class EsEC groups. Working class respondents have even starker differences, just 3% of these respondents experience a promotion, and 35% of respondents experience an employer exit to a new positions. Lateral moves within firms are eually unlikely for all respondents. Overall, there is a clear hierarchy to a worker's chances of experiencing promotion within a five year period. 
 
 ### Mobility and earnings
 

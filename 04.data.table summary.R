@@ -4,6 +4,16 @@ library(ggplot2)
 View(ru3)
 
 ru3 %>% 
+  select(round, idind, mob_final) %>% 
+  filter(mob_final != 'Same') %>% 
+  group_by(idind)
+
+
+ru3 %>% 
+  filter(idind==21676)
+
+
+ru3 %>% 
   filter(!is.na(esec_simple)) %>% 
   group_by(esec_simple, ever_promoted) %>% 
   summarise(mean_income= mean(income, na.rm=TRUE),
