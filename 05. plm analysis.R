@@ -3,8 +3,6 @@ library(plm)
 library(tidyverse)
 library(gtools)
 
-
-View(ru4)
 ru4  <- ru3 %>%
   mutate(logwage = log(wage)) %>% 
   filter(logwage > 0,
@@ -18,6 +16,11 @@ ru4  <- ru3 %>%
   ungroup(idind) %>%
   filter(n>4) 
 
+
+ru3 <- ru3 %>% 
+  mutate(logwage = log(wage)) %>% 
+  filter(logwage>0,
+         hours < 100)
 
 ru3 %>% 
   filter(idind<100) %>% 
@@ -33,14 +36,15 @@ ru4 %>%
 ru3 %>% 
   count(round)
 
-
-View(ru4)
-
-ru3 <- ru3 %>% 
-  filter(wage>0)
-  
 ru3 %>% count(n)
 ru4 %>% count(n)
+
+
+
+
+
+# panel analysis ----------------------------------------------------------
+
   
 (p1 <- pdata.frame(ru3, c("idind","round"), drop.index = FALSE, row.names = TRUE))
 (pbal <- pdata.frame(ru4, c("idind","round"), drop.index = FALSE, row.names = TRUE))
@@ -52,21 +56,21 @@ glimpse(p1)
 
 View(p1)
 
-m1 <- plm(log(wage) ~ mob_final + age, data = p1, model = "within")
+m1 <- plm(log(wage) ~ mob_final + age + hours, data = p1, model = "within")
 m2 <- plm(log(wage) ~ mob_final + age, data = pbal, model = "within")
 
 
 summary(m1)
 summary(m2)
 
-m3 <- plm(log(wage) ~ factor(marr_stat) + mob_final + age, data = p1, model = "within")
+m3 <- plm(log(wage) ~ marr + mob_final + age + hours, data = p1, model = "within")
 m4 <- plm(log(wage) ~ factor(marr_stat) + mob_final + age, data = pbal, model = "within")
 
 
 summary(m3)
 summary(m4)
 
-m5 <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round, data = p1, model = "within")
+m5 <- plm(log(wage) ~ marr + mob_final + age + hours + firm_size + round, data = p1, model = "within")
 m6 <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round, data = pbal, model = "within")
 
 
@@ -79,7 +83,7 @@ pHi <- p1 %>%
   pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
 
   
-mHi  <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round,
+mHi  <- plm(log(wage) ~ marr + mob_final + age + hours + firm_size + round,
              data=pHi, 
              model = "within")
 
@@ -92,21 +96,20 @@ mHi  <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round,
     pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
   
   
-  mLo  <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round,
+  mLo  <- plm(log(wage) ~ marr + mob_final + age + hours + firm_size + round,
               data=pLo, 
               model = "within")
   
   
   summary(mLo)
     
-View(p1)
 
 pMid <- p1 %>% 
     filter(esec_simple=='Medium') %>% 
     pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
   
 
-mMid  <- plm(log(wage) ~ factor(marr_stat) + mob_final + age + firm_size + round,
+mMid  <- plm(log(wage) ~ marr + mob_final + age + hours + firm_size + round,
               data=pMid, 
               model = "within")
   
@@ -116,6 +119,41 @@ summary(mMid)
 
 # presenting models -------------------------------------------------------
 
+t1 <- broom::tidy(m1) %>% 
+  mutate(signif = stars.pval(p.value),
+         estimate = round(estimate, 3),
+         p.value = round(p.value, 3))%>% 
+  select(term,estimate, signif) %>% 
+  rename(m1 = estimate,
+         m1_sig= signif)
+
+
+t2 <- broom::tidy(m3) %>% 
+  mutate(signif = stars.pval(p.value),
+         estimate = round(estimate, 3),
+         p.value = round(p.value, 3))%>% 
+  select(term,estimate, signif) %>% 
+  rename(m2 = estimate,
+         m2_sig = signif)
+
+t3 <- broom::tidy(m5) %>% 
+  mutate(signif = stars.pval(p.value),
+         estimate = round(estimate, 3),
+         p.value = round(p.value, 3))%>% 
+  select(term,estimate, signif) %>% 
+  rename(m3 = estimate,
+         m3_sig = signif)
+
+
+t1
+t3
+
+ru_tbl1 <- t1 %>% 
+  right_join(t2, by='term') %>% 
+  right_join(t3, by='term')
+
+
+table1
 
 
 n1 <- broom::tidy(mHi) %>% 

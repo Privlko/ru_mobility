@@ -5,12 +5,10 @@ View(ru3)
 
 ru3 %>% 
   select(round, idind, mob_final) %>% 
-  filter(mob_final != 'Same') %>% 
+  filter(mob_final != 'Same',
+         !is.na(mob_final)) %>% 
+  arrange(idind, round) %>% 
   group_by(idind)
-
-
-ru3 %>% 
-  filter(idind==21676)
 
 
 ru3 %>% 
@@ -48,7 +46,15 @@ ru3 %>%
   summarise(median_wage= median(wage, na.rm=TRUE),
             count= n())
 
-saveRDS(ru3, file = "ru_data.rds")
+
+
+
+
+ru3 %>% 
+  group_by(esec) %>% 
+  summarise(mean(hours, na.rm=TRUE))
+
+
 # forcats::fct_explicit_na ------------------------------------------------
 
 forcats::fct_explicit_na(ru3$esec, na_level = "(Missing)")

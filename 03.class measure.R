@@ -244,3 +244,33 @@ ru3 %>%
   theme_minimal()+
   coord_flip()+
   theme(legend.position = "none") 
+
+
+
+# measure for marriage status ---------------------------------------------
+ru3$marr <- factor(ru3$marr_stat, levels = unique(ru3$marr_stat)) 
+
+levels(ru3$marr)
+
+
+ru3 <- ru3 %>% 
+  mutate(marr = fct_recode(marr,
+                           'Never married' = '1',
+                           'Married' = '2',
+                           'Married' = '3',
+                           'Separated' = '4',
+                           'Separated' = '5',
+                           'Separated' = '6' ))
+
+
+levels(ru3$marr)
+
+ru3$marr <- factor(ru3$marr, levels = c('Never married', 'Married', 'Separated')) 
+
+ru3$marr
+
+ru3 %>% 
+  count(marr)
+
+
+saveRDS(ru3, file = "ru_data.rds")
