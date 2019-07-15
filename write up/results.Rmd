@@ -22,6 +22,7 @@ ru3 <- readRDS("~/ru_mobility/ru_data.rds")
 
 library(tidyverse)
 library(knitr)
+library(kableExtra)
 
 t1 <- ru3 %>%
   filter(!is.na(mob_final)) %>% 
@@ -53,8 +54,14 @@ t1 %>%
          'Observations' = obs,
          'Total' = obs_total,
          'Percent' = obs_pct) %>%
-  kable(format.args = list(decimal.mark = '.', big.mark = ","),
-        caption = "Mobility types, overall")
+  kable('latex',
+        booktabs = TRUE,
+        format.args = list(decimal.mark = '.', big.mark = ","),
+        caption = "Mobility types, overall") %>% 
+  kable_styling(latex_options = 'hold_position') %>% 
+  group_rows("Stay", 1, 1) %>% 
+  group_rows("Leave", 2, 4)
+  
 
 ``` 
 
@@ -94,14 +101,22 @@ t1.5 <- ru3 %>%
 
 
 t1.5 %>% 
+  ungroup() %>% 
   select(esec_simple, mob_final, resp:resp_pct) %>% 
   rename('Mobility type'= mob_final,
          "Social class" = esec_simple,
          'Total' = resp_total,
          'Respondents' = resp,
-         'Percent' = resp_pct) %>%
-  kable(format.args = list(decimal.mark = '.', big.mark = ","),
-        caption = "Mobility types, by social class")
+         'Percent' = resp_pct) %>% 
+  select(-"Social class") %>%
+  kable('latex',
+        booktabs = TRUE,
+        format.args = list(decimal.mark = '.', big.mark = ","),
+        caption = "Mobility types, by social class") %>% 
+  kable_styling(latex_options = 'hold_position') %>% 
+  group_rows("High social class", 1, 4) %>% 
+  group_rows("Medium social class", 5, 8) %>% 
+  group_rows("Low social class", 9, 12)
 
 ``` 
 
@@ -135,8 +150,12 @@ t2 %>%
   rename("Change" = ever_promoted,
          "Ever exited (mean wage)" = ever_exit_mean_wage,
          "Ever promoted (mean wage)" = ever_promoted_mean_wage) %>% 
-  kable(format.args = list(decimal.mark = '.', big.mark = ","),
-        caption = 'Average earnings of stayers and movers')
+  kable('latex',
+        booktabs = TRUE,
+        format.args = list(decimal.mark = '.', 
+                           big.mark = ","),
+        caption = 'Average earnings of stayers and movers') %>% 
+    kable_styling(latex_options = 'hold_position')
 
 ```
 
@@ -167,12 +186,20 @@ t3 <- ru3 %>%
 
 t3 %>%
   select(ever_promoted, ever_exit_mean_wage, ever_promoted_mean_wage) %>%
-  rename("Social class "= esec_simple,
+  rename("Social class"= esec_simple,
          "Change" = ever_promoted,
          "Ever exited (mean wage)" = ever_exit_mean_wage,
-         "Ever promoted (mean wage)" = ever_promoted_mean_wage) %>% 
-  kable(format.args = list(decimal.mark = '.', big.mark = ","),
-        caption= 'Average earnings of stayers and movers, by social class')
+         "Ever promoted (mean wage)" = ever_promoted_mean_wage) %>%
+  ungroup() %>%
+  select(-"Social class") %>% 
+  kable('latex',
+        booktabs = TRUE,
+        format.args = list(decimal.mark = '.', big.mark = ","),
+        caption= 'Average earnings of stayers and movers, by social class') %>%
+  kable_styling(latex_options = 'hold_position') %>% 
+  group_rows("High social class", 1, 2) %>% 
+  group_rows("Medium social class", 3, 4) %>% 
+  group_rows("Low social class", 5, 6)
 
 ```
 
@@ -247,7 +274,9 @@ ru_tbl1 <- t1 %>%
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 kable(ru_tbl1,
-      caption= 'Estimated fixed-effects of mobility, overall')
+      format = 'markdown',
+      caption= 'Estimated fixed-effects of mobility, overall') %>% 
+    kable_styling(latex_options = 'hold_position')
 ```
 
 The models in Table 5 list the stimated fixed effect of moving to a new position, controlling for a number of important measures, mainly changes in marital status, changes in age, changes in hours worked by individuals, changes in the number of people employed in the firm, and changes over time throughout the panel. The most basic model captures the effect of mobility, while controlling for age and daily working hours. Promotion and lateral moves both have a positive effect on earnings, but only promotions have a significant effect (10%). Employee exits from the firm have no significant effect on earnings, suggesting that workers who move directly from one firm to another are able to recreate their pay with a new employer. Changes in age have a positive effect on earnings, as workers age, they see a premium in pay. Changes in working hours also lead to significant positive changes in pay.
