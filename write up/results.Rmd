@@ -1,0 +1,384 @@
+---
+title: "Class, mobility, and earnings"
+author: ""
+date: "19 May 2019"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+## Results
+
+
+This section outlines the main results of the paper. First, I explore the prominence of mobility in the sample. Second I outline the wage differences between movers and non-movers. Third, I present the results of four fixed-effects linear models which estimate the effect of mobility on earnings, controlling for a range of time-variant measures. For each section, I consider the social class differences in mobility, earnings, and both, as well as the overall differences. I conclude the section with a brief discussion of the hypotheses.  
+
+### Mobility types
+
+Table 1 presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses capture instances where people remain in the same job with the same employer. 4% of observations capture promotions, 1% capture a lateral move, and 15% capture an exit from the firm, either voluntary or involuntary. Columns 4,5, and 6 consider respondents. Between respondents 88% experience staying in the same job with the same employer at least once during the study. Further, 10% experience a promotion at least once, and 3% experience a lateral move (within the firm) at least once. Finally 31% of respondents experience an exit from the firm, wither voluntary or involuntary, at least once during the study. 
+
+
+```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
+ru3 <- readRDS("~/ru_mobility/ru_data.rds")
+
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+t1 <- ru3 %>%
+  filter(!is.na(mob_final)) %>% 
+  group_by(mob_final) %>% 
+  summarise(obs = n()) %>% 
+  mutate(obs_total = sum(obs),
+         freq = obs/sum(obs),
+         obs_pct=round(freq*100,2)) %>% 
+  select(mob_final, obs, obs_total, obs_pct)
+
+t1 <- ru3 %>% 
+  filter(!is.na(mob_final)) %>%
+  mutate(resp_total = length(unique(idind))) %>% 
+  group_by(mob_final) %>% 
+  summarise(resp_total = min(resp_total),
+            resp= length(unique(idind))) %>%
+  mutate(freq=resp/resp_total,
+         resp_pct=round(freq*100,2)) %>% 
+  bind_cols(t1) %>% 
+ select(mob_final, obs, obs_total, obs_pct,
+         resp, resp_total, resp_pct)
+
+
+t1 %>% 
+  rename('Mobility type'= mob_final,
+         'Total' = resp_total,
+         'Respondents' = resp,
+         'Percent' = resp_pct,
+         'Observations' = obs,
+         'Total' = obs_total,
+         'Percent' = obs_pct) %>%
+  kable('latex',
+        booktabs = TRUE,
+        format.args = list(decimal.mark = '.', big.mark = ","),
+        caption = "Mobility types, overall") %>% 
+  kable_styling(latex_options = 'hold_position') %>% 
+  group_rows("Stay", 1, 1) %>% 
+  group_rows("Leave", 2, 4)
+  
+
+``` 
+
+Three points are worth mentioning about Table 1. First, the majority of respondents do not change jobs. Most workers remain in the same job with the same employer. Second, when respondents do change jobs, they are most likely to change employers as well as jobs. The most common form of mobility in the sample is exit to a new employer or firm. This mobility likely contains a mix of voluntary (quits to new opportunities) and involuntary (redundancy, dismissal, firm closure etc.) changes. Lastly, Promotions, which are voluntary forms of mobility, occur rarely in the data, suggesting they are unique opportunities for workers. This does not mean that exit to a new employer cannot provide earnings premiums to workers, the literature suggests that quits to a new employer, expecially when they are direct changes, can yield significant earnings growth and premiums. However, such changes are impossible to isolate in the RLMS survey. Instead these changes sit within the exit category.
+
+Social class groups experience unequal chances of exit, lateral changes, and promotion. As Goldthorpe (ref) suggests, high social class groups are tied to "service relationships" with their employers, who sees these workers as an investment to be secured over the long-term. Meanwhile, employers see low social class groups as "contractual agreements", where compensation is tied to pay on a short-term basis. For this reason, we will split mobility across three broad social class groups, mentioned earlier. It should be noted that mobility between social class groups also exists, although it is generally rare. 
+\newpage
+
+
+```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
+
+
+t1.5 <- ru3 %>%
+  filter(!is.na(mob_final),
+         !is.na(esec_simple)) %>% 
+  group_by(esec_simple, mob_final) %>% 
+  summarise(obs = n()) %>% 
+  mutate(obs_total = sum(obs),
+         freq = obs/sum(obs),
+         obs_pct=round(freq*100,2)) %>% 
+  select(mob_final, obs, obs_total, obs_pct)
+
+
+t1.5 <- ru3 %>% 
+  filter(!is.na(mob_final),
+         !is.na(esec_simple)) %>%
+  group_by(esec_simple) %>% 
+  mutate(resp_total = length(unique(idind))) %>% 
+  group_by(esec_simple, mob_final) %>% 
+  summarise(resp_total = min(resp_total),
+            resp= length(unique(idind))) %>%
+  mutate(freq=resp/resp_total,
+         resp_pct=round(freq*100,2)) %>% 
+  bind_cols(t1.5) %>% 
+ select(mob_final, obs, obs_total, obs_pct,
+         resp, resp_total, resp_pct)
+
+
+t1.5 %>% 
+  ungroup() %>% 
+  select(esec_simple, mob_final, resp:resp_pct) %>% 
+  rename('Mobility type'= mob_final,
+         "Social class" = esec_simple,
+         'Total' = resp_total,
+         'Respondents' = resp,
+         'Percent' = resp_pct) %>% 
+  select(-"Social class") %>%
+  kable('latex',
+        booktabs = TRUE,
+        format.args = list(decimal.mark = '.', big.mark = ","),
+        caption = "Mobility types, by social class") %>% 
+  kable_styling(latex_options = 'hold_position') %>% 
+  group_rows("High social class", 1, 4) %>% 
+  group_rows("Medium social class", 5, 8) %>% 
+  group_rows("Low social class", 9, 12)
+
+``` 
+
+In this section, we will focus only on class differences between respondents. Starting with the High social class group, 22% of these workers exit the firm at least once, and 15% of these workers are promoted at least once. These changes are unique when compared to Middle class workers. Here, just 7% experience a promotion, and 27% experience an exit. Among middle class workers, promotion is less common and exit is more common than among High EsEC groups. Working class respondents have starker differences, just 3% experience a promotion, and 35% experience an exit to a new employer. Lateral moves within firms are equally unlikely for all social class groups. Overall, there is a clear class hierarchy in terms of access to promotion, at least over the five year period chosen for the study. 
+
+### Mobility and earnings
+
+We find differences in the frequency of mobility between and within workers, but what are the consequences of these differences? Is there a difference in earnings between movers and non-movers? This section considers such differences in the sample overall, and between social class groups. 
+
+```{r warning=F, echo=FALSE, message=FALSE, error=FALSE}
+
+t2 <- ru3 %>%
+  filter(!is.na(ever_promoted),
+         !is.na(wage)) %>% 
+  group_by(ever_promoted) %>% 
+  summarise(ever_promoted_median = median(wage, na.rm=TRUE),
+            ever_promoted_mean_wage =mean(wage, na.rm=TRUE)) 
+
+t2 <- ru3 %>%
+  filter(!is.na(ever_exit),
+         !is.na(wage)) %>% 
+  group_by(ever_exit) %>% 
+  summarise(ever_exit_median = median(wage, na.rm=TRUE),
+            ever_exit_mean_wage =mean(wage, na.rm=TRUE)) %>% 
+  bind_cols(t2) %>% 
+  select(ever_promoted, ever_exit_mean_wage, ever_exit_median,
+         ever_promoted_mean_wage, ever_promoted_median)
+
+t2 %>%
+  select(ever_promoted, ever_exit_mean_wage, ever_promoted_mean_wage) %>%
+  rename("Change" = ever_promoted,
+         "Ever exited (mean wage)" = ever_exit_mean_wage,
+         "Ever promoted (mean wage)" = ever_promoted_mean_wage) %>% 
+  kable('latex',
+        booktabs = TRUE,
+        format.args = list(decimal.mark = '.', 
+                           big.mark = ","),
+        caption = 'Average earnings of stayers and movers') %>% 
+    kable_styling(latex_options = 'hold_position')
+
+```
+
+The first column shows the mean wage between workers who exited the firm at least once, and those who have not exited (over the five-year period). The second, considers the mean wage of those who were promoted at least once, and the earnings of those who were never promoted. First the earnings of movers, in both columns are typically higher than the earnings of non-movers. Second, the earnings of those who are promoted (even if only once) are higher than those never promoted (over the five year period). Although exits may contain a premium, this premium is likely lower than the premium tied to promotions. Table 3 suggests that promotions (in themselves) carry financial premiums. An alternative explanation would suggest that promotions and exits do not hold financial premiums (in themselves), and these differences in wages stem from other differences between those who are promoted and those who are not, such as age, experience, and efficiency of workers. As before, it's likely that class differences exist in the effect above. Table 4 considers the wage differences between those who quit and those who are promoted, across social classes. 
+\newpage
+
+
+
+```{r warning=F, echo=FALSE, message=FALSE, error=FALSE}
+
+t3 <- ru3 %>%
+  filter(!is.na(ever_promoted),
+         !is.na(wage),
+         !is.na(esec_simple)) %>% 
+  group_by(esec_simple, ever_promoted) %>% 
+  summarise(ever_promoted_median = median(wage, na.rm=TRUE),
+            ever_promoted_mean_wage =mean(wage, na.rm=TRUE)) 
+
+t3 <- ru3 %>%
+  filter(!is.na(ever_exit),
+         !is.na(wage),
+         !is.na(esec_simple)) %>% 
+  group_by(esec_simple, ever_exit) %>% 
+  summarise(ever_exit_median = median(wage, na.rm=TRUE),
+            ever_exit_mean_wage =mean(wage, na.rm=TRUE)) %>% 
+  bind_cols(t3) %>% 
+  select(ever_promoted, ever_exit_mean_wage, ever_promoted_mean_wage)
+
+t3 %>%
+  select(ever_promoted, ever_exit_mean_wage, ever_promoted_mean_wage) %>%
+  rename("Social class"= esec_simple,
+         "Change" = ever_promoted,
+         "Ever exited (mean wage)" = ever_exit_mean_wage,
+         "Ever promoted (mean wage)" = ever_promoted_mean_wage) %>%
+  ungroup() %>%
+  select(-"Social class") %>% 
+  kable('latex',
+        booktabs = TRUE,
+        format.args = list(decimal.mark = '.', big.mark = ","),
+        caption= 'Average earnings of stayers and movers, by social class') %>%
+  kable_styling(latex_options = 'hold_position') %>% 
+  group_rows("High social class", 1, 2) %>% 
+  group_rows("Medium social class", 3, 4) %>% 
+  group_rows("Low social class", 5, 6)
+
+```
+
+The third column lists the average earnings of those who quit at elast once, and those who never quit by social calss. High EsEc workers report higher earnings among "exiters" (27,000+) than "non-exiters" (24,000+). Middle and lower class groups see no differences in earnings between "exiters"" and "non-exiters", although lower class groups may see a small difference between those who leave (19,000+) and those who remain (18,000+). Middle group exiters appear to earn less on average (20,100+) than non-exiters (+20,900), although this difference is minor. 
+
+The effect is different for respondents who receive promotions, and those who never receive promotions  (Column 4). In each social class group, those who receive at least one promotion typically report higher earnings than those never promoted (during the study). Further, this difference appears largest for high class groups (+7,000), than middle (+4,000) and low EsEC groups (+4,000). 
+
+Generally, low EsEC groups earn the least and high EsEc groups earn the most. Further, mobility carries the largest premium for High EsEC groups than for low or middle EsEC groups. This is especially true for respondents who experienced a promotion, but also applies to High EsEC groups who experience employment exit. A natural question then emerges, does mobility, in itself carry a premium for workers, or can these differences be explained by worker specific measures, who self-select for promtoion or employment exit?
+
+Although the tables above point to interesting correlations, the difference between groups may be explained by other, unmeasured factors. Job mobility is not a random event, and class differences may be capturing other characteristics of movers and non-movers. Further class-differences in earnings and premiums could account for other factors such as age, and managerial responsibilities, which typically fall on more senior respondents. We explore the unbiased effects on mobility in the neext section, controlling for a range of measures.
+
+
+### Mobility's effects on earnings
+
+This section uses linear fixed effects estimation to consider the impact of job mobility on earnings growth. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(plm)
+library(tidyverse)
+library(gtools)
+
+p1 <- ru3 %>% 
+  mutate(logwage = log(wage)) %>% 
+  filter(logwage>0,
+         hours < 100) %>% 
+  pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
+
+
+
+
+
+
+m1 <- plm(log(wage) ~ mob_final + age + hours, data = p1, model = "within")
+m3 <- plm(log(wage) ~ marr + mob_final + age + hours, data = p1, model = "within")
+m5 <- plm(log(wage) ~ marr + mob_final + age + hours + firm_size + round, data = p1, model = "within")
+
+
+t1 <- broom::tidy(m1) %>% 
+  mutate(signif = stars.pval(p.value),
+         estimate = round(estimate, 3),
+         p.value = round(p.value, 3))%>% 
+  select(term,estimate, signif) %>% 
+  rename(m1 = estimate,
+         m1_sig= signif)
+
+
+t2 <- broom::tidy(m3) %>% 
+  mutate(signif = stars.pval(p.value),
+         estimate = round(estimate, 3),
+         p.value = round(p.value, 3))%>% 
+  select(term,estimate, signif) %>% 
+  rename(m2 = estimate,
+         m2_sig = signif)
+
+t3 <- broom::tidy(m5) %>% 
+  mutate(signif = stars.pval(p.value),
+         estimate = round(estimate, 3),
+         p.value = round(p.value, 3))%>% 
+  select(term,estimate, signif) %>% 
+  rename(m3 = estimate,
+         m3_sig = signif)
+
+
+ru_tbl1 <- t1 %>% 
+  right_join(t2, by='term') %>% 
+  right_join(t3, by='term') %>% 
+  rename('Term' = term)
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+kable(ru_tbl1,
+      format = 'markdown',
+      caption= 'Estimated fixed-effects of mobility, overall') %>% 
+    kable_styling(latex_options = 'hold_position')
+```
+
+The models in Table 5 list the stimated fixed effect of moving to a new position, controlling for a number of important measures, mainly changes in marital status, changes in age, changes in hours worked by individuals, changes in the number of people employed in the firm, and changes over time throughout the panel. The most basic model captures the effect of mobility, while controlling for age and daily working hours. Promotion and lateral moves both have a positive effect on earnings, but only promotions have a significant effect (10%). Employee exits from the firm have no significant effect on earnings, suggesting that workers who move directly from one firm to another are able to recreate their pay with a new employer. Changes in age have a positive effect on earnings, as workers age, they see a premium in pay. Changes in working hours also lead to significant positive changes in pay.
+
+Model 2 controls for changes in marital status, which typically lead to earnings growth. In our case however, transitions in marriage and out of marriage lead to a significant fall in earnings, even when controlling for changes in working hours. Importantly, the significant effect of promotion on earnings growth remains, even when we control for changes in household composition. The effects of age and working hours are largely unchanged. 
+
+Model 3 controls for changes infirm_size, and changes between survey rounds. Changes in firm size have an extremely small but positive and significant effect on earnings growth. This makes sense, as the firm grows, so too may the earnings of those working in the firm, even if the respondents themselves remain in the same job with the same employer. The effects of rounds is also positive and signifficant. This effect also fully explains the changes in earnings tied to age (which is no longer significant). Once agains, the estimated effects of mobility are not explained by the models. 
+
+
+### Class differences between mobiltiy types
+
+Table 6 splits the previous model according to respondents social class. Once again, we control for changes to households composition, age, working time, the size of the firm, and the research year. The results in Table 6 look different to those of Table 5, suggesting there are differences between classes in the effect of mobility. 
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+pHi <- p1 %>% 
+  filter(esec_simple=='High') %>% 
+  pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
+
+  
+mHi  <- plm(log(wage) ~ marr + mob_final + age + hours + firm_size + round,
+             data=pHi, 
+             model = "within")
+
+  
+
+
+  
+pLo <- p1 %>% 
+    filter(esec_simple=='Low') %>% 
+    pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
+  
+  
+mLo  <- plm(log(wage) ~ marr + mob_final + age + hours + firm_size + round,
+              data=pLo, 
+              model = "within")
+  
+  
+pMid <- p1 %>% 
+    filter(esec_simple=='Medium') %>% 
+    pdata.frame(c("idind","round"), drop.index = FALSE, row.names = TRUE)
+  
+
+mMid  <- plm(log(wage) ~ marr + mob_final + age + hours + firm_size + round,
+              data=pMid, 
+              model = "within")
+
+q1 <- broom::tidy(mHi) %>% 
+  mutate(signif = stars.pval(p.value),
+         estimate = round(estimate, 3),
+         p.value = round(p.value, 3))%>% 
+  select(term,estimate, signif) %>% 
+  rename(mHi = estimate,
+         mHi_sig= signif)
+
+
+q2 <- broom::tidy(mMid) %>% 
+  mutate(signif = stars.pval(p.value),
+         estimate = round(estimate, 3),
+         p.value = round(p.value, 3))%>% 
+  select(term,estimate, signif) %>% 
+  rename(mMid = estimate,
+         mMid_sig = signif)
+
+
+q3 <- broom::tidy(mLo) %>% 
+  mutate(signif = stars.pval(p.value),
+         estimate = round(estimate, 3),
+         p.value = round(p.value, 3))%>% 
+  select(term,estimate, signif) %>% 
+  rename(mLo = estimate,
+         m3_Lo = signif)
+
+
+ru_tbl2 <- q1 %>% 
+  right_join(q2, by='term') %>% 
+  right_join(q3, by='term') %>% 
+  rename('Term' = term)
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+kable(ru_tbl2,
+      caption = 'Estimated fixed-effects of mobility, by class')
+```
+
+
+
+Begining with those in High EsEC groups, promotion has a strong and significant positive effect on earnings, while lateral changes and exits have no effect. Further, High EsEC groups that increase their working time also increase their earnings. Further, respondents who remain in the same job, but see growth in the number of workers or the general size of the firm, also report higher earnings. Beyond these differences, changes over time captrue a general growth in earnings. 
+
+Among those in the Middle EsEC group, mobilty has no imapct significant impact on earnings, although a minor effect emerges for respondents who are promoted. This effect is only significant at the 0.1 level. Lateral moves and exits have no significant effect on earnings. However, middle calss groups see no benefit in increasing working hours and see no benefit in firms growing in size. The estimates for time are significant and positive, indicating the worker earnings increase over time. 
+
+Finally, those in working class groups do not benefit from mobility, and are penalised for firm exit. One reason for the effect may be tied to involuntary mobility. Working class respondents may be more likely to involuntary mobility to a new employer, which is captured in the "firm exit" measure. Working classes often hold precarious and unstable contracts, they also have limited bargaining power at work. As a result, they may be more prone to dismissals and redundancies than the other class groups. Another explanation may stem from Internal Labour Market theory. Working class respondents are particularly reliant on internal labour markets, where rewards are tied to firm tenure and time spent on the job, if working class workers leave these positions, they lose this tenure and become reliant on a new firm, where they have limited experience. These penalties do not appear to affect middle and high EsEC groups.
+
+Crucially, working class respondents do not benefit financially from internal promotions. These repsondent do benefit from increasing their working day, but the premium is far smaller than the premium given to High EsEC workers. As with the other models working class respondents see their wages grow across the survey rounds. 
+
+
+### Discussion
+
+Reforming Russia's labour market has been a government goal since the European debt crisis. While the state attempted to increase retirement age, its efforts to lower employment protection legislation and to liberalise the labour market or to otherwise increase  churn, have been relatively passive, although stated explicitly.  This paper argues that the Russian labour market does indeed have low levels of mobility, but it also shows that any short term rewards to mobility are first, limited to promotions, and second, secured primarily by upper class workers and managers. In other words, labour market mobility is a risky endevour with few rewards for Russian workers, especially when the rewards tied to internal movement are so lucrative. 
+
+
