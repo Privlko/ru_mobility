@@ -7,14 +7,14 @@ output:
   word_document: default
 ---
 
-## Results
+# Results
 
 
 This section outlines the main results of the paper. First, I explore the prominence of mobility in the sample. Second I outline the wage differences between movers and non-movers. Third, I present the results of four fixed-effects linear models which estimate the effect of mobility on earnings, controlling for a range of time-variant measures. For each section, I consider the social class differences in mobility, earnings, and both, as well as the overall differences. I conclude the section with a brief discussion of the hypotheses.  
 
-### Mobility types
+## Mobility types
 
-Table 1 presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses capture instances where people remain in the same job with the same employer. 4% of observations capture promotions, 1% capture a lateral move, and 15% capture an exit from the firm, either voluntary or involuntary. Columns 4,5, and 6 consider respondents. Between respondents 88% experience staying in the same job with the same employer at least once during the study. Further, 10% experience a promotion at least once, and 3% experience a lateral move (within the firm) at least once. Finally 31% of respondents experience an exit from the firm, wither voluntary or involuntary, at least once during the study. 
+Table 1 presents mobility statistics in two ways, between observations, and between respondents. Columns 1, 2, and 3 consider observations. In total, 79% of all responses capture years where respondents remain in the same job with the same employer. In total, 4% of all responses capture years where respondents cite a promotion, 1% capture a lateral move, and 15% capture an exit from the firm, either voluntary or involuntary. Columns 4,5, and 6 consider respondents, not observations. Between respondents 88% experience staying in the same job with the same employer at least once during the study. Further, 10% experience a promotion at least once, and 3% experience a lateral move (within the firm) at least once. Finally 31% of respondents experience a firm exit, either voluntary or involuntary, at least once during the study. 
 
 
 ```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE}
@@ -65,9 +65,14 @@ t1 %>%
 
 ``` 
 
-Three points are worth mentioning about Table 1. First, the majority of respondents do not change jobs. Most workers remain in the same job with the same employer. Second, when respondents do change jobs, they are most likely to change employers as well as jobs. The most common form of mobility in the sample is exit to a new employer or firm. This mobility likely contains a mix of voluntary (quits to new opportunities) and involuntary (redundancy, dismissal, firm closure etc.) changes. Lastly, Promotions, which are voluntary forms of mobility, occur rarely in the data, suggesting they are unique opportunities for workers. This does not mean that exit to a new employer cannot provide earnings premiums to workers, the literature suggests that quits to a new employer, expecially when they are direct changes, can yield significant earnings growth and premiums. However, such changes are impossible to isolate in the RLMS survey. Instead these changes sit within the exit category.
+Table 1 captures three important features about workers in Russia. First, the majority of respondents do not change jobs. Most workers remain in the same job with the same employer. This is surprising given that variance in wages is wider now than in the past. The IMF's report on the Soviet Union found substantional more labour mobility in 1985 at a tmie when variance in wages and conditions was minimal (Clarke). During the time under observation, mobility has been halved and wage variance has increased substantially.  
 
-Social class groups experience unequal chances of exit, lateral changes, and promotion. As Goldthorpe (ref) suggests, high social class groups are tied to "service relationships" with their employers, who sees these workers as an investment to be secured over the long-term. Meanwhile, employers see low social class groups as "contractual agreements", where compensation is tied to pay on a short-term basis. For this reason, we will split mobility across three broad social class groups, mentioned earlier. It should be noted that mobility between social class groups also exists, although it is generally rare. 
+Second, when respondents change jobs, they are most likely to change employers. The most common form of mobility in the sample is exit to a new employer or firm. This mobility contains a mix of voluntary (quits to new opportunities) and involuntary (redundancy, dismissal, firm closure etc.) changes.  
+
+Lastly, promotions, which are voluntary forms of mobility, occur rarely in the data, suggesting they are unique opportunities for workers. This does not mean that exit to a new employer cannot provide earnings premiums to workers, the literature suggests that quits to a new employer, especially when these changes happen directly (without unemployment), can yield significant earnings growth. This finding suggests a substantial decline in internal career ladders. Thus there are fewer "life chances" to improve earnings and conditions, with more workers competing for fewer opportunities within their organisation.
+
+A natural question emerges, do all workers experience equal chacnes of seeing mobility events? Social class groups may experience unequal chances of exit, lateral changes, and promotion. High social class groups are tied to "service relationships" with their employers, who see these workers as an investment to be secured over the long-term (Goldthorpe). Meanwhile, employers see low social class groups as "contractual agreements", where compensation is tied to pay on a short-term basis (Goldthorpe). For this reason, we will split mobility across three broad social class groups, mentioned earlier. Although mobility between social class groups also exists, it is generally rare and workers tend to remain in the same class grouping throughout the period observed. We present these figures in Table 2.
+
 \newpage
 
 
@@ -120,9 +125,13 @@ t1.5 %>%
 
 ``` 
 
-In this section, we will focus only on class differences between respondents. Starting with the High social class group, 22% of these workers exit the firm at least once, and 15% of these workers are promoted at least once. These changes are unique when compared to Middle class workers. Here, just 7% experience a promotion, and 27% experience an exit. Among middle class workers, promotion is less common and exit is more common than among High EsEC groups. Working class respondents have starker differences, just 3% experience a promotion, and 35% experience an exit to a new employer. Lateral moves within firms are equally unlikely for all social class groups. Overall, there is a clear class hierarchy in terms of access to promotion, at least over the five year period chosen for the study. 
+Table 2 focuses only on class differences between respondents. Starting with the High social class group, 15% of these workers are promoted at least once and  22% of these workers exit the firm at least once. 
 
-### Mobility and earnings
+These changes are unique when compared to Middle class workers. Here, just 8% of respondents experience a promotion, and 27% experience an exit at least once. Among middle class workers, promotion is less common and exit is more common than among High social class groups. 
+
+Working class respondents show even starker differences, just 3% experience a promotion at least once, and 35% experience an exit to a new employer. Lateral moves within firms are equally unlikely for all social class groups. Overall, there is a clear class hierarchy in terms of access to promotion, at least over the five year period chosen for the study. 
+
+## Mobility and earnings
 
 We find differences in the frequency of mobility between and within workers, but what are the consequences of these differences? Is there a difference in earnings between movers and non-movers? This section considers such differences in the sample overall, and between social class groups. 
 

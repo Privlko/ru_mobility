@@ -8,6 +8,7 @@ library(tidyverse)
 
 load("~/Russia/data/adult2015x.RData")
 
+
 ix <-  x %>%
   select(round, idind, wage = ixwagelm,
          income=ixinclmo, marr_stat=ixmarist, 
@@ -15,12 +16,15 @@ ix <-  x %>%
          lateral = ixmovao, lower=ixmovlp, 
          newjob = ixnewjob, age = ixage,
          mainoc=ixmainoc, isco=ixilpjb8, firm_size=ixpjemps,
-         sub=ixprisub, sub_n=ixnpsub, hours= ixpwrkhr ) 
+         sub=ixprisub, sub_n=ixnpsub, 
+         hours= ixpwrkhr, job_year=ixjobsyr,
+         w1 =inwgt_x) 
 
 
 ##open 2014
 
 load("~/Russia/data/adult2014w.RData")
+
 
 iw <-  x %>%
   select(round, idind, wage = iwwagelm,
@@ -29,7 +33,8 @@ iw <-  x %>%
          lateral = iwmovao, lower=iwmovlp, 
          newjob = iwnewjob, age = iwage,
          mainoc= iwmainoc, isco=iwilpjb8, firm_size=iwpjemps,
-         sub=iwprisub, sub_n=iwnpsub, hours=iwpwrkhr) 
+         sub=iwprisub, sub_n=iwnpsub, hours=iwpwrkhr, 
+         job_year=iwjobsyr, w1 =inwgt_w ) 
 
 ##open 2013 
 
@@ -41,7 +46,8 @@ iv <- x %>%
              lateral = ivmovao, lower=ivmovlp, 
          newjob = ivnewjob, age = ivage,
          mainoc=ivmainoc, isco=ivilpjb8, firm_size=ivpjemps,
-         sub=ivprisub, sub_n=ivnpsub, hours=ivpwrkhr) 
+         sub=ivprisub, sub_n=ivnpsub, hours=ivpwrkhr, 
+         job_year=ivjobsyr, w1 =inwgt_v ) 
 
 
 
@@ -54,7 +60,8 @@ iu <- x %>%
          lateral = iumovao, lower=iumovlp, 
          newjob = iunewjob, age = iuage,
          mainoc=iumainoc, isco=iuilopjb, firm_size=iupjemps,
-         sub=iuprisub, sub_n=iunpsub, hours=iupwrkhr) 
+         sub=iuprisub, sub_n=iunpsub, hours=iupwrkhr, 
+         job_year=iujobsyr, w1 =inwgt_u ) 
 
 
 ### open 2011
@@ -67,7 +74,8 @@ it <- x %>%
          lateral = itmovao, lower=itmovlp, 
          newjob = itnewjob, age = itage,
          mainoc=itmainoc, isco=itilopjb, firm_size=itpjemps,
-         sub=itprisub, sub_n=itnpsub, hours=itpwrkhr) 
+         sub=itprisub, sub_n=itnpsub, 
+         hours=itpwrkhr, job_year=itjobsyr, w1 =inwgt_t ) 
 
 
 ix <- tbl_df(ix)
@@ -96,7 +104,7 @@ ru1 %>%
   count(promotion)
 
 ru1 %>% 
-  count(isco)
+  count(w1)
 
 
 ru1 <- ru1 %>% arrange(idind, round)
@@ -109,7 +117,7 @@ ru1 <- ru1 %>%
   group_by(idind) %>% 
   mutate(n=n())
 
-
+ru1
 # create a measure for ever promoted, lateral, or lower --------------------------------------
 
 ru1 <- ru1 %>% 
@@ -124,3 +132,4 @@ ru1 %>%
   filter(ever_promoted==1) %>% 
   select(idind, round, promotion, ever_promoted)
 
+ru1

@@ -161,7 +161,7 @@ ru3 <- ru3 %>%
                            'Medium' = "Intermediate occupations",
                            'Medium' = "Small employers and self-emp (non-agriculture)",
                            'Medium' = "Small employers and self-emp (agriculture)",
-                           'Low' = "Lower supervisors and technicians",
+                           'Medium' = "Lower supervisors and technicians",
                            'Low' = "Lower sales and service","Lower technical",
                            'Low' = "Lower technical",
                            'Low' = "Routine"))

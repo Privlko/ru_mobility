@@ -1,4 +1,6 @@
 library(forcats)
+library(tidyverse)
+library(srvyr)
 
 
 # load the data, don't use ru1!! -----------------------------------------------------------
@@ -78,6 +80,7 @@ ru2 <- ru2 %>%
 table(ru2$promotion, ru2$lateral, useNA ='always')
 
 
+
 # final mobility measure --------------------------------------------------
 
 ru2 <- ru2 %>% 
@@ -89,6 +92,7 @@ ru2 <- ru2 %>%
 
 
 table(ru2$mob_final)
+prop.table(table(ru2$mob_final, ru2$gender),2)
 
 
 ##relevel
@@ -121,28 +125,128 @@ ru2$ever_lateral <- factor(ru2$ever_lateral, levels = c('No', 'Yes'))
 ru2$ever_lowered <- factor(ru2$ever_lowered, levels = c('No', 'Yes'))
 
 # view and explore --------------------------------------------------------
+ru2
+
+# weighted results --------------------------------------------------------
+theme_set(theme_bw())
 
 
-ru2 %>% 
-  filter( !is.na(mob_final)) %>% 
-  ggplot(aes(x=mob_final, fill=gender))+
-  geom_bar(position = 'dodge', aes(y=..prop.., group=gender))+
-  coord_flip()
-
-ru2 %>% 
-  filter( !is.na(ever_promoted)) %>% 
-  ggplot(aes(x=ever_promoted, fill=gender))+
-  geom_bar(position = 'dodge', aes(y=..prop.., group=gender))+
-  coord_flip()
+w_ru2 <- ru2 %>% 
+  as_survey(id = idind, weights=w1)
 
 
+w_ru2 %>% 
+  summarise(mean1 = survey_mean(wage, vartype = 'ci', na.rm=T))
 
+
+w_ru2 %>% 
+  group_by(gender) %>% 
+  summarise(mean1 = survey_mean(wage, vartype = 'ci', na.rm=T))
+
+
+w_ru2 %>% 
+  group_by(gender, mob_final) %>% 
+  summarise(mean1 = survey_mean(wage, vartype = 'ci', na.rm=T))
+
+
+#proportion of respondents who move, weighted by gender
+w_ru2 %>%
+  filter(!is.na(mob_final)) %>% 
+  group_by(gender, mob_final) %>% 
+  summarise(prop = survey_mean(na.rm=T),
+            total = survey_total())
+
+## proportion of yougn respondents who move, weighted, split by gender
+#proportion of respondents who move, weighted by gender
+w_ru2 %>%
+  filter(!is.na(mob_final),
+         age < 30,
+         age > 17) %>% 
+  group_by(gender, mob_final) %>% 
+  summarise(prop = survey_mean(na.rm=T),
+            total = survey_total())
+
+
+
+
+w_ru2 %>%
+  filter(!is.na(mob_final)) %>% 
+  group_by(gender, mob_final) %>% 
+  summarise(prop = survey_mean(na.rm=T)) %>% 
+  ggplot(aes(x=mob_final, y= prop))+
+  geom_point(aes(group=mob_final,
+                 col=mob_final,
+                 size=3))+
+  facet_wrap(~gender)+
+  geom_errorbar(aes(group=mob_final,
+                    ymin=prop-prop_se,
+                    ymax=prop+prop_se,
+                    width=0.5))
+
+
+w_ru2 %>%
+  filter(!is.na(mob_final)) %>% 
+  group_by(gender, mob_final) %>% 
+  summarise(wage = survey_mean(wage, na.rm=TRUE)) %>% 
+  ggplot(aes(x=mob_final, y= wage))+
+  geom_point(aes(group=mob_final,
+                 col=mob_final,
+                 size=3))+
+  facet_wrap(~gender)+
+  geom_errorbar(aes(group=mob_final,
+                    ymin=wage-wage_se,
+                    ymax=wage+wage_se,
+                    width=0.5))
+
+ru2 %>%
+  filter(!is.na(mob_final)) %>% 
+  group_by(gender, mob_final) %>% 
+  summarise(wage = mean(wage, na.rm=TRUE)) %>% 
+  ggplot(aes(x=mob_final, y= wage))+
+  geom_point(aes(group=mob_final,
+                 col=mob_final,
+                 size=3))+
+  facet_wrap(~gender)
+  
+
+
+
+##mobility over time
 ru2 %>% 
   filter( !is.na(mob_final)) %>% 
   ggplot(aes(x=round, fill=mob_final))+
-  geom_bar(position = 'fill', aes(group=mob_final))
+  geom_bar(position = 'fill', aes(group=mob_final))+
+  facet_wrap(~gender)
 
-ru2
+##earnings by promotion and gender
+ru2 %>% 
+  filter(!is.na(ever_promoted)) %>% 
+  ggplot(aes(x=factor(ever_promoted), y=wage, fill=factor(ever_promoted)))+
+  geom_boxplot()+
+  scale_y_log10(labels = scales::comma)+
+  facet_wrap(~gender)+
+  guides(fill=FALSE)
+
+
+##earnings by mobility type and gender
+ru2 %>% 
+  filter(!is.na(mob_final)) %>% 
+  ggplot(aes(x=factor(gender), y=wage, fill=factor(gender)))+
+  geom_boxplot()+
+  scale_y_log10(labels = scales::comma)+
+  facet_grid(.~mob_final)+
+  guides(fill=FALSE)
+
+##mobility by age and gender
+ru2 %>% 
+  filter( !is.na(mob_final),
+          age > 20,
+          age < 66) %>%
+  ggplot(aes(x=age, fill=mob_final))+
+  geom_bar(binwidth = 5,
+           position = 'fill', aes(group=mob_final))+
+  facet_wrap(~gender)
+
 
 
 # create a "balanced" group/panel for brief comparison --------------------
@@ -199,6 +303,8 @@ summary(m2)
 
 coef(m3)
 summary(m3)
+
+
 ru2
 
 
@@ -230,15 +336,26 @@ ggplot(ru3, aes(x=round, y=wage))+
 ru2 <- tbl_df(ru2)
 
 
-ru2 <- ru2 %>% 
+ru2 %>%
   mutate(ever_exit= if_else(mob_final=='Exit', 1, 0)) %>% 
   group_by(idind) %>% 
-  mutate(ever_exit = max(ever_exit))
+  mutate(ever_exit = max(ever_exit)) %>% 
+  ggplot(aes(x=factor(ever_exit), y=wage, fill=factor(ever_exit)))+
+  geom_boxplot()+
+  scale_y_log10(labels = scales::comma)+
+  facet_wrap(~gender)+
+  guides(fill=FALSE)
 
 
-
-
-
-
-
+ru2 %>% 
+  mutate(ever_exit= if_else(mob_final=='Exit', 1, 0)) %>% 
+  group_by(idind) %>% 
+  mutate(ever_exit = max(ever_exit)) %>% 
+  filter( !is.na(ever_exit),
+          age > 20,
+          age < 66) %>%
+  ggplot(aes(x=age, fill=ever_exit))+
+  geom_bar(binwidth = 5,
+           position = 'fill', aes(group=ever_exit))+
+  facet_wrap(~gender)
 

@@ -54,3 +54,10 @@ broom::augment(m1, ru4) %>%
   ungroup() %>% 
   ggplot(aes(x=.resid, y=lag_res))+
   geom_point(aes(colour=factor(round)))
+
+ru3
+
+ggplot(ru3, aes(round, income)) +
+  geom_jitter()+
+  geom_smooth(method='lm', se=F, size=6)+
+  scale_y_log10()
