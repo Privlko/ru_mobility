@@ -22,6 +22,7 @@ ru15 <- x %>%
          marr = ixmarist,
          promo = ixpromot,
          newjob= ixnewjob,
+         occ=ixilpjb8,
          wage = ixwagelm) %>% 
   filter(income < 610000) %>% 
   filter(respect !=52) %>% 
@@ -73,6 +74,7 @@ ru14 <- x %>%
          marr = iwmarist,
          promo = iwpromot,
          newjob= iwnewjob,
+         occ = iwilopjb ,
          wage = iwwagelm) %>% 
   filter(income < 610000) %>% 
   filter(respect !=52) %>% 
@@ -120,6 +122,7 @@ ru13 <- x %>%
          marr = ivmarist,
          promo = ivpromot,
          newjob= ivnewjob,
+         occ = ivilopjb,
          wage = ivwagelm) %>% 
   filter(income < 610000) %>% 
   filter(respect !=52) %>% 
@@ -170,6 +173,7 @@ ru12 <- x %>%
          marr = iumarist,
          promo = iupromot,
          newjob= iunewjob,
+         occ = iuilopjb,
          wage = iuwagelm) %>% 
   filter(income < 610000) %>% 
   filter(respect !=52) %>% 
@@ -203,7 +207,7 @@ ru12 <- x %>%
 # year 2011 ---------------------------------------------------------------
 
 load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2011t.RData")
-View(x)
+
 ru11 <- x %>% 
   select(round, 
          id = idind, 
@@ -217,6 +221,7 @@ ru11 <- x %>%
          marr = itmarist,
          promo = itpromot,
          newjob= itnewjob,
+         occ = itilopjb,
          wage = itwagelm) %>% 
   filter(income < 610000) %>% 
   filter(respect !=52) %>% 
@@ -267,6 +272,7 @@ ru10 <- x %>%
          marr = ismarist,
          promo = ispromot,
          newjob= isnewjob,
+         occ = isilopjb,
          wage = iswagelm) %>% 
   filter(income < 610000) %>% 
   filter(respect !=52) %>% 
@@ -302,7 +308,7 @@ View(ru10)
 
 load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2009r.RData")
 
-View(x)
+
 ru09 <- x %>% 
   select(round, 
          id = idind, 
@@ -316,6 +322,7 @@ ru09 <- x %>%
          marr = irmarsta,
          promo = irpromot,
          newjob= irnewjob,
+         occ= irilopjb,
          wage = irwagelm) %>% 
   filter(income < 610000) %>% 
   filter(respect !=52) %>% 
@@ -345,9 +352,6 @@ ru09 <- x %>%
 
 
 (as.tibble(ru09))
-View(ru09)
-
-
 
 # bind rows ---------------------------------------------------------------
 
@@ -357,24 +361,46 @@ q1 <- rbind(ru15, ru14, ru13, ru12, ru11, ru10, ru09)
 
 q1 %>% 
   count(marr)
+
+qq<-q1 %>% 
+  count(occ)
+
+
+
 q1$promo[is.na(q1$promo)] <- 0
 
 q2 <- q1 %>% 
   mutate(mob = case_when(promo== 0  & (newjob == "No change" | newjob== "Change prof, not place") ~ "No change",
                          promo== 1 & (newjob == "No change" | newjob== "Change prof, not place") ~ "Promo",
-                         promo== 0 & (newjob == "Change place, not prof") ~ "Quit"))
+                         promo== 0 & (newjob == "Change place, not prof") ~ "Quit")) %>% 
+  filter(!is.na(mob))
 
 
 
 q2 %>% 
   count(mob)
+
+save(q2,file="C:/Users/Ivan/Desktop/dir/papers/ru_mobility/data.Rda")
+load("C:/Users/Ivan/Desktop/dir/papers/ru_mobility/data.Rda")
+
+
+
 # set to panel ------------------------------------------------------------
 
-(p1 <- pdata.frame(q2, c("id","round"), drop.index = FALSE, row.names = TRUE))
+(p1 <- pdata.frame(q2, c("id","round"), row.names = TRUE))
 
 ##some clean up and variable coding?
 
-ggplot(p1, aes(round, ..count..)) + 
-         geom_bar(aes(fill = mob), position = "dodge")
+ggplot(p1, aes(y=..prop..,
+               x=mob,
+               group=1)) + 
+         geom_bar()+
+  facet_wrap(~round)
+
+View(p1)
+
+?plm
+
+p1$occ_diff <- diff(p1$occ)
 
 ##you're good to go

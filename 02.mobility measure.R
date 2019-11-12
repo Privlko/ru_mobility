@@ -1,6 +1,8 @@
 library(forcats)
 library(tidyverse)
 library(srvyr)
+library(nnet)
+
 
 
 # load the data, don't use ru1!! -----------------------------------------------------------
@@ -22,9 +24,15 @@ ru2$newjob <- factor(ru2$newjob, levels = unique(ru2$newjob))
 ru2$promotion <- factor(ru2$promotion, levels = unique(ru2$promotion))
 ru2$lateral <- factor(ru2$lateral, levels = unique(ru2$lateral))
 
+ru2$newjob <- forcats::fct_explicit_na(ru2$newjob)
+ru2$lateral <- forcats::fct_explicit_na(ru2$lateral)
+ru2$promotion <- forcats::fct_explicit_na(ru2$promotion)
+
+ru2
 
 ru2 %>% 
-  count(lateral, promotion)
+  count(lateral, promotion) 
+
 
 # change the labels or add some labels ------------------------------------
 
@@ -248,13 +256,24 @@ ru2 %>%
   facet_wrap(~gender)
 
 
+save(ru2, file = "genderpaper.RData")
+
+
+
+ru2 %>% 
+  filter(!is.na(mob_final)) %>% 
+  group_by(gender) %>% 
+  count(mob_final) %>% 
+  mutate(per = n/sum(n))
+
+
+  
 
 # create a "balanced" group/panel for brief comparison --------------------
 ru3 <- ru2 %>% 
   filter(n==5)
 
 prop.table(table(ru2$mob_final,ru2$round),2)
-prop.table(table(ru3$mob_final,ru3$round),2)
 
 
 ru2 %>% 
@@ -279,13 +298,15 @@ ru2 %>%
   scale_y_log10(labels = scales::comma)+
   facet_wrap(~gender)
 
-
+ru2 %>% 
+  count(round)
 
 # model -------------------------------------------------------------------
 
 ru3 <- ru3 %>% 
   mutate(log_wage = log(wage)) %>% 
   filter(log_wage > 0)
+
 
 
 m1 <- lm(data= ru3, log_wage ~ newjob)

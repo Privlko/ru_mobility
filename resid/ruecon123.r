@@ -4,8 +4,8 @@ library(forcats)
 library(tidyverse)
 library(plm)
 
-load("C:/Users/00015/Desktop/data/econ/adult2015x.RData")
-
+load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2015x.RData")
+View(x)
 ru15 <- x %>% 
   select(round, 
          id = idind, 
@@ -19,6 +19,7 @@ ru15 <- x %>%
          marr = ixmarist,
          promo = ixpromot,
          newjob= ixnewjob,
+         occ = ixilpjb8,
          wage = ixwagelm) %>% 
   filter(income < 610000) %>% 
   filter(respect !=52) %>% 
@@ -54,8 +55,12 @@ ru15 <- x %>%
 ru15 %>% 
   count(promo, gender)
 
-ru15 %>% 
-  count(promo, newjob)
+qqq<- ru15 %>% 
+  count(promo, newjob,occ)
+
+qqq<- ru15 %>% 
+  count(occ)
+View(qqq)
 
 ru15 %>% 
   count(rank)

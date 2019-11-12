@@ -1,3 +1,5 @@
+library(knitr)
+
 # sidenote: do not run, set to panel ------------------------------------------------------------
 library(plm)
 library(tidyverse)
