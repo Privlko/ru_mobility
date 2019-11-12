@@ -1,6 +1,8 @@
 ---
 title: "Age and Gender Difference in Quitting and Its Rewards"
 author: "Ivan Privalko"
+header-includes:
+    - \usepackage{setspace}\doublespacing
 date: "11/9/2019"
 output: pdf_document
 bibliography: 'C:/Users/Ivan/Dropbox/Biblio/bibblio.bib'
@@ -18,7 +20,8 @@ library(nnet)
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 
-load("~/ru_mobility/genderpaper.RData")
+load("C:/Users/Ivan/Desktop/dir/papers/ru_mobility/genderpaper.RData")
+
 
 ru2 <- ru2 %>% 
   mutate(age_groups=case_when(
@@ -31,15 +34,17 @@ ru2 <- ru2 %>%
 
 # Abstract
 
-The article uses data from Russia's Longitudinal Monitoring Survey to consider age and sex differences in the probability and consequences of quitting. It argues that overall quit rates are similar for young men and women, but finds gender differences among older workers. When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences can be explained by early career sorting. When controlling for individual heterogeneity (through the use of fixed effects estimation), it is found that, for all race and sex groups, quitting does not improve current wages. However, promotions contain a significant earnings premium, at least in the short term. Results help to understand inequality on wages and conditions that occur due to sorting, and the acquisition of life chances, like promotions.
+The article uses data from Russia's Longitudinal Monitoring Survey to consider age and sex differences in the probability and consequences of quitting. It finds that quit rates between young men and women similar, but that gender differences among older workers emerge. When several personal and job characteristics are held constant, the likelihood of quitting for young men and women are about the same, suggesting gender differences can be explained by early career sorting. When controlling for individual heterogeneity (through the use of fixed effects estimation), I find that, for all age and sex groups, quitting does not improve wages. However, promotions contain a significant earnings premium, at least in the short term. Results help to understand inequality on wages and conditions that occur due to sorting, and the acquisition of life chances, like promotions.
 
 
 # Introduction 
 
+Studies of the gender pay gap often cite differences in early career job mobility as an important predictor [@blau1981race].  
+
 
 # Job matching and Job searching theories
 
-Job mobility is primarily motivated by two theoretical frameworks, these are the *job-searching* and  *job-matching* approach. Both suggest that unfavourable working environments, from either inadequate pay or inadequate conditions, push workers to search for new positions either to improve their wages and the match between their skills and their environment at work [@kalleberg2001; @gensthuizen2008]. The *job matching* approach considers the *Reservation Wage*, or the minimum wage a worker will consider before moving to a new position, given her skill set. *Reservation wage X* drives employers out of unemployment, by capturing the minimum wage that workers will accept before taking a job. *Reservation wage Y* where (X < Y) drives employees to new positions either within or between employers, by capturing the minimum wage that a worker will accept before changing changing positions. If a previously unemployed worker accepts *Wage X* that is below *Wage Y*, she is assumed to continue job searching on-the-job [@schmelzer2002; @burdett1978].
+Job mobility is primarily motivated by two theoretical frameworks, the *job-searching* approach and the *job-matching* approach. Both suggest that unfavourable working environments, from either inadequate pay or inadequate conditions, push workers to search for new positions either to improve their wages and the match between their skills and their environment at work [@kalleberg2001satisfied; @gesthuizen2008mismatching]. The *job matching* approach considers the *Reservation Wage*, or the minimum wage a worker will consider before moving to a new position, given her skill set. *Reservation wage X* drives employers out of unemployment, by capturing the minimum wage that workers will accept before taking a job. *Reservation wage Y* where (X < Y) drives employees to new positions either within or between employers, by capturing the minimum wage that a worker will accept before changing changing positions. If a previously unemployed worker accepts *Wage X* that is below *Wage Y*, she is assumed to continue job searching on-the-job [@schmelzer2010consequences; @burdett1978theory].
 
 
 # Methodology
