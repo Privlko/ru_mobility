@@ -1,9 +1,9 @@
 ---
 title: "Age and Gender Difference in Quitting and Its Rewards"
 author: "Ivan Privalko"
-date: "11/9/2019"
+date: "02/12/2019"
 output: pdf_document
-bibliography: 'C:/Users/Ivan/Dropbox/Biblio/bibblio.bib'
+bibliography: 'C:/Users/Ivan.Privalko/Documents/ru_mobility/biblio/ru1.bib'
 ---
 
 
@@ -13,6 +13,7 @@ library(forcats)
 library(knitr)
 library(kableExtra)
 library(nnet)
+library(broom)
 
 
 knitr::opts_chunk$set(echo = FALSE)
@@ -27,11 +28,12 @@ ru2 <- ru2 %>%
     age %in% 56:100 ~ "56+"
   ))
 
+
 ```
 
 # Abstract
 
-The article uses data from Russia's Longitudinal Monitoring Survey to consider age and sex differences in the probability and consequences of quitting. It argues that overall quit rates are similar for young men and women, but finds gender differences among older workers. When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences can be explained by early career sorting. When controlling for individual heterogeneity (through the use of fixed effects estimation), it is found that, for all race and sex groups, quitting does not improve current wages. However, promotions contain a significant earnings premium, at least in the short term. Results help to understand inequality on wages and conditions that occur due to sorting, and the acquisition of life chances, like promotions.
+The article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of job mobility. It argues that overall quit rates are similar for young men and women, but finds gender differences among older workers. When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences can be explained by early career sorting. When controlling for individual heterogeneity (through the use of fixed effects estimation), it is found that, for all race and sex groups, quitting does not improve current wages. However, promotions contain a significant earnings premium, at least in the short term. Results help to understand inequality in wages and conditions that occur due to sorting, and the acquisition of life chances, like promotions.
 
 
 # Introduction 
@@ -39,7 +41,9 @@ The article uses data from Russia's Longitudinal Monitoring Survey to consider a
 
 # Job matching and Job searching theories
 
-Job mobility is motivated by two theoretical frameworks, these are the *job-searching* and  *job-matching* approach. Both suggest that unfavourable working environments, from either inadequate pay or inadequate conditions, push workers to search for new positions either to improve their wages and the match between their skills and their environment at work [@kalleberg2001; @gensthuizen2008]. The *job matching* approach considers the *Reservation Wage*, or the minimum wage a worker will consider before moving to a new position, given her skill set. *Reservation wage X* drives employers out of unemployment, by capturing the minimum wage that workers will accept before taking a job. *Reservation wage Y* where (X < Y) drives employees to new positions either within or between employers, by capturing the minimum wage that a worker will accept before changing changing positions. If a previously unemployed worker accepts *Wage X* that is below *Wage Y*, she is assumed to continue job searching on-the-job [@schmelzer2002; @burdett1978]. 
+Two theoretical approaches help to understand job mobility processes, these are the *job-searching* and  *job-matching* approaches. Both suggest that poor work environments, either from inadequate pay or inadequate conditions, push workers to search for new positions [@kalleberg2001; @gensthuizen2008]. The *job searching* approach considers the *Reservation Wage*, or the minimum wage a worker will consider before moving to a new position, given her skill set. *Reservation wage X* drives employers out of unemployment, by capturing the minimum wage that workers will accept before taking a job. *Reservation wage Y* where (X < Y) drives employees to new positions either within or between employers, by capturing the minimum wage that a worker will accept before changing changing positions. If a previously unemployed worker accepts *Wage X* that is below *Wage Y*, they are assumed to continue job searching on-the-job unntil they find their reservation wage [@schmelzer2002; @burdett1978]. The *job-matching* approach is one where workers take time to evaluate whetehr their skills are a good fit for their tasks at work. Since work is an experience good, workers must try several jobs before sticking with a job. This theory would explain why younger workers are typically most likely to change jobs [@sorensen; @thurrow].  
+
+The theories above do not expect a gender difference in patterns of job mobility, at least not explicitly. However, authors routinely find differences  between men and women in their chances of job mobility [@blau1981; @keith; @keith; @keith]. Young women are more likely to quit when comparede to men, and the impact of work tenure is less effective for women than men, with men showing a lower chances of quitting as their time with a given employer increases [@blau1981]. Further, men appear more likely to be rewarded for "economic quits" which are voluntary changes to a new employer, where a respondents cites finding a "better job". This suggests that the wage or conditions premium described above applies more often to men than to women, even when removing gender differences in types of mobility. Some authors argue that the lack of a gender  
 
 
 # Methodology
@@ -99,38 +103,39 @@ ru2 %>%
   group_rows("Female Aged 56+", 21, 24)
 ```
 
-## binomial regression
+## Multinomial regression
 
 this section cosiders the likelihood of experiencing a mobility event.
 
 ```{r}
-m1 <- multinom(mob_final ~ age + gender + hours, data = ru2)
+d1  <-  ru2 %>% 
+  filter(round == 24,
+         age_groups=='0-35',
+         gender=='Male') 
 
+
+  
+m1  <- multinom(mob_final ~ age + gender + hours, data = d1)
+```
+
+
+```{r}
 
 summary(m1)
 coef(m1)
+tidy(m1, conf.int = T,
+     conf.level = 0.95,
+     exponentiate = T) %>% 
+  ggplot(aes(x=term, y=estimate))+
+  geom_point(aes(colour=term))+
+  facet_wrap(~y.level)+
+  geom_errorbarh(aes(xmin=estimate-std.error,
+                    xmax=estimate+std.error,
+                    colour=term))+
+  coord_flip()
+
 ```
 
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 # References
 
