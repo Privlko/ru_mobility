@@ -19,7 +19,7 @@ library(broom)
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 
-load("~/ru_mobility/genderpaper.RData")
+load("C:/Users/Ivan/Desktop/dir/papers/ru_mobility/genderpaper.RData")
 
 ru2 <- ru2 %>% 
   mutate(age_groups=case_when(
