@@ -3,7 +3,7 @@ title: "Age and Gender Difference in Quitting and Its Rewards"
 author: "Ivan Privalko"
 date: "02/12/2019"
 output: pdf_document
-bibliography: 'C:/Users/Ivan.Privalko/Documents/ru_mobility/biblio/ru1.bib'
+bibliography: 'C:/Users/Ivan/Dropbox/Biblio/bibblio.bib'
 ---
 
 
@@ -28,12 +28,12 @@ ru2 <- ru2 %>%
     age %in% 56:100 ~ "56+"
   ))
 
-
 ```
 
 # Abstract
 
-The article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of job mobility. It argues that overall quit rates are similar for young men and women, but finds gender differences among older workers. When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences can be explained by early career sorting. When controlling for individual heterogeneity (through the use of fixed effects estimation), it is found that, for all race and sex groups, quitting does not improve current wages. However, promotions contain a significant earnings premium, at least in the short term. Results help to understand inequality in wages and conditions that occur due to sorting, and the acquisition of life chances, like promotions.
+The article uses data from Russia's Longitudinal Monitoring Survey to estimate age and gender differences in the probability and consequences of job mobility. 
+uit rates are similar for young men and women, but finds gender differences among older workers. When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences can be explained by early career sorting. When controlling for individual heterogeneity (through the use of fixed effects estimation), it is found that, for all race and sex groups, quitting does not improve current wages. However, promotions contain a significant earnings premium, at least in the short term. Results help to understand inequality in wages and conditions that occur due to sorting, and the acquisition of life chances, like promotions.
 
 
 # Introduction 
@@ -77,6 +77,9 @@ ru2 %>%
   kable_styling(latex_options = 'hold_position') %>% 
   group_rows("Male", 1, 4) %>% 
   group_rows("Female", 5, 8) 
+
+
+
 ```
 
 Table 2 considers the age differences in these rates. We see that younger groups are more mobile than older groups for both genders, with a seemingly steady increase between respondents aged 0-35, 36-55, and those aged over 55. Young men are still more mobile than young women, but the likelihood of mobility decreases among older respondents.  
@@ -110,29 +113,19 @@ this section cosiders the likelihood of experiencing a mobility event.
 ```{r}
 d1  <-  ru2 %>% 
   filter(round == 24,
-         age_groups=='0-35',
-         gender=='Male') 
+         age_groups=='0-35') 
 
 
   
-m1  <- multinom(mob_final ~ age + gender + hours, data = d1)
+m1  <- multinom(mob_final ~ age + gender + hours + job_year, data = d1)
 ```
 
 
 ```{r}
-
-summary(m1)
-coef(m1)
 tidy(m1, conf.int = T,
      conf.level = 0.95,
-     exponentiate = T) %>% 
-  ggplot(aes(x=term, y=estimate))+
-  geom_point(aes(colour=term))+
-  facet_wrap(~y.level)+
-  geom_errorbarh(aes(xmin=estimate-std.error,
-                    xmax=estimate+std.error,
-                    colour=term))+
-  coord_flip()
+     exponentiate = T)
+
 
 ```
 
