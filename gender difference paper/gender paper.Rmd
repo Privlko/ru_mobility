@@ -33,17 +33,45 @@ ru2 <- ru2 %>%
 
 # Abstract
 
-The article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of job mobility. It argues that overall quit rates are similar for young men and women, but finds gender differences among older workers. When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences can be explained by early career sorting. When controlling for individual heterogeneity (through the use of fixed effects estimation), it is found that, for all race and sex groups, quitting does not improve current wages. However, promotions contain a significant earnings premium, at least in the short term. Results help to understand inequality in wages and conditions that occur due to sorting, and the acquisition of life chances, like promotions.
+The article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of job mobility. 
+It argues that overall quit rates are similar for young men and women, but finds gender differences among older workers. 
+When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences can be explained by early career sorting. 
+When controlling for individual heterogeneity (through the use of fixed effects estimation), it is found that, quitting does not improve current wages while promotions contain a significant earnings premium, at least in the short term. 
+Results help to understand inequality in wages and conditions that occur due to sorting, and the importance of promotions (internal job changes with the same employer) as a "life chance" which improves earnings in the immediate sense.
 
 
 # Introduction 
 
 
-# Job matching and Job searching theories
+# Job searching and Job matching 
 
-Two theoretical approaches help to understand job mobility processes, these are the *job-searching* and  *job-matching* approaches. Both suggest that poor work environments, either from inadequate pay or inadequate conditions, push workers to search for new positions [@kalleberg2001; @gensthuizen2008]. The *job searching* approach considers the *Reservation Wage*, or the minimum wage a worker will consider before moving to a new position, given her skill set. *Reservation wage X* drives employers out of unemployment, by capturing the minimum wage that workers will accept before taking a job. *Reservation wage Y* where (X < Y) drives employees to new positions either within or between employers, by capturing the minimum wage that a worker will accept before changing changing positions. If a previously unemployed worker accepts *Wage X* that is below *Wage Y*, they are assumed to continue job searching on-the-job unntil they find their reservation wage [@schmelzer2002; @burdett1978]. The *job-matching* approach is one where workers take time to evaluate whetehr their skills are a good fit for their tasks at work. Since work is an experience good, workers must try several jobs before sticking with a job. This theory would explain why younger workers are typically most likely to change jobs [@sorensen; @thurrow].  
+Two theoretical approaches make predictions about job mobility processes, these are the *job-searching* and  *job-matching* approaches. 
+Both suggest that poor work environments, either from inadequate pay or inadequate conditions, push workers to search for new positions [@kalleberg2001satisfied; @gesthuizen2008mismatching]. 
+The *job searching* approach considers the *Reservation Wage*, or the minimum wage a worker will consider before moving to a new position, given her skill set. 
+*Reservation wage X* drives employers out of unemployment, by capturing the minimum wage that workers will accept before taking a job. 
+*Reservation wage Y* where (X < Y) drives employees to new positions either within or between firms, by capturing the minimum wage that a worker will accept before changing positions. 
+If a previously unemployed worker accepts *Wage X* that is below *Wage Y*, they are assumed to continue job searching until they find their reservation wage [@schmelzer2010consequences; @burdett1978theory].
 
-The theories above do not expect a gender difference in patterns of job mobility, at least not explicitly. However, authors routinely find differences  between men and women in their chances of job mobility [@blau1981; @keith; @keith; @keith]. Young women are more likely to quit when comparede to men, and the impact of work tenure is less effective for women than men, with men showing a lower chances of quitting as their time with a given employer increases [@blau1981]. Further, men appear more likely to be rewarded for "economic quits" which are voluntary changes to a new employer, where a respondents cites finding a "better job". This suggests that the wage or conditions premium described above applies more often to men than to women, even when removing gender differences in types of mobility. Some authors argue that the lack of a gender  
+The *job-matching* approach is one where workers take time to evaluate whether their skills are a good fit for their tasks at work. 
+Since work is an experience good, workers must try several jobs before finding a match.
+The large rates of mobility that workers see in the early stages of their career, is their navigation of the labour market, where individual employers and jobs are comapred relative to a workers skills and level of exprience [@sorensen1977structure; @thurow1975generating].  
+
+Considering both theories together, neither explicitly notes a gender difference in job mobility. 
+Despite this, authors routinely find this difference  [@blau1981race; @keith1995wage; @keith1997job; @keith1999returns]. 
+Blau and Duncan [-@blau1981race] note young women are more likely to quit when compared to men. 
+Keith and McWilliam [-@keith1995wage] note that economic quits happen at a simialr rate for men and women, but that family related changes are more common among young women, when comapred to young men. 
+They also find that men are more likely to experience job loss, when compared to young women, suggesting that gender differences stem most from different types of mobility, rather than a gender difference in similar mobility types. 
+Neither family-reated mobility nor involuntary mobility are related to processes of job matching or job searching, and so do not apply to our hypotheses directly.
+However, it is important to note that women's tendency to move jobs for non-economic reasons (tied to care or other family obligations) is clearly an important piece of the gender wage-gap puzzle.
+Beyond mobility itself, its effects on wages may differ by gender. For example, women may have higher reservation wages than men. Mobility may be more disruptive to their lives, especially if they have children of other family obligations which they try to balance with paid employment. As a result, they may move only for jobs with significantly higher earnings as opposed to men who are less active in the care of children and other family memebers. As a result men may see earnings as their primary responsiblility, and so incremental changes in earnings may be more lucrative for men. Cha [-@cha2014job] notes a significant difference in the effect of mobility on earnings between women with and without children, but one that runs opposite to the described pattern. Women with children saw few rewards to mobility when comapred to woment without children, whi experienced signifcant premiums in earnings. 
+
+
+Although other authros find no gender differences between men and women in the wage effects of "economic quits" between young men and women in the early stages of their career [@keith1995wage].
+
+
+
+This suggests that the wage or conditions premium described above applies more often to men than to women, even when removing gender differences in types of mobility. 
+Some authors argue that the lack of a gender  
 
 
 # Methodology
