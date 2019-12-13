@@ -24,10 +24,6 @@ ru2$newjob <- factor(ru2$newjob, levels = unique(ru2$newjob))
 ru2$promotion <- factor(ru2$promotion, levels = unique(ru2$promotion))
 ru2$lateral <- factor(ru2$lateral, levels = unique(ru2$lateral))
 
-ru2$newjob <- forcats::fct_explicit_na(ru2$newjob)
-ru2$lateral <- forcats::fct_explicit_na(ru2$lateral)
-ru2$promotion <- forcats::fct_explicit_na(ru2$promotion)
-
 ru2
 
 ru2 %>% 
@@ -62,11 +58,9 @@ ru2$newjob <- factor(ru2$newjob, levels = c("Profession and employer, the same",
                                             "Profession- changed, employer- same",
                                             "Profession- same, employer- changed",
                                             "Profession- changed, employer- changed"))
+ru2 %>% 
+  count(newjob)
 
-  levels(ru2$newjob)
-
-  ru2 %>% 
-    count(newjob)
 
 ##there's an issue with promotion and lateral moves, they only apply to 
 #respondents in the same job or respondents with the same employer
@@ -84,6 +78,10 @@ ru2 <- ru2 %>%
                             lateral == 'No'~ 'No'))
 
 
+
+
+ru2 %>% 
+  count(promotion)
 
 table(ru2$promotion, ru2$lateral, useNA ='always')
 
@@ -258,7 +256,8 @@ ru2 %>%
 
 save(ru2, file = "genderpaper.RData")
 
-
+ru2 %>% 
+  count(mob_final)
 
 ru2 %>% 
   filter(!is.na(mob_final)) %>% 
