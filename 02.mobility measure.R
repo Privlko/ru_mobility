@@ -1,14 +1,15 @@
 library(forcats)
 library(tidyverse)
-library(srvyr)
-library(nnet)
+library(broom)
+library(gtools)
+library(ggrepel)
 
 
 
 # load the data, don't use ru1!! -----------------------------------------------------------
 ru2 <- tbl_df(ru1)
 ru2
-# need to revisit this below ----------------------------------------------
+
 
 
 
@@ -23,8 +24,6 @@ ru2 %>% count(newjob, promotion, lateral)
 ru2$newjob <- factor(ru2$newjob, levels = unique(ru2$newjob))
 ru2$promotion <- factor(ru2$promotion, levels = unique(ru2$promotion))
 ru2$lateral <- factor(ru2$lateral, levels = unique(ru2$lateral))
-
-ru2
 
 ru2 %>% 
   count(lateral, promotion) 
@@ -98,6 +97,7 @@ ru2 <- ru2 %>%
 
 
 table(ru2$mob_final)
+
 prop.table(table(ru2$mob_final, ru2$gender),2)
 
 
@@ -133,95 +133,129 @@ ru2$ever_lowered <- factor(ru2$ever_lowered, levels = c('No', 'Yes'))
 # view and explore --------------------------------------------------------
 ru2
 
-# weighted results --------------------------------------------------------
 theme_set(theme_bw())
 
 
-w_ru2 <- ru2 %>% 
-  as_survey(id = idind, weights=w1)
 
 
-w_ru2 %>% 
-  summarise(mean1 = survey_mean(wage, vartype = 'ci', na.rm=T))
+
+# employer tenure ---------------------------------------------------------
+
+ru2 %>% 
+  count(year)
 
 
-w_ru2 %>% 
-  group_by(gender) %>% 
-  summarise(mean1 = survey_mean(wage, vartype = 'ci', na.rm=T))
+ru2 %>% 
+  count(job_year)
+
+ru2 <- ru2 %>% 
+  filter(job_year < 2016) %>% 
+  mutate(tenure = year - job_year) 
 
 
-w_ru2 %>% 
-  group_by(gender, mob_final) %>% 
-  summarise(mean1 = survey_mean(wage, vartype = 'ci', na.rm=T))
+ru2
 
 
-#proportion of respondents who move, weighted by gender
-w_ru2 %>%
-  filter(!is.na(mob_final)) %>% 
-  group_by(gender, mob_final) %>% 
-  summarise(prop = survey_mean(na.rm=T),
-            total = survey_total())
+# mobility rate by gender -------------------------------------------------
 
-## proportion of yougn respondents who move, weighted, split by gender
-#proportion of respondents who move, weighted by gender
-w_ru2 %>%
+theme_set(theme_bw())
+
+
+
+# using standard errors & confidence intervals---------------------------------------------------
+
+
+sum1 <- ru2 %>%
+filter(!is.na(mob_final)) %>% 
+  group_by(gender, mob_final) %>%
+  summarise(n = n()) %>% 
+  mutate(prop = n/sum(n),
+         prop_dev =prop*(1-prop),
+         se=sqrt(prop_dev/n),
+         conf_up = prop + (se*1.96),
+         conf_low = prop -(se*1.96))  
+  
+right_label <- sum1 %>%
+  filter(gender=='Male')
+
+left_label <- sum1 %>% 
+  filter(gender=="Female")
+
+sum1 %>% 
+ggplot(aes(x=mob_final,
+             y=prop,
+             colour=gender))+
+  geom_point(aes(size=0.3))+
+  geom_errorbar(aes(ymin=conf_up,
+                    ymax=conf_low),
+                width=0.3,
+                size=0.3)+
+  labs(title = "Proportion of respondents citing mobility type by gender",
+       subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
+       x="Mobility type",
+       y="Proportion of respondents",
+       caption="RLMS rounds 2015 to 2011 \nAuthors own calculation")+
+  guides(size=FALSE)+
+  geom_text(data = right_label, aes(color = gender, label = round(prop, 3)),
+                               size = 3, hjust = -.6) +
+  geom_text(data = left_label, aes(color = gender, label = round(prop, 3)),
+            size = 3, hjust = 1.8)
+
+
+# using mobility and wages -----------------------------------------------
+
+sum3 <- ru2 %>%
   filter(!is.na(mob_final),
-         age < 30,
-         age > 17) %>% 
+         !is.na(wage)) %>% 
   group_by(gender, mob_final) %>% 
-  summarise(prop = survey_mean(na.rm=T),
-            total = survey_total())
+  summarise(wage_mean = mean(wage, na.rm=TRUE),
+            wage_sd = sd(wage, na.rm = TRUE),
+            n= n(),
+            wage_se = wage_sd/sqrt(n)) 
+ 
+sum3
 
-
-
-
-w_ru2 %>%
-  filter(!is.na(mob_final)) %>% 
-  group_by(gender, mob_final) %>% 
-  summarise(prop = survey_mean(na.rm=T)) %>% 
-  ggplot(aes(x=mob_final, y= prop))+
+sum3 %>% 
+ggplot(aes(x=mob_final, 
+             y= wage_mean,
+             col=gender))+
+  geom_line(aes(group=gender))+
   geom_point(aes(group=mob_final,
-                 col=mob_final,
                  size=3))+
-  facet_wrap(~gender)+
-  geom_errorbar(aes(group=mob_final,
-                    ymin=prop-prop_se,
-                    ymax=prop+prop_se,
-                    width=0.5))
+  geom_errorbar(aes(ymin=wage_mean-(wage_se*1.96),
+                    ymax=wage_mean+(wage_se*1.96)),
+                width=0.25)+
+  scale_y_continuous(labels = scales::comma)+
+  labs(y= "Average monthly wages in rubles",
+       x="Mobility type",
+       caption="RLMS rounds 2015 to 2011 \nAuthors own calculation")+
+  guides(size=FALSE)+
+  geom_text(data = sum3, aes(color = gender, label = round(wage_mean, 0)),
+            size = 3, hjust = -.6)
 
-
-w_ru2 %>%
-  filter(!is.na(mob_final)) %>% 
-  group_by(gender, mob_final) %>% 
-  summarise(wage = survey_mean(wage, na.rm=TRUE)) %>% 
-  ggplot(aes(x=mob_final, y= wage))+
-  geom_point(aes(group=mob_final,
-                 col=mob_final,
-                 size=3))+
-  facet_wrap(~gender)+
-  geom_errorbar(aes(group=mob_final,
-                    ymin=wage-wage_se,
-                    ymax=wage+wage_se,
-                    width=0.5))
-
-ru2 %>%
-  filter(!is.na(mob_final)) %>% 
-  group_by(gender, mob_final) %>% 
-  summarise(wage = mean(wage, na.rm=TRUE)) %>% 
-  ggplot(aes(x=mob_final, y= wage))+
-  geom_point(aes(group=mob_final,
-                 col=mob_final,
-                 size=3))+
-  facet_wrap(~gender)
   
 
+
+q1 <- multinom(mob_final~ gender, data=ru2)
+
+summary(q1)
+
+knitr::kable(tidy(q1, exponentiate = TRUE), 2) 
+
+tidy(q1, exponentiate = T) %>% 
+  mutate(signif = stars.pval(p.value),
+         p.value=round(p.value, 3),
+         estimate=round(estimate, 3),
+         std.error=round(std.error, 3))
 
 
 ##mobility over time
 ru2 %>% 
   filter( !is.na(mob_final)) %>% 
-  ggplot(aes(x=round, fill=mob_final))+
-  geom_bar(position = 'fill', aes(group=mob_final))+
+  ggplot(aes(x=mob_final, 
+             y=..prop..,
+             group=1))+
+  geom_bar()+
   facet_wrap(~gender)
 
 ##earnings by promotion and gender

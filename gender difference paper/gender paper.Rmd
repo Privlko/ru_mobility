@@ -1,9 +1,10 @@
 ---
-title: "Age and Gender Difference in Quitting and Its Rewards"
+title: "Age and Gender Differences in Job Mobility and Its Rewards"
 author: "Ivan Privalko"
-date: "02/12/2019"
+date: "02 December 2019"
 output: pdf_document
-bibliography: 'C:/Users/Ivan.Privalko/Documents/ru_mobility/biblio/ru1.bib'
+bibliography: 'C:/Users/Ivan/Desktop/R projects/ru_mobility/biblio/ru1.bib'
+toc: TRUE
 ---
 
 
@@ -19,7 +20,7 @@ library(broom)
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 
-load("~/ru_mobility/genderpaper.RData")
+load("C:/Users/Ivan/Desktop/R projects/ru_mobility/genderpaper.RData")
 
 ru2 <- ru2 %>% 
   mutate(age_groups=case_when(
@@ -33,9 +34,9 @@ ru2 <- ru2 %>%
 
 # Abstract
 
-The article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of job mobility. 
+The article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of quits and promotions. 
 It argues that overall quit rates are similar for young men and women, but finds gender differences among older workers. 
-When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences can be explained by early career sorting. 
+When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences are explained by early career sorting. 
 When controlling for individual heterogeneity (through the use of fixed effects estimation), it is found that, quitting does not improve current wages while promotions contain a significant earnings premium, at least in the short term. 
 Results help to understand inequality in wages and conditions that occur due to sorting, and the importance of promotions (internal job changes with the same employer) as a "life chance" which improves earnings in the immediate sense.
 
@@ -80,87 +81,189 @@ This article uses five rounds of Russia's Longitudinal Monitoring Survey (Rounds
 
 # Results
 
-Table one considers gender differences in mobility and earnings, focusing on observations rather than individuals. Overall, respondents are largely immobile although men (76 per cent) appear slightly less likely to list an observation without mobility when compared to women (81 per cent). Both men and women (4 per cent) are equally likely to list a promotion in a given year. However, promotions are generally uncommon. Respondents are much more likely to list exiting a firm, with men (18 per cent) listing more exits than women (12 per cent).
+This section is split into three pars. 
+First, I present gender differences in mobility, and the wages tied to certain mobility responses.
+Second, I explore gender differences in mobility using multinomial logistic regression.
+Finally, we explore the effects of mobility on earnings using fixed-effects linear regression.
 
-Thinking about earnings, there is an difference between men and women, with immobile observations for men (24,000+ rubles) being higher than immobile observations for women (16,000+ rubles). However, between each group, there appears to be a premium tied to promotion, and a penalty tied to Exit. 
+## Descriptive statistics
 
-```{r}
+Figure 1  considers gender differences in mobility types focusing on observations rather than individuals. 
+Overall, respondents are largely immobile although women (0.814) are less mobile compared to men (0.762). 
+Both men and women (0.044) are equally likely to list a promotion in a given year, although promotions are uncommon in general. 
+Respondents are much more likely to list exiting a firm, with men (0.182) listing more exits than women (0.130).
+Lateral changes within the firm are the least common and do not appear to have a gender difference. 
+Considering the confidence intervals in Figure 1, it seems gender differences are most prominent in terms of firm exits.
+Unfortunately we are not able to discern voluntary from involutnary exits, which are particualrly important for discussions of reservations wages.
+However, this category, along with promotions, likely contains the job mobility which is driven by reservation wages.
+ 
 
-ru2 %>% 
-  filter(!is.na(mob_final)) %>% 
-  group_by(gender, mob_final) %>% 
-  summarise(n = n(),
-            wage = mean(wage, na.rm=TRUE)) %>% 
-  ungroup() %>% 
-  group_by(gender) %>% 
-  mutate(per = round(n/sum(n)*(100), 2)) %>% 
-  ungroup() %>% 
-  select(-gender,
-         Mobility= mob_final,
-         Observations = n,
-         Percent = per,
-         Wage= wage) %>% 
-  kable(format.args = list(decimal.mark = '.', big.mark = ","),
-        caption = "Mobility and earnings, by gender") %>% 
-  kable_styling(latex_options = 'hold_position') %>% 
-  group_rows("Male", 1, 4) %>% 
-  group_rows("Female", 5, 8) 
-```
+```{r, fig.cap="Proportion of respondents citing mobility type by gender"}
 
-Table 2 considers the age differences in these rates. We see that younger groups are more mobile than older groups for both genders, with a seemingly steady increase between respondents aged 0-35, 36-55, and those aged over 55. Young men are still more mobile than young women, but the likelihood of mobility decreases among older respondents.  
-
-```{r}
-
-ru2 %>% 
-  filter(!is.na(mob_final)) %>% 
-  group_by(gender, age_groups) %>% 
-  count(mob_final) %>% 
-  mutate(per = round(n/sum(n)*(100), 2)) %>% 
-  ungroup() %>% 
-  select(Mobility= mob_final,
-         Observations = n,
-         Percent = per) %>% 
-  kable(format.args = list(decimal.mark = '.', big.mark = ","),
-        caption = "Mobility, by age and gender") %>% 
-  kable_styling(latex_options = 'hold_position') %>% 
-  group_rows("Male Aged 0-35", 1, 4) %>% 
-  group_rows("Male 36-55", 5, 8) %>% 
-  group_rows("Male 56+", 9, 12) %>% 
-  group_rows("Female Aged 0-35", 13, 16) %>% 
-  group_rows("Female Aged 36-55", 17, 20) %>% 
-  group_rows("Female Aged 56+", 21, 24)
-```
-
-## Multinomial regression
-
-this section cosiders the likelihood of experiencing a mobility event.
-
-```{r}
-d1  <-  ru2 %>% 
-  filter(round == 24,
-         age_groups=='0-35',
-         gender=='Male') 
-
-
+sum1 <- ru2 %>%
+filter(!is.na(mob_final)) %>% 
+  group_by(gender, mob_final) %>%
+  summarise(n = n()) %>% 
+  mutate(prop = n/sum(n),
+         prop_dev =prop*(1-prop),
+         se=sqrt(prop_dev/n),
+         conf_up = prop + (se*1.96),
+         conf_low = prop -(se*1.96))  
   
-m1  <- multinom(mob_final ~ age + gender + hours, data = d1)
+right_label <- sum1 %>%
+  filter(gender=='Male')
+
+left_label <- sum1 %>% 
+  filter(gender=="Female")
+
+sum1 %>% 
+ggplot(aes(x=mob_final,
+             y=prop,
+             colour=gender))+
+  geom_point(aes(size=0.3))+
+  geom_errorbar(aes(ymin=conf_up,
+                    ymax=conf_low),
+                width=0.3,
+                size=0.3)+
+  labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
+       x="Mobility type",
+       y="Proportion of respondents",
+       caption="RLMS rounds 2015 to 2011 \nAuthors own calculation")+
+  guides(size=FALSE)+
+  geom_text(data = right_label, aes(color = gender, label = round(prop, 3)),
+                               size = 3, hjust = -.6) +
+  geom_text(data = left_label, aes(color = gender, label = round(prop, 3)),
+            size = 3, hjust = 1.8)
+
 ```
 
 
-```{r}
+Figure 2 considers the age differences tied to the changes in Figure 1. We note that younger respondents are more likely to experience promotions and exits. Both of these measures gradually decline as we consider older groups. Noteably, gender differences in quits dissapear for older respondents, but remain for younger respondents. This effect stems from the sharp decline in men's likelihood of quitting. 
 
-summary(m1)
-coef(m1)
-tidy(m1, conf.int = T,
-     conf.level = 0.95,
-     exponentiate = T) %>% 
-  ggplot(aes(x=term, y=estimate))+
-  geom_point(aes(colour=term))+
-  facet_wrap(~y.level)+
-  geom_errorbarh(aes(xmin=estimate-std.error,
-                    xmax=estimate+std.error,
-                    colour=term))+
-  coord_flip()
+```{r, fig.cap="Age and gender differences in mobility"}
+
+sum2 <- ru2 %>%
+filter(!is.na(mob_final)) %>% 
+  group_by(gender, age_groups , mob_final) %>%
+  summarise(n = n()) %>% 
+  mutate(prop = n/sum(n),
+         prop_dev =prop*(1-prop),
+         se=sqrt(prop_dev/n),
+         conf_up = prop + (se*1.96),
+         conf_low = prop -(se*1.96))  
+  
+right_label <- sum1 %>%
+  filter(gender=='Male')
+
+left_label <- sum1 %>% 
+  filter(gender=="Female")
+
+sum2 %>% 
+ggplot(aes(x=mob_final,
+             y=prop,
+             colour=gender))+
+  geom_point(aes(size=0.3))+
+  geom_errorbar(aes(ymin=conf_up,
+                    ymax=conf_low),
+                size=0.3)+
+  labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
+       x="Mobility type",
+       y="Proportion of respondents",
+       caption="RLMS rounds 2015 to 2011 \nAuthors own calculation")+
+  guides(size=FALSE)+
+  facet_wrap(~age_groups)+
+  scale_x_discrete(labels = abbreviate)
+
+```
+
+Generally, there is a gender and age effect tied job mobility, with younger workers being more mobile than older workers, and younger men being more mobile than younger women. We now turn to the wage differences between these groups. Importantly, we will not consider the effect of promotion or exit on wages, focusing instead on the average wage associated with a given gender and a given mobility type. 
+
+
+
+```{r, fig.cap="Wage differences between gender and mobility groups"}
+sum3 <- ru2 %>%
+  filter(!is.na(mob_final),
+         !is.na(wage)) %>% 
+  group_by(gender, mob_final) %>% 
+  summarise(wage_mean = mean(wage, na.rm=TRUE),
+            wage_sd = sd(wage, na.rm = TRUE),
+            n= n(),
+            wage_se = wage_sd/sqrt(n)) 
+ 
+
+sum3 %>% 
+ggplot(aes(x=mob_final, 
+             y= wage_mean,
+             col=gender))+
+  geom_line(aes(group=gender))+
+  geom_point(aes(group=mob_final,
+                 size=3))+
+  geom_errorbar(aes(ymin=wage_mean-(wage_se*1.96),
+                    ymax=wage_mean+(wage_se*1.96)),
+                width=0.25)+
+  scale_y_continuous(labels = scales::comma)+
+  labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
+       y= "Average monthly wages in rubles",
+       x="Mobility type",
+       caption="RLMS rounds 2015 to 2011 \nAuthors own calculation")+
+  guides(size=FALSE)+
+  geom_text(data = sum3, aes(color = gender, label = round(wage_mean, 0)),
+            size = 3, hjust = -.6)
+
+
+```
+
+Figure 4 captures thre eimportant differences. First, there is a gender difference tied to pay, with men earning more than women in each mobility cateogry. Second, there is a bility difference in pay, with respondents who experience a promotion in the survey year citing significantly more in terms of average earnings, compared to respondents citing a different mobility type in a given survey year. Third, there is a pay penatly among respondents who cite employment exit, but this difference is only significant for men. This effect likely stems from women's pay reaching a "floor". We consider the age differences in this effect below.
+
+
+```{r, fig.cap="Wage differences between age, gender, and mobility groups"}
+sum4 <- ru2 %>%
+  filter(!is.na(mob_final),
+         !is.na(wage)) %>% 
+  group_by(gender, age_groups, mob_final) %>% 
+  summarise(wage_mean = mean(wage, na.rm=TRUE),
+            wage_sd = sd(wage, na.rm = TRUE),
+            n= n(),
+            wage_se = wage_sd/sqrt(n)) 
+ 
+
+sum4 %>% 
+ggplot(aes(x=mob_final, 
+             y= wage_mean,
+             col=gender))+
+  geom_line(aes(group=gender))+
+  geom_point(aes(group=mob_final,
+                 size=3))+
+  geom_errorbar(aes(ymin=wage_mean-(wage_se*1.96),
+                    ymax=wage_mean+(wage_se*1.96)),
+                width=0.25)+
+  scale_y_continuous(labels = scales::comma)+
+  labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
+       y= "Average monthly wages in rubles",
+       x="Mobility type",
+       caption="RLMS rounds 2015 to 2011 \nAuthors own calculation")+
+  guides(size=FALSE)+
+  facet_wrap(~age_groups)+
+  scale_x_discrete(labels = abbreviate)
+
+
+```
+
+Thinking of the patterns in Figure 4, respondents appear to gain the most from mobility aged 36-55, although the premium only appears to apply to men. Surprisingly, older groups report the lowest income and also the lowest return on mobilty. Older women appear to make significant gainst when citing promotion, however the large confidence intervals suggest this premium is not significantly different from other age groups.
+
+## Multinomial logistic regression
+
+We now consider some explanatory measures tied tojob mobility differences. 
+
+
+```{r}
+d1<- ru2 %>% 
+  filter(round==24,
+         !is.na(mainoc))
+
+m1 <- multinom(mob_final ~ gender + age_groups + tenure +factor(sub) +factor(esec) , data=ru3)
+
+kable(tidy(m1), digits = 3)
 
 ```
 
