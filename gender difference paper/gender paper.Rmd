@@ -46,7 +46,7 @@ Results help to understand inequality in wages and conditions that occur due to 
 
 # Job searching and Job matching 
 
-Two theoretical approaches make predictions about job mobility processes, these are the *job-searching* and  *job-matching* approaches. 
+Two theoretical approaches make predictions about job mobility, these are the *job-searching* and  *job-matching* approaches. 
 Both suggest that poor work environments, either from inadequate pay or inadequate conditions, push workers to search for new positions [@kalleberg2001satisfied; @gesthuizen2008mismatching]. 
 The *job searching* approach considers the *Reservation Wage*, or the minimum wage a worker will consider before moving to a new position, given her skill set. 
 *Reservation wage X* drives employers out of unemployment, by capturing the minimum wage that workers will accept before taking a job. 
@@ -55,16 +55,38 @@ If a previously unemployed worker accepts *Wage X* that is below *Wage Y*, they 
 
 The *job-matching* approach is one where workers take time to evaluate whether their skills are a good fit for their tasks at work. 
 Since work is an experience good, workers must try several jobs before finding a match.
-The large rates of mobility that workers see in the early stages of their career, is their navigation of the labour market, where individual employers and jobs are comapred relative to a workers skills and level of exprience [@sorensen1977structure; @thurow1975generating].  
+The large rates of mobility that workers see in the early stages of their career, is their navigation of the labour market, where individual employers and jobs are comapred relative to a workers skills and level of exprience [@sorensen1977structure; @thurow1975generating]. 
+
+How do the theories above explains the large differencs in mobility between workers? 
+Both understand that workers are most mobile in the early stages of their career. 
+However, in the job searching approach, individuals try to secure their reservation wages as they establish themselves in the labour market and gain the experience and networks needed to evaluate new positions. 
+As they gradually close the gap between their given wage and their reservation wage, they become less mobile [@sorensen1977structure; @kalleberg1979sociology; @sorensen1975structure].
+The job-matching appraoch is slightly different in that it does not expect a wage premium tied to mobility, only that the subjectively evaluated match between a worker and her position should improve with mobility. 
+This approach also anticipates the large rate of mobility in the early stages of a person's career, but in this mechanism workers are "experiencing" the type of work they would like to do. 
+It is possible that this mechanism affects men and women differently, in that men would be more driven by wages, and women be more driven by work life balance, especially if women hold the majority of care responsibilities in the home [@keith1997job].
+
+# Gender differences in mobility and its returns
 
 Considering both theories together, neither explicitly notes a gender difference in job mobility. 
 Despite this, authors routinely find this difference  [@blau1981race; @keith1995wage; @keith1997job; @keith1999returns]. 
 Blau and Duncan [-@blau1981race] note young women are more likely to quit when compared to men. 
 Keith and McWilliam [-@keith1995wage] note that economic quits happen at a simialr rate for men and women, but that family related changes are more common among young women, when comapred to young men. 
-They also find that men are more likely to experience job loss, when compared to young women, suggesting that gender differences stem most from different types of mobility, rather than a gender difference in similar mobility types. 
-Neither family-reated mobility nor involuntary mobility are related to processes of job matching or job searching, and so do not apply to our hypotheses directly.
-However, it is important to note that women's tendency to move jobs for non-economic reasons (tied to care or other family obligations) is clearly an important piece of the gender wage-gap puzzle.
-Beyond mobility itself, its effects on wages may differ by gender. For example, women may have higher reservation wages than men. Mobility may be more disruptive to their lives, especially if they have children of other family obligations which they try to balance with paid employment. As a result, they may move only for jobs with significantly higher earnings as opposed to men who are less active in the care of children and other family memebers. As a result men may see earnings as their primary responsiblility, and so incremental changes in earnings may be more lucrative for men. Cha [-@cha2014job] notes a significant difference in the effect of mobility on earnings between women with and without children, but one that runs opposite to the described pattern. Women with children saw few rewards to mobility when comapred to woment without children, whi experienced signifcant premiums in earnings. 
+They also find that men are more likely to experience job loss, when compared to young women, suggesting that gender differences stem mostly from different types of mobility, rather than a gender difference in wage returns from similar mobility types [@keith1995wage; @keith1999returns].
+In short, part of the voluntary job mobility carried out by women is closer tied to job matching than job searching, in this way Keith and McWilliams [-@keith1995wage; -@keith1999returns] sugegst women find positions where they are better able to combine family roles and work. 
+Gesthuizen finds some evidence to support this, reporting that dissatisfaction with the job match and dissatisfaction with hours increases women's chances of voluntary mobility to a new employer.
+This effect does not emerge for men. 
+Further, subjective dissatisfaction with wages also pushes women to inter-firm mobility, but not men, which would support the job searching hypothesis. 
+In discussing the result Gesthuizen [] notes that mobility may be “less costly” for women, in that men are more likely typically “breadwinner” roles, with less room
+Keith and McWilliams [-@keith1999returns] also note a gender difference in job searching behaviour, reporting men are more likely to explore new positions than women. Job searching behaviour was particualrly important as it brought a significant wage premiums for both men and women who engaged in job mobility. 
+
+Beyond gender differences in mobility types, mobility may have different effects on men and women. 
+Keith and McWilliams [-@keith1999returns, -@keith1995wage; -@keith1997job] find no gender difference in the effects of job mobility on wages, assuming the mobility occurs for economic reasons. 
+Further, they find that men and women benefit roughly equally from the interaction between job search and job mobility.
+Gesthuizen [] also finds no significant difference between men and women in the premium tied to mobility.
+Cha [-@cha2014job] notes a significant difference in the effect of mobility on earnings between women with and without children, but one that runs opposite to the described pattern. 
+Women with children see few rewards to mobility when compared to woment without children, who experienced signifcant premiums in earnings.
+The study doesn't consider men.
+Kronberg [-@kronberg2013stay] finds this specific difference, reporting that men gain more from voluntary mobility to a new employer when comapred to women, although see a premium also. 
 
 
 Although other authros find no gender differences between men and women in the wage effects of "economic quits" between young men and women in the early stages of their career [@keith1995wage].
@@ -258,10 +280,9 @@ We now consider some explanatory measures tied tojob mobility differences.
 
 ```{r}
 d1<- ru2 %>% 
-  filter(round==24,
-         !is.na(mainoc))
+  filter(round==24)
 
-m1 <- multinom(mob_final ~ gender + age_groups + tenure +factor(sub) +factor(esec) , data=ru3)
+m1 <- multinom(mob_final ~ gender + age_groups + tenure , data=ru2)
 
 kable(tidy(m1), digits = 3)
 
