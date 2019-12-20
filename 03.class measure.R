@@ -3,6 +3,7 @@
 ru3 <- tbl_df(ru2)
 ru3
 
+
 # you have to go back and include the measures below in 01 ----------------
 
 ru3 %>% count(sub)
@@ -14,7 +15,7 @@ ru3 %>% count(sub_n)
 
 ru3 <- ru3 %>% 
   mutate(isco08 = isco/100,
-         isco08 = round(isco08, 0))
+         isco08 = round(isco08, 0)) 
 
 
 ru3 %>% count(isco08)
@@ -247,6 +248,22 @@ ru3 %>%
 
 
 
+ru3 %>% 
+  ggplot(aes(y=wage,
+             x=age))+
+  geom_point(alpha=0.05)+
+  scale_y_log10(labels=scales::comma)+
+  geom_smooth(method='lm')
+
+
+ru3 %>% 
+  ggplot(aes(y=wage,
+             x=tenure))+
+  geom_point(alpha=0.05)+
+  scale_y_log10(labels=scales::comma)+
+  scale_x_log10()+
+  geom_smooth()#method='lm')
+
 # measure for marriage status ---------------------------------------------
 ru3$marr <- factor(ru3$marr_stat, levels = unique(ru3$marr_stat)) 
 
@@ -273,4 +290,6 @@ ru3 %>%
   count(marr)
 
 
-saveRDS(ru3, file = "ru_data.rds")
+
+
+save(ru3, file = "genderpaper.RData")

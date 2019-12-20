@@ -1,9 +1,9 @@
 ---
-title: "Age and Gender Differences in Job Mobility and Its Rewards"
-author: "Ivan Privalko"
+title: "Age and Gender Differences in Russia's Job Mobility and Its Rewards"
+author: "Author"
 date: "02 December 2019"
-output: pdf_document
-bibliography: 'C:/Users/Ivan/Desktop/R projects/ru_mobility/biblio/ru1.bib'
+output: pdf_document 
+bibliography: 'C:/Users/Ivan.Privalko/Desktop/R projects/ru_mobility/biblio/ru1.bib'
 toc: TRUE
 ---
 
@@ -11,18 +11,20 @@ toc: TRUE
 ```{r, echo=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(forcats) 
+library(gtools)
 library(knitr)
 library(kableExtra)
 library(nnet)
 library(broom)
+library(plm)
 
 
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 
-load("C:/Users/Ivan/Desktop/R projects/ru_mobility/genderpaper.RData")
+load("C:/Users/Ivan.Privalko/Desktop/R projects/ru_mobility/genderpaper.RData")
 
-ru2 <- ru2 %>% 
+ru3 <- ru3 %>% 
   mutate(age_groups=case_when(
     age %in% 0:35 ~  "0-35",
     age %in% 36:55 ~ "36-55",
@@ -34,17 +36,29 @@ ru2 <- ru2 %>%
 
 # Abstract
 
-The article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of quits and promotions. 
-It argues that overall quit rates are similar for young men and women, but finds gender differences among older workers. 
-When several personal and job characteristics are held constant, however, the quit rates of young men and women are about the same, suggesting gender differences are explained by early career sorting. 
-When controlling for individual heterogeneity (through the use of fixed effects estimation), it is found that, quitting does not improve current wages while promotions contain a significant earnings premium, at least in the short term. 
-Results help to understand inequality in wages and conditions that occur due to sorting, and the importance of promotions (internal job changes with the same employer) as a "life chance" which improves earnings in the immediate sense.
+The article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of quits and promotions.
+Russia's relatively liberalised labour market has allowed workers more mobility, whether this mobility has any immediate effect on worker's wages, and the gender gaps in these wages has not been explored.
+Resutls show that mobility rates are higher for young respondents, and that gender differences in quits and promotions only exist in these early stages of a person's career. Spcifically, when several personal and job characteristics are held constant, instances of promotion are higher for men than they are for women. 
+Further, even among 18-35 year olds, promotions are less likely among older respondents (closer to 35) than they are among younger respondents.
+Regarding firm exits or quits, women have a lower chance of experiencing the change when compared to men, again even after several personal characteristics are controlled for. Here too, age differences suggest that younger respondents are more likely to experience exit than older respondents, even within groups of respondents aged 18-35.
+When controlling for individual heterogeneity (through the use of fixed effects estimation), quitting does not improve current wages although promotions contain significant wage premiums, at least in the short term. 
+Results help to understand inequality in wages and conditions that occur due to sorting, and the importance of promotions (internal job changes with the same employer) as "life chances" which improves earnings in the immediate sense.
+Gender differences in securing these life chances may help to understand wider gender gaps, which emerge later. 
 
 
 # Introduction 
 
+Russia's relatively liberalised economy has given workers more employment options and a wider spectrum of potential wages [imfreport]. 
+In this way workers are better able to correct mismatches of working conditions and wages if they feel they are entitled to more from work [@keith1995job; @cha].
+Theoretically these changes are tied to job mobility through either *job searching* or *job matching processes*.
+Yet despite this liberalisation, mobility rates in Russia are currently lower than they were in the Soviet Union as recorded by the IMF. 
 
-# Job searching and Job matching 
+
+
+
+# Review
+
+## Job searching and Job matching 
 
 Two theoretical approaches make predictions about job mobility, these are the *job-searching* and  *job-matching* approaches. 
 Both suggest that poor work environments, either from inadequate pay or inadequate conditions, push workers to search for new positions [@kalleberg2001satisfied; @gesthuizen2008mismatching]. 
@@ -65,7 +79,7 @@ The job-matching appraoch is slightly different in that it does not expect a wag
 This approach also anticipates the large rate of mobility in the early stages of a person's career, but in this mechanism workers are "experiencing" the type of work they would like to do. 
 It is possible that this mechanism affects men and women differently, in that men would be more driven by wages, and women be more driven by work life balance, especially if women hold the majority of care responsibilities in the home [@keith1997job].
 
-# Gender differences in mobility and its returns
+## Gender differences in mobility and its returns
 
 Considering both theories together, neither explicitly notes a gender difference in job mobility. 
 Despite this, authors routinely find this difference  [@blau1981race; @keith1995wage; @keith1997job; @keith1999returns]. 
@@ -89,12 +103,17 @@ The study doesn't consider men.
 Kronberg [-@kronberg2013stay] finds this specific difference, reporting that men gain more from voluntary mobility to a new employer when comapred to women, although see a premium also. 
 
 
-Although other authros find no gender differences between men and women in the wage effects of "economic quits" between young men and women in the early stages of their career [@keith1995wage].
-
-
-
-This suggests that the wage or conditions premium described above applies more often to men than to women, even when removing gender differences in types of mobility. 
+Although other authors find no gender differences between men and women in the wage effects of "economic quits" between young men and women in the early stages of their career [@keith1995wage]. This suggests that the wage or conditions premium described above applies more often to men than to women, even when removing gender differences in types of mobility. 
 Some authors argue that the lack of a gender  
+
+
+## Russia's labour market, as a case
+
+Russia's fast transition to a post-soviet economy had positive and negative effects on gender differences in its labour market. 
+Although transition increased women's participation and employemnt, it also increased levels variation in women's job quality [@gerber2006dynamic]. 
+Given the pace of market transition, this increased variation did not stem from a decline in human capital, but the *"introduction of market institutions"* [@gerber2006dynamic].
+Since the liberalisation of the labour market, authors have argued 
+Despite the theories above, Russian levels of job mobility actually fell in the 1990's, to levels below that of 1980's soviet job mobility, at least in measures of inter-firm mobility (voluntary quits to new employers). 
 
 
 # Methodology
@@ -103,7 +122,7 @@ This article uses five rounds of Russia's Longitudinal Monitoring Survey (Rounds
 
 # Results
 
-This section is split into three pars. 
+This section is split into three parts. 
 First, I present gender differences in mobility, and the wages tied to certain mobility responses.
 Second, I explore gender differences in mobility using multinomial logistic regression.
 Finally, we explore the effects of mobility on earnings using fixed-effects linear regression.
@@ -122,7 +141,7 @@ However, this category, along with promotions, likely contains the job mobility 
 
 ```{r, fig.cap="Proportion of respondents citing mobility type by gender"}
 
-sum1 <- ru2 %>%
+sum1 <- ru3 %>%
 filter(!is.na(mob_final)) %>% 
   group_by(gender, mob_final) %>%
   summarise(n = n()) %>% 
@@ -164,7 +183,7 @@ Figure 2 considers the age differences tied to the changes in Figure 1. We note 
 
 ```{r, fig.cap="Age and gender differences in mobility"}
 
-sum2 <- ru2 %>%
+sum2 <- ru3 %>%
 filter(!is.na(mob_final)) %>% 
   group_by(gender, age_groups , mob_final) %>%
   summarise(n = n()) %>% 
@@ -203,7 +222,7 @@ Generally, there is a gender and age effect tied job mobility, with younger work
 
 
 ```{r, fig.cap="Wage differences between gender and mobility groups"}
-sum3 <- ru2 %>%
+sum3 <- ru3 %>%
   filter(!is.na(mob_final),
          !is.na(wage)) %>% 
   group_by(gender, mob_final) %>% 
@@ -239,7 +258,7 @@ Figure 4 captures thre eimportant differences. First, there is a gender differen
 
 
 ```{r, fig.cap="Wage differences between age, gender, and mobility groups"}
-sum4 <- ru2 %>%
+sum4 <- ru3 %>%
   filter(!is.na(mob_final),
          !is.na(wage)) %>% 
   group_by(gender, age_groups, mob_final) %>% 
@@ -278,15 +297,92 @@ Thinking of the patterns in Figure 4, respondents appear to gain the most from m
 We now consider some explanatory measures tied tojob mobility differences. 
 
 
-```{r}
-d1<- ru2 %>% 
-  filter(round==24)
+```{r, echo=FALSE, warning=FALSE}
+d1<- ru3 %>% 
+  filter(age_groups=="0-35")
+d2<- ru3 %>% 
+  filter(age_groups=="36-55")
 
-m1 <- multinom(mob_final ~ gender + age_groups + tenure , data=ru2)
+m1 <- multinom(mob_final ~  gender + age + tenure + super + factor(isco08), data=d1)
+m2 <- multinom(mob_final ~  gender + age + tenure + super + factor(isco08), data=d2)
 
-kable(tidy(m1), digits = 3)
+
+t1<- tidy(m1) %>% 
+  select(-statistic, -y.level) %>% 
+  mutate(signif = stars.pval(p.value))
+
+t2 <- tidy(m2) %>% 
+  select(-y.level, -term, -statistic) %>% 
+  mutate(signif = stars.pval(p.value)) 
+
+
+
+
+kable(cbind(t1, t2), digits=3,
+      booktabs=TRUE) %>% 
+  kable_styling(latex_options = c("scale_down","repeat_header")) %>% 
+  add_header_above(c(" " = 1, "Age 18-35" = 4, "Age 36-55" = 4)) %>% 
+  pack_rows("Promotion", 1, 4) %>% 
+  pack_rows("Lateral change", 5, 8) %>% 
+  pack_rows("Exit", 9, 12) %>% 
+  footnote(number = c("RLMS rounds 20-25. Model considers all respondents together", "*** p < 0.001, ** p < 0.01, * p < 0.05, . p < 0.1"))
+
+
+
+
+View(ru3)
+#kable(tidy(m1), 
+ #     digits = 3,
+  #    booktabs=TRUE) %>% 
+  #kable_styling(latex_options = c("scale_down"))
+
+
 
 ```
+
+
+## Fixed effects estimation
+
+We now turn to the quetion of how mobility affects earnings
+```{r}
+df_m<- ru3 %>% 
+  mutate(ln_wage = log(wage),
+         t= year - 2011) %>% 
+  filter(gender=="Male",
+         ln_wage !=-Inf) 
+
+
+View(df_m)
+
+df_m <- pdata.frame(df_m, index=c("idind", "round"))
+df_m
+
+
+df_f<- ru3 %>% 
+  mutate(ln_wage = log(wage),
+         t= year - 2011) %>% 
+  filter(gender=="Female",
+         ln_wage !=-Inf,
+         age_groups=="36-55") 
+
+ru3 %>% 
+  count(esec_simple) 
+
+pm_fe <- plm(ln_wage ~ mob_final + age + tenure +super + firm_size + factor(esec_simple) +  t, 
+                    data = df_m,
+                    index = c("idind", "round"), 
+                    model = "within")
+
+
+summary(pm_fe)
+
+tidy(pm_fe) %>% 
+mutate(sig=stars.pval(p.value)) %>% 
+kable(digits = 3)
+
+
+```
+
 
 
 # References
