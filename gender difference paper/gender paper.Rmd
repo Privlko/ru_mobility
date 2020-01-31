@@ -107,40 +107,48 @@ It is possible that this mechanism affects men and women differently, in that me
 
 ## Gender differences in mobility and its returns
 
+### Gender and mobility
+
 Considering both theories together, neither explicitly notes a gender difference in job mobility. 
-Despite this, authors routinely find this difference  [@blau1981race; @keith1995wage; @keith1997job; @keith1999returns]. 
-Blau and Duncan [-@blau1981race] note young women are more likely to quit when compared to men. 
-Keith and McWilliam [-@keith1995wage] note that economic quits happen at a similar rate for men and women, but that family related changes are more common among young women, when compared to young men. 
-They also find that men are more likely to experience job loss, when compared to young women, suggesting that gender differences stem mostly from different types of mobility, rather than a gender difference in wage returns from similar mobility types [@keith1995wage; @keith1999returns].
-In short, part of the voluntary job mobility carried out by women is closer tied to job matching than job searching, in this way Keith and McWilliams [-@keith1995wage; -@keith1999returns] suggest women find positions where they are better able to combine family roles and work. 
-Gesthuizen finds some evidence to support this, reporting that dissatisfaction with the job match and dissatisfaction with hours increases women's chances of voluntary mobility to a new employer.
-This effect does not emerge for men. 
-Further, subjective dissatisfaction with wages also pushes women to inter-firm mobility, but not men, which would support the job searching hypothesis. 
-In discussing the result Gesthuizen [] notes that mobility may be “less costly” for women, in that men are more likely typically “breadwinner” roles, with less room
-Keith and McWilliams [-@keith1999returns] also note a gender difference in job searching behaviour, reporting men are more likely to explore new positions than women. Job searching behaviour was particularly important as it brought a significant wage premiums for both men and women who engaged in job mobility. 
+In the empirical literature too, the findings are generally mixed, even when considering young workers. 
+Blau and Duncan [-@blau1981race] find that young women are more likely to quit compared to young men in a sample of US workers. 
+Using more recent data, Hachen [-@hachen1988gender] finds women are less likely to exit, but are even less likely to receive promotion relative to men, even when controlling for a range of measures including share of women in an occupation.
 
-Beyond gender differences in mobility types, mobility may have different effects on men and women. 
-Keith and McWilliams [-@keith1999returns, -@keith1995wage; -@keith1997job] find no gender difference in the effects of job mobility on wages, assuming the mobility occurs for economic reasons. 
-Further, they find that men and women benefit roughly equally from the interaction between job search and job mobility.
-Gesthuizen [] also finds no significant difference between men and women in the premium tied to mobility.
-Cha [-@cha2014job] notes a significant difference in the effect of mobility on earnings between women with and without children, but one that runs opposite to the described pattern. 
-Women with children see few rewards to mobility when compared to women without children, who experienced significant premiums in earnings.
-The study doesn't consider men.
-Kronberg [-@kronberg2013stay] finds this specific difference, reporting that men gain more from voluntary mobility to a new employer when compared to women, although see a premium also. 
+Gesthuizen [-@gesthuizen2009job] finds that women are more likely to exit the firm and more likely to secure promotion. compared to men, but that measures of workplace dissatisfaction explain both of these differences.
+In these results it seems that dissatisfaction is a stronger predictor of exit for women, when compared to men and that dissatisfaction with working hours and dissatisfaction with the job are stronger predictors of promotion for women when compared to men.
+Keith and McWilliam [-@keith1995wage] do not find a gender difference when predicting "economic quits". 
+However, they find that "family-related quits" are more common among young women, compared to young men, and that involuntary exit was more common among men that it was among women.
+Keith and McWilliams [-@keith1999returns] also note a gender difference in job searching behaviour, reporting men are more likely to explore new positions than women. 
+Job searching behaviour was particularly important as it brought a significant wage premiums for both men and women who changed jobs. 
+In general, results tend to suggest that differences in mobility between men and women can be explained by other factors like workplace dissatisfaction.
 
+### Gender and returns to mobility
 
-Although other authors find no gender differences between men and women in the wage effects of "economic quits" between young men and women in the early stages of their career [@keith1995wage]. This suggests that the wage or conditions premium described above applies more often to men than to women, even when removing gender differences in types of mobility. 
-Some authors argue that the lack of a gender  
+The theories above also do not consider gender differences in the returns to mobility.
+Here too, authors have produced mixed findings, with some supporting and some refuting gender differences in returns to mobility.
+Keith and McWilliams [-@keith1999returns; -@keith1997job] reports no gender difference in the effects of job mobility on wages, assuming the mobility occurs for "economic reasons". 
+Gesthuizen [@gesthuizen2008mismatching] also finds no significant difference between men and women in subjective premiums tied to mobility within and between firms.
+Kronberg [-@kronberg2013stay] finds a gender difference in mobility's effect on earnings using US data. 
+She notes that men gain more from a voluntary exit to a new employer when compared to women, although women see a premium also. 
+Crucially Kronberg [-@kronberg2013stay] notes that the effect applies only to men and women in "good jobs", characterised as those in high paying occupations with benefits and insurance.
+Part of this effect may also stem from family types and other household characteristics. 
+Cha [-@cha2014job] reports a difference between single women and women with children regarding the effect of a quit on earnings. 
+According to Cha [-@cha2014job] women with children see almost no rewards after the change, compared to women without children who see significant premiums.
+However, since the study does not consider men, it is not possible to comment on gender differences in quit and promotion premiums.
+Fuller [-@fuller2008job] considers the effect of mobility and wages for both men and women, finding that early quits  during the first five years of one's career yield an equally positive result for both men and women.
+This result also emerges for early career movers with children, both men and women saw a positive increase in earnings after the change and no gender difference was detected.
+When Fuller [@fuller2008job] substitutes marital status for children a similar result emerges, men and women see similar returns to job mobility regardless of their marital status. 
+In short, results suggest some premium tied to volutnary mobility exists, however, this premium appears equally likely for both men and women, according to the literature.
 
+### Gender and Russia's labour market, as a case
 
-## Russia's labour market, as a case
-
-Russia's fast transition to a post-soviet economy had positive and negative effects on gender differences in its labour market. 
-Although transition increased women's participation and employment, it also increased levels variation in women's job quality [@gerber2006dynamic]. 
-Given the pace of market transition, this increased variation did not stem from a decline in human capital, but the *"introduction of market institutions"* [@gerber2006dynamic].
-Since the liberalization of the labour market, authors have argued 
-Despite the theories above, Russian levels of job mobility actually fell in the 1990's, to levels below that of 1980's soviet job mobility, at least in measures of inter-firm mobility (voluntary quits to new employers). 
-
+Most of the papers in the sections above rely on US data, and so may not apply to Russia easily.
+Gerber and Mayorova [-@gerber2006dynamic] for example, find that throughout the 1990's women, relative to men, had higher rates of layoff and labour market exit, and higher odds of starting in low-quality jobs. 
+Further, they find that women reported lower odds of job mobility, and lower odds of holding good quality jobs, relative to men.
+Russia transition to a market economy apepars to have improved women's access to jobs, but they remain at a disadavatnage.
+Overall, although transition increased women's participation and employment, it also increased variation in women's job quality [@gerber2006dynamic]. 
+Separately, Clarke [-@clarke2002market] notes the sharp rise in variation in earnings, most of which which located within occupations, regions, and similar positions.
+As mentioned earlier, this variation in earnings and job quality does not appear to have a corresponding variation in increased job mobility [@imf1991study], making Russia a particularly interesting case for study.
 
 # Methodology
 
@@ -409,6 +417,7 @@ We now turn to the quetion of how mobility affects earnings
 
 
 
+\newpage
 # References
 
 
