@@ -1,5 +1,5 @@
 ---
-title: "Age and Gender Differences in Russia's Job Mobility and Its Rewards"
+title: "Gender Differences in Russia's Job Mobility and Its Rewards"
 author: "Author"
 date: "02 December 2019"
 output: pdf_document 
@@ -33,74 +33,100 @@ ru3 <- ru3 %>%
 
 
 ```
-
+\newpage
 # Abstract
 
-The article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of quits and promotions.
-Russia's relatively liberalised labour market has allowed workers more mobility, whether this mobility has any immediate effect on worker's wages, and the gender gaps in these wages has not been explored.
-Resutls show that mobility rates are higher for young respondents, and that gender differences in quits and promotions only exist in these early stages of a person's career. Spcifically, when several personal and job characteristics are held constant, instances of promotion are higher for men than they are for women. 
-Further, even among 18-35 year olds, promotions are less likely among older respondents (closer to 35) than they are among younger respondents.
-Regarding firm exits or quits, women have a lower chance of experiencing the change when compared to men, again even after several personal characteristics are controlled for. Here too, age differences suggest that younger respondents are more likely to experience exit than older respondents, even within groups of respondents aged 18-35.
-When controlling for individual heterogeneity (through the use of fixed effects estimation), quitting does not improve current wages although promotions contain significant wage premiums, at least in the short term. 
-Results help to understand inequality in wages and conditions that occur due to sorting, and the importance of promotions (internal job changes with the same employer) as "life chances" which improves earnings in the immediate sense.
-Gender differences in securing these life chances may help to understand wider gender gaps, which emerge later. 
-
+This article uses data from Russia's Longitudinal Monitoring Survey to consider age and gender differences in the probability and consequences of quits and promotions.
+Russia's relatively liberalised labour market should have high rates of job mobility.
+However,  IMF figures suggest that mobility in the early 2010's is on par with mobility recorded in the 1980's.
+Beyond this, little has been said on who is mobile in Russia and whether mobility has any impact on wages, once personal characteristics of movers are omitted.
+Results show significant difference between age and gender groups regarding both exits and internal promotions.
+Regarding promotions, when several personal and job characteristics are held constant, instances of promotion are higher for men when compared to women. 
+Further, age is a strong predictor of the likelihood of promotion, even among 18-35 year olds, promotions are less likely for older respondents (closer to 35) than they are for younger respondents (closer to 18).
+Regarding firm exits, when several personal and job characteristics are held constant, instances of exit are again higher for men when compared to women. 
+Here too, age differences suggest that younger respondents are more likely to experience exit when comapred to older respondents, even within groups of respondents aged 18-35.
+In general, the early stages of a respondent's career are marked by periods of high mobility in Russia, which is similar to the experience of young workers in other countries.
+However, after this period, mobility becomes increasingly unlikely.
+Part of this result could stem from the premiums tied to promotion. 
+I find that after controlling for individual heterogeneity (through the use of fixed effects estimation), firm exits do not improve immediate wages although promotions contain significant wage premiums, at least in the short term. 
+Results help to understand processes of inequality in wages and conditions that occur due to sorting, and the importance of promotions (internal job changes with the same employer) as "life chances" which improve earnings in the immediate sense.
+Gender differences in securing these life chances may help to understand wider gender gaps in earnings, which emerge later. 
 
 # Introduction 
 
-Russia's relatively liberalised economy has given workers more employment options and a wider spectrum of potential wages [imfreport]. 
-In this way workers are better able to correct mismatches of working conditions and wages if they feel they are entitled to more from work [@keith1995job; @cha].
-Theoretically these changes are tied to job mobility through either *job searching* or *job matching processes*.
-Yet despite this liberalisation, mobility rates in Russia are currently lower than they were in the Soviet Union as recorded by the IMF. 
+Russia's liberalised economy gave workers more employment options and a wider spectrum of potential wages and conditions [@imf1991study; @clarke2002market]. 
+As a result, theorists assumed that workers would increase their job mobility in order to correct their earnings and conditions [@keith1995wage; @keith1997job; @cha2014job; @clarke2002market].
+Such corrections are an important part of *job searching* and *job matching* theories of inequality [@schmelzer2012consequences; @schmelzer2011consequences].
+Despite these predictions, Russian job mobility rates in 2010 were lower than they were in the 1980's under the Soviet Union [@imf1991study]. 
+Although the labour market saw significant churn immediately after reforms in the 1990's, this rate gradually declined and returned to previous levels, with workers preferring to remain in the same job with the same employer [@clarke2000closure]. As a result, Russia presents an itneresting puzzle to researchers, one where wage inequality is relatively high, but job mobility is relatively low.
 
+This article has two aims. 
+First, we will focus on predicting mobility, estimating group differences in who moves and who remains in the same job with the same employer. 
+Do gender differences in Russia's job mobility exist, and if they do are these the product of gender, or gender differences in occupational sorting or firm size? 
+Further, is mobility confined only to younger workers, or do certain occupations contain mobility patterns that cannot be explained by age differences between workers alone?
+Second, having established these differences, we will consider the effects that moving has on wages. 
+Does mobility reward workers, in that after we consider the characteristics of those most likely to move, do premiums exist in the earnings of workers, and do those differ by mobility within and between firms?
+Again, I pay attention to the gender differences in the effects of mobility on earnings, asking whether men and women benefit equally from the change.
 
+We will use the Russia Longitudinal Monitoring Survey (RLMS) throughout  as a representative sample of the country's workforce. 
+This approach has two strengths which are relevant to the wider discussion of job mobility. 
+First, the survey explicitly measures firm exits and promotions which occurred in the last twelve months.
+Previous authors discussing mobility often operationalise promotions and exits in complex ways [@kalleberg2001satisfied; @keith1995wage; @keith1997job].
+Second, by using longitudinal data we will focus on the effects of mobility on wages, instead of comparing the wages of movers to non-movers [@cha2014job; @reichelt2017occupational].
 
+The article has three main findings .... summarise here.
+
+The article is structured as follows. The first section summarises the theoretical literature on job mobility. The second section summarises the empirical findings between age, gender, and job mobility. This section also presents Russia as an important case in the studies of job mobility. The third section summarises the data and the approach of estimating the likelihood of mobility, and the effect of mobility. Section four presents the results, while a brief discussion concludes the article. 
 
 # Review
 
 ## Job searching and Job matching 
 
-Two theoretical approaches make predictions about job mobility, these are the *job-searching* and  *job-matching* approaches. 
-Both suggest that poor work environments, either from inadequate pay or inadequate conditions, push workers to search for new positions [@kalleberg2001satisfied; @gesthuizen2008mismatching]. 
-The *job searching* approach considers the *Reservation Wage*, or the minimum wage a worker will consider before moving to a new position, given her skill set. 
-*Reservation wage X* drives employers out of unemployment, by capturing the minimum wage that workers will accept before taking a job. 
-*Reservation wage Y* where (X < Y) drives employees to new positions either within or between firms, by capturing the minimum wage that a worker will accept before changing positions. 
-If a previously unemployed worker accepts *Wage X* that is below *Wage Y*, they are assumed to continue job searching until they find their reservation wage [@schmelzer2010consequences; @burdett1978theory].
+Studies of job mobility rely on two theoretical approaches, *job-searching* and  *job-matching*. 
+Both suggest that poor work environments either from inadequate pay or inadequate conditions, push workers to search for new positions [@kalleberg2001satisfied; @gesthuizen2008mismatching; @schmelzer2011consequences]. 
+The *job searching* approach considers the *Reservation Wage*. 
+This is the minimum wage a worker accepts before moving to a new position, given their skill set. 
+*Reservation wage X* draws employees out of unemployment and is the minimum wage that he or she will accept before taking a job.
+*Reservation wage Y* where (X < Y) draws employees to new positions either within or between firms; it is the minimum wage that a worker will accept before changing positions.
+If a previously unemployed worker accepts *Wage X* that is below *Wage Y*, they are assumed to continue searching until they secure *Wage Y* [@schmelzer2010consequences; @burdett1978theory].
+*Wage Y* is typically greater than *Wage X* for several reasons including the fact that job-searching is costly to workers. 
+Most importantly however, workers searching for new positions have access to wider networks of information and wider knowledge about possible reservation wages. 
+There may be gender differences in these networks, which can lead to differences in reservation wages after the change.
 
-The *job-matching* approach is one where workers take time to evaluate whether their skills are a good fit for their tasks at work. 
+On the other hand, the *job-matching* approach is one where workers take time to evaluate whether they have a good amtch between their skills and their tasks at work. 
 Since work is an experience good, workers must try several jobs before finding a match.
-The large rates of mobility that workers see in the early stages of their career, is their navigation of the labour market, where individual employers and jobs are comapred relative to a workers skills and level of exprience [@sorensen1977structure; @thurow1975generating]. 
+The large rates of mobility that workers see in the early stages of their career, is them navigating the labour market, trying individual employers and jobs and comparing their experience with rpevious experiences [@sorensen1977structure; @thurow1975generating]. 
 
-How do the theories above explains the large differencs in mobility between workers? 
+How do the theories above explains the large differences in mobility between workers? 
 Both understand that workers are most mobile in the early stages of their career. 
 However, in the job searching approach, individuals try to secure their reservation wages as they establish themselves in the labour market and gain the experience and networks needed to evaluate new positions. 
 As they gradually close the gap between their given wage and their reservation wage, they become less mobile [@sorensen1977structure; @kalleberg1979sociology; @sorensen1975structure].
-The job-matching appraoch is slightly different in that it does not expect a wage premium tied to mobility, only that the subjectively evaluated match between a worker and her position should improve with mobility. 
+The job-matching approach is slightly different in that it does not expect a wage premium tied to mobility, only that the subjectively evaluated match between a worker and her position should improve following mobility. 
 This approach also anticipates the large rate of mobility in the early stages of a person's career, but in this mechanism workers are "experiencing" the type of work they would like to do. 
-It is possible that this mechanism affects men and women differently, in that men would be more driven by wages, and women be more driven by work life balance, especially if women hold the majority of care responsibilities in the home [@keith1997job].
+It is possible that this mechanism affects men and women differently, in that men would be more driven by wages, and women be more driven by work life balance or their experience at work. This is likely especially true if women hold the majority of care responsibilities in the home [@keith1997job].
 
 ## Gender differences in mobility and its returns
 
 Considering both theories together, neither explicitly notes a gender difference in job mobility. 
 Despite this, authors routinely find this difference  [@blau1981race; @keith1995wage; @keith1997job; @keith1999returns]. 
 Blau and Duncan [-@blau1981race] note young women are more likely to quit when compared to men. 
-Keith and McWilliam [-@keith1995wage] note that economic quits happen at a simialr rate for men and women, but that family related changes are more common among young women, when comapred to young men. 
+Keith and McWilliam [-@keith1995wage] note that economic quits happen at a similar rate for men and women, but that family related changes are more common among young women, when compared to young men. 
 They also find that men are more likely to experience job loss, when compared to young women, suggesting that gender differences stem mostly from different types of mobility, rather than a gender difference in wage returns from similar mobility types [@keith1995wage; @keith1999returns].
-In short, part of the voluntary job mobility carried out by women is closer tied to job matching than job searching, in this way Keith and McWilliams [-@keith1995wage; -@keith1999returns] sugegst women find positions where they are better able to combine family roles and work. 
+In short, part of the voluntary job mobility carried out by women is closer tied to job matching than job searching, in this way Keith and McWilliams [-@keith1995wage; -@keith1999returns] suggest women find positions where they are better able to combine family roles and work. 
 Gesthuizen finds some evidence to support this, reporting that dissatisfaction with the job match and dissatisfaction with hours increases women's chances of voluntary mobility to a new employer.
 This effect does not emerge for men. 
 Further, subjective dissatisfaction with wages also pushes women to inter-firm mobility, but not men, which would support the job searching hypothesis. 
 In discussing the result Gesthuizen [] notes that mobility may be “less costly” for women, in that men are more likely typically “breadwinner” roles, with less room
-Keith and McWilliams [-@keith1999returns] also note a gender difference in job searching behaviour, reporting men are more likely to explore new positions than women. Job searching behaviour was particualrly important as it brought a significant wage premiums for both men and women who engaged in job mobility. 
+Keith and McWilliams [-@keith1999returns] also note a gender difference in job searching behaviour, reporting men are more likely to explore new positions than women. Job searching behaviour was particularly important as it brought a significant wage premiums for both men and women who engaged in job mobility. 
 
 Beyond gender differences in mobility types, mobility may have different effects on men and women. 
 Keith and McWilliams [-@keith1999returns, -@keith1995wage; -@keith1997job] find no gender difference in the effects of job mobility on wages, assuming the mobility occurs for economic reasons. 
 Further, they find that men and women benefit roughly equally from the interaction between job search and job mobility.
 Gesthuizen [] also finds no significant difference between men and women in the premium tied to mobility.
 Cha [-@cha2014job] notes a significant difference in the effect of mobility on earnings between women with and without children, but one that runs opposite to the described pattern. 
-Women with children see few rewards to mobility when compared to woment without children, who experienced signifcant premiums in earnings.
+Women with children see few rewards to mobility when compared to women without children, who experienced significant premiums in earnings.
 The study doesn't consider men.
-Kronberg [-@kronberg2013stay] finds this specific difference, reporting that men gain more from voluntary mobility to a new employer when comapred to women, although see a premium also. 
+Kronberg [-@kronberg2013stay] finds this specific difference, reporting that men gain more from voluntary mobility to a new employer when compared to women, although see a premium also. 
 
 
 Although other authors find no gender differences between men and women in the wage effects of "economic quits" between young men and women in the early stages of their career [@keith1995wage]. This suggests that the wage or conditions premium described above applies more often to men than to women, even when removing gender differences in types of mobility. 
@@ -110,9 +136,9 @@ Some authors argue that the lack of a gender
 ## Russia's labour market, as a case
 
 Russia's fast transition to a post-soviet economy had positive and negative effects on gender differences in its labour market. 
-Although transition increased women's participation and employemnt, it also increased levels variation in women's job quality [@gerber2006dynamic]. 
+Although transition increased women's participation and employment, it also increased levels variation in women's job quality [@gerber2006dynamic]. 
 Given the pace of market transition, this increased variation did not stem from a decline in human capital, but the *"introduction of market institutions"* [@gerber2006dynamic].
-Since the liberalisation of the labour market, authors have argued 
+Since the liberalization of the labour market, authors have argued 
 Despite the theories above, Russian levels of job mobility actually fell in the 1990's, to levels below that of 1980's soviet job mobility, at least in measures of inter-firm mobility (voluntary quits to new employers). 
 
 
@@ -169,7 +195,7 @@ ggplot(aes(x=mob_final,
   labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
        x="Mobility type",
        y="Proportion of respondents",
-       caption="RLMS rounds 2015 to 2011 \nAuthors own calculation")+
+       caption="RLMS rounds 2011 to 2015 \nAuthors own calculation")+
   guides(size=FALSE)+
   geom_text(data = right_label, aes(color = gender, label = round(prop, 3)),
                                size = 3, hjust = -.6) +
@@ -210,7 +236,7 @@ ggplot(aes(x=mob_final,
   labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
        x="Mobility type",
        y="Proportion of respondents",
-       caption="RLMS rounds 2015 to 2011 \nAuthors own calculation")+
+       caption="RLMS rounds 2011 to 2015 \nAuthors own calculation")+
   guides(size=FALSE)+
   facet_wrap(~age_groups)+
   scale_x_discrete(labels = abbreviate)
@@ -246,7 +272,7 @@ ggplot(aes(x=mob_final,
   labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
        y= "Average monthly wages in rubles",
        x="Mobility type",
-       caption="RLMS rounds 2015 to 2011 \nAuthors own calculation")+
+       caption="RLMS rounds 2011 to 2015 \nAuthors own calculation")+
   guides(size=FALSE)+
   geom_text(data = sum3, aes(color = gender, label = round(wage_mean, 0)),
             size = 3, hjust = -.6)
@@ -330,12 +356,6 @@ kable(cbind(t1, t2), digits=3,
 
 
 
-View(ru3)
-#kable(tidy(m1), 
- #     digits = 3,
-  #    booktabs=TRUE) %>% 
-  #kable_styling(latex_options = c("scale_down"))
-
 
 
 ```
@@ -345,43 +365,47 @@ View(ru3)
 
 We now turn to the quetion of how mobility affects earnings
 ```{r}
-df_m<- ru3 %>% 
-  mutate(ln_wage = log(wage),
-         t= year - 2011) %>% 
-  filter(gender=="Male",
-         ln_wage !=-Inf) 
+#df_m<- ru3 %>% 
+ # mutate(ln_wage = log(wage),
+  #       t= year - 2011) %>% 
+  #filter(gender=="Male",
+ #        ln_wage !=-Inf) 
 
 
-View(df_m)
 
-df_m <- pdata.frame(df_m, index=c("idind", "round"))
-df_m
-
-
-df_f<- ru3 %>% 
-  mutate(ln_wage = log(wage),
-         t= year - 2011) %>% 
-  filter(gender=="Female",
-         ln_wage !=-Inf,
-         age_groups=="36-55") 
-
-ru3 %>% 
-  count(esec_simple) 
-
-pm_fe <- plm(ln_wage ~ mob_final + age + tenure +super + firm_size + factor(esec_simple) +  t, 
-                    data = df_m,
-                    index = c("idind", "round"), 
-                    model = "within")
+#df_m <- pdata.frame(df_m, index=c("idind", "round"))
+#df_m
 
 
-summary(pm_fe)
+#df_f<- ru3 %>% 
+ # mutate(ln_wage = log(wage),
+  #       t= year - 2011) %>% 
+  #filter(gender=="Female",
+   #      ln_wage !=-Inf,
+#         age_groups=="36-55") 
 
-tidy(pm_fe) %>% 
-mutate(sig=stars.pval(p.value)) %>% 
-kable(digits = 3)
+#ru3 %>% 
+#  count(esec_simple) 
+
+#pm_fe <- plm(ln_wage ~ mob_final + age + tenure +super + firm_size + factor(esec_simple) +  t, 
+ #                   data = df_m,
+  #                  index = c("idind", "round"), 
+   #                 model = "within")
+
+
+#summary(pm_fe)
+
+#tidy(pm_fe) %>% 
+#mutate(sig=stars.pval(p.value)) %>% 
+#kable(digits = 3)
 
 
 ```
+
+
+### scraps
+
+ this occured because workers were not being paid, rather than their desire to improve pay between two employers [@clarke2002market]. In fact Clarke [-@clarke2002market] noted a sharp rise in Russia's real wages during reforms, that also lead to significant variance in wages. He noted however, that the beneficiaries of these wages were respondents who remained in relatively successful firms which protected workers from instability. 
 
 
 
