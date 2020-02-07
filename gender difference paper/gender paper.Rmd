@@ -2,9 +2,9 @@
 title: "Gender Differences in Russia's Job Mobility and Its Rewards"
 author: "Author"
 date: "02 December 2019"
-output: pdf_document 
-bibliography: 'C:/Users/Ivan.Privalko/Desktop/R projects/ru_mobility/biblio/ru1.bib'
-toc: TRUE
+output: pdf_document
+bibliography: C:/Users/Ivan.Privalko/Desktop/R projects/ru_mobility/biblio/ru1.bib
+toc: yes
 ---
 
 
@@ -195,26 +195,36 @@ This is to capture the reservation wage mentioned above.
 Income from other sources like returns on savings, or returns on rental properties, do not encompass a reservation wage, and should be ignored.
 
 Finally, we consider a set of controls for models predicting mobility and models predicting wages.
-The literature above noted that russian wages tend to change quickly over time. 
+The literature above notes that russian wages tend to change quickly over time. 
 Although the majority of authors above mention the Russian labour amrket of the 1990's, it is clear that wages, in an aggregate sense, tend to change over time. 
 As a result we control for annual changes using survey round dummies (ROUND).
-Beyond this, authors mention the importance of human capital and experience; while we cannot measure a respondents full labour market experience directly, we can capture some of this effect usng a respondents age and age squared (IXAGE).
-Further, we note the importance of tenure, or the level of internal labour market experience reported by respondents.
+Beyond this, authors mention the importance of human capital and experience; while we cannot measure a respondents full labour market experience directly, we can capture some of this effect using a respondent's age and age squared (IXAGE).
+Further, we note the importance of tenure as a measure of firm specific human capital, or the level of internal labour market experience reported by respondents.
 We capture this measure using the year the respondent started with their current employer (IXJBSYR), and the current survey year.
-
-
-
+We also want to capture "pure" mobility effects [@le2002job], and so we controls for occupational differences (IXILPJB8) in mobility as well as the effects of occupational mobility on wages.
+By "pure mobility effect" we mean the change of jobs between and within firms while remaining in the same occupation [@le2002job]. 
+Finally we consider whether respondents hold supervisory positions within the same occupation (IXPRISUB), in an effort to avoid changes in responsibility within the same role.
 
 ## Estimation
 
+We will consider two sets of models throughout the article. 
+The first predicts the likelihood of promotion or firm exit, relative to staying in the same job with the same employer. 
+The second estimates the effects of job mobility on the log wages of respondents. 
 
+Logistic regression 
 
+$$ L =  \log_b( \frac{p}{1-p}) = \beta_0 + \beta_1x_1 + \beta_2x_2 $$ 
 
+In order to estimate the predicted effect of moving on  wages we will turn to fixed effects linear regression. 
+This formula is listed below.
 
+$$y_{it} - \overline{y_i} = \beta(X_{it} - \overline{X_i}) + (\alpha_i - \overline{\alpha_i}) + (u_{it} - \overline{u_i})$$
 
+This approach models average deviation in wages $(y_{it} - \overline{y_i})$ for individual $i$ at a given time $t$.
+The model also considers person specific deviations from a set of controls, which include job mobility $\beta(X_{it} - \overline{X_i})$. 
+Importantly, the model omits the influence of person-specific errors like motivation or upbringing, and avoids individual heterogeneity tied to job mobility $(\alpha_i - \overline{\alpha_i})$.
+The remaining level-2 errors are tied to differences over time that are not person-specific $(u_{it} - \overline{u_i})$.
 
-
-We focus only on those who are in employment and 
 
 # Results
 
