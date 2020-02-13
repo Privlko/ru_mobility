@@ -153,7 +153,9 @@ ru2 <- ru2 %>%
   mutate(tenure = year - job_year) 
 
 
-ru2
+ru2 %>% 
+  ggplot(aes(x=job_year))+
+  geom_density()
 
 
 # mobility rate by gender -------------------------------------------------

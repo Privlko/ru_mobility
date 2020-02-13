@@ -1,12 +1,10 @@
 library(tidyverse)
 
 
-##caution; there's an issues with occupational measures.
-
 ##start with 2015
 ##do not touch
 
-load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2015x.RData")
+load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2015x.RData")
 
 
 ix <-  x %>%
@@ -17,7 +15,7 @@ ix <-  x %>%
          newjob = ixnewjob, age = ixage,
          mainoc=ixmainoc, isco=ixilpjb8, firm_size=ixpjemps,
          sub=ixprisub, sub_n=ixnpsub, 
-         hours= ixpwrkhr, job_year=ixjobsyr,
+         hours= ixpwrkwh, job_year=ixjobsyr,
          w1 =inwgt_x) %>% 
   mutate(year = 2015)
 
@@ -25,7 +23,7 @@ ix <-  x %>%
 ix
 ##open 2014
 
-load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2014w.RData")
+load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2014w.RData")
 
 
 iw <-  x %>%
@@ -35,13 +33,13 @@ iw <-  x %>%
          lateral = iwmovao, lower=iwmovlp, 
          newjob = iwnewjob, age = iwage,
          mainoc= iwmainoc, isco=iwilpjb8, firm_size=iwpjemps,
-         sub=iwprisub, sub_n=iwnpsub, hours=iwpwrkhr, 
+         sub=iwprisub, sub_n=iwnpsub, hours=iwpwrkwh, 
          job_year=iwjobsyr, w1 =inwgt_w ) %>% 
   mutate(year = 2014)
 
 ##open 2013 
 
-load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2013v.RData")
+load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2013v.RData")
 iv <- x %>% 
   select(round, idind, wage = ivwagelm,
              income=ivinclmo, marr_stat=ivmarist, 
@@ -49,14 +47,14 @@ iv <- x %>%
              lateral = ivmovao, lower=ivmovlp, 
          newjob = ivnewjob, age = ivage,
          mainoc=ivmainoc, isco=ivilpjb8, firm_size=ivpjemps,
-         sub=ivprisub, sub_n=ivnpsub, hours=ivpwrkhr, 
+         sub=ivprisub, sub_n=ivnpsub, hours=ivpwrkwh, 
          job_year=ivjobsyr, w1 =inwgt_v ) %>% 
   mutate(year = 2013)
 
 
 
 ### open 2012 
-load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2012u.RData")
+load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2012u.RData")
 iu <- x %>% 
   select(round, idind, wage = iuwagelm,
          income=iuinclmo, marr_stat=iumarist, 
@@ -64,14 +62,14 @@ iu <- x %>%
          lateral = iumovao, lower=iumovlp, 
          newjob = iunewjob, age = iuage,
          mainoc=iumainoc, isco=iuilopjb, firm_size=iupjemps,
-         sub=iuprisub, sub_n=iunpsub, hours=iupwrkhr, 
+         sub=iuprisub, sub_n=iunpsub, hours=iupwrkwh, 
          job_year=iujobsyr, w1 =inwgt_u ) %>% 
   mutate(year = 2012)
 
 
 ### open 2011
 
-load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2011t.RData")
+load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2011t.RData")
 it <- x %>% 
   select(round, idind, wage = itwagelm,
          income=itinclmo, marr_stat=itmarist, 
@@ -80,7 +78,7 @@ it <- x %>%
          newjob = itnewjob, age = itage,
          mainoc=itmainoc, isco=itilopjb, firm_size=itpjemps,
          sub=itprisub, sub_n=itnpsub, 
-         hours=itpwrkhr, job_year=itjobsyr, w1 =inwgt_t ) %>% 
+         hours=itpwrkwh, job_year=itjobsyr, w1 =inwgt_t ) %>% 
   mutate(year = 2011)
 
 
@@ -118,6 +116,9 @@ ru1 %>%
 
 ru1 <- ru1 %>% arrange(idind, round)
 
+ru1 %>% 
+  ggplot(aes(x=hours))+
+  geom_density()
 
 
 # create a measure for total number of waves experienced ------------------

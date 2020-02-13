@@ -137,7 +137,8 @@ ru3 %>%
   ggplot(aes(x=esec))+
   geom_bar(position='stack',
            aes(y=..prop.., group=gender, fill=gender))+
-  coord_flip()
+  coord_flip()+
+  facet_wrap(.~gender)
 
 ru3 %>% 
 count(esec)
