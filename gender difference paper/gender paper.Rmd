@@ -810,10 +810,10 @@ It's possible that they are better able to recover from these penalties over the
 
 # Conclusion
 
-In general we will make three important conclusions.
+In general we will make three broad conclusions from our analysis.
 First, our results suggest that promotions in themselves have mixed effects on earnings; but they are especially crucial for young women.
 This result does not emerge in other studies listed above [@gesthuizen2009job; @lup2018something], possibly pointing to Russia as a unique case.
-Second, in a further split from other authors, we find that firm exits rarely have a significant effect on earnings [-@keith1999returns; -@keith1997job; @fuller2008job; @cha2014job]. 
+Second, in a further split from other authors, we find that firm exits rarely have a significant effect on earnings [@keith1999returns; @keith1997job; @fuller2008job; @cha2014job]. 
 Where they do have an effect on earnings, that effect is most likely negative.
 This result could stem from three issues. 
 First, the category for firm exits contains more involuntary mobility (like layoffs, dismissals, and redundancies) than voluntary mobility (like new opportunities and new jobs with new firms or employers).
