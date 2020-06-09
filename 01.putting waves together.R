@@ -16,7 +16,7 @@ ix <-  x %>%
          mainoc=ixmainoc, isco=ixilpjb8, firm_size=ixpjemps,
          sub=ixprisub, sub_n=ixnpsub, 
          hours= ixpwrkwh, job_year=ixjobsyr,
-         w1 =inwgt_x) %>% 
+         w1 =inwgt_x, gov= ixentgov) %>% 
   mutate(year = 2015)
 
 
@@ -34,7 +34,7 @@ iw <-  x %>%
          newjob = iwnewjob, age = iwage,
          mainoc= iwmainoc, isco=iwilpjb8, firm_size=iwpjemps,
          sub=iwprisub, sub_n=iwnpsub, hours=iwpwrkwh, 
-         job_year=iwjobsyr, w1 =inwgt_w ) %>% 
+         job_year=iwjobsyr, w1 =inwgt_w, gov= iwentgov) %>% 
   mutate(year = 2014)
 
 ##open 2013 
@@ -48,7 +48,7 @@ iv <- x %>%
          newjob = ivnewjob, age = ivage,
          mainoc=ivmainoc, isco=ivilpjb8, firm_size=ivpjemps,
          sub=ivprisub, sub_n=ivnpsub, hours=ivpwrkwh, 
-         job_year=ivjobsyr, w1 =inwgt_v ) %>% 
+         job_year=ivjobsyr, w1 =inwgt_v, gov= iventgov ) %>% 
   mutate(year = 2013)
 
 
@@ -63,7 +63,7 @@ iu <- x %>%
          newjob = iunewjob, age = iuage,
          mainoc=iumainoc, isco=iuilopjb, firm_size=iupjemps,
          sub=iuprisub, sub_n=iunpsub, hours=iupwrkwh, 
-         job_year=iujobsyr, w1 =inwgt_u ) %>% 
+         job_year=iujobsyr, w1 =inwgt_u, gov= iuentgov ) %>% 
   mutate(year = 2012)
 
 
@@ -78,7 +78,8 @@ it <- x %>%
          newjob = itnewjob, age = itage,
          mainoc=itmainoc, isco=itilopjb, firm_size=itpjemps,
          sub=itprisub, sub_n=itnpsub, 
-         hours=itpwrkwh, job_year=itjobsyr, w1 =inwgt_t ) %>% 
+         hours=itpwrkwh, job_year=itjobsyr, 
+         w1 =inwgt_t , gov= itentgov) %>% 
   mutate(year = 2011)
 
 

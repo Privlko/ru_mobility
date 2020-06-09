@@ -1,11 +1,11 @@
 ---
 title: "Gender Differences in Russia's Job Mobility and Its Rewards"
-author: "Author"
+author: "Ivan Privalko"
 date: \today
 output:
   pdf_document: null
 always_allow_html: yes
-bibliography: C:/Users/Ivan.Privalko/Desktop/R projects/ru_mobility/biblio/ru1.bib
+bibliography: C:/Users/ivan.privalko/Documents/RProjects/ru_mobility/biblio/ru1.bib
 
 
 abstract: |
@@ -27,7 +27,7 @@ library(plm)
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 
-load("C:/Users/Ivan.Privalko/Desktop/R projects/ru_mobility/genderpaper.RData")
+load("C:/Users/ivan.privalko/Documents/RProjects/ru_mobility/genderpaper.RData")
 
 ru3 <- ru3 %>% 
   mutate(age_groups=case_when(
@@ -36,9 +36,6 @@ ru3 <- ru3 %>%
     age %in% 56:100 ~ "56+")) %>% 
   filter(hours > 0)
 
-
-ru3 %>% 
-  filter(econ=='Employed') 
 
 
 ```
@@ -480,9 +477,9 @@ The section below turns to these explanations, predicting mobility events using 
 ## Multinomial logistic regression
 
 We now consider the effects of other explanatory variables, besides age and gender, in predicting mobility differences.
-The multinomial logistic regression consider the controls we discussed above, alongside gender and age. 
+The multinomial logistic regression considers the controls discussed above, as well as gender and age. 
 
-```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE, tidy=TRUE}
+```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE, tidy=TRUE, results='hide'}
 d1<- ru3 %>% 
   filter(age_groups=="0-35")
 d2<- ru3 %>% 
@@ -501,6 +498,10 @@ t2 <- tidy(m2) %>%
   mutate(signif = stars.pval(p.value)) 
 
 
+```
+
+
+```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE, tidy=TRUE}
 kable(cbind(t1, t2), 
       digits=3,
       booktabs=TRUE,
@@ -512,10 +513,7 @@ kable(cbind(t1, t2),
   pack_rows("Exit", 21, 30) %>% 
   footnote(number = c("RLMS rounds 20-25. Models consider two separate age groups", "*** p < 0.001, ** p < 0.01, * p < 0.05, . p < 0.1"))
 
-
-
 ```
-
 
 We discuss the main findings in turn, focusing on one mobility outcome at a time. 
 Regarding promotions, we first look at models for respondents aged 18-35. 
@@ -595,19 +593,21 @@ We start by considering respondents aged between 18-35, before considering respo
 We discuss the results for men and women separately since gender is a time-invariant variable.
 
 
-```{r, }
+```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE, tidy=TRUE}
+
+
 df_m<- ru3 %>% 
- mutate(ln_wage = log(wage),
+ mutate(ln_hrwage = log(wage/hours),
        t= year - 2011) %>% 
 filter(gender=="Male",
-        ln_wage !=-Inf,
+        ln_hrwage !=-Inf,
         age_groups=="0-35")
 
 
 
 df_m <- pdata.frame(df_m, index=c("idind", "round"))
 
-pm_m <- plm(ln_wage ~ 1 + mob_final + age + tenure + super + factor(esec_simple) +factor(marr) + hours, 
+pm_m <- plm(ln_hrwage ~ 1 + mob_final + age + tenure + super + factor(esec_simple) +factor(marr) + firm_size, 
                    data = df_m,
                    index = c("idind", "round"), 
                     model = "within")
@@ -616,10 +616,10 @@ pm_m <- plm(ln_wage ~ 1 + mob_final + age + tenure + super + factor(esec_simple)
 
 
 df_f<- ru3 %>% 
- mutate(ln_wage = log(wage),
+ mutate(ln_hrwage = log(wage/hours),
        t= year - 2011) %>% 
 filter(gender=="Female",
-        ln_wage !=-Inf,
+        ln_hrwage !=-Inf,
         age_groups=="0-35")
 
 
@@ -627,7 +627,7 @@ filter(gender=="Female",
 
 df_f <- pdata.frame(df_f, index=c("idind", "round"))
 
-pm_f <- plm(ln_wage ~ 1 +  mob_final + age + tenure + super + factor(esec_simple) +factor(marr) + hours, 
+pm_f <- plm(ln_hrwage ~ 1 +  mob_final + age + tenure + super + factor(esec_simple) +factor(marr) + firm_size, 
                    data = df_f,
                    index = c("idind", "round"), 
                     model = "within")
@@ -706,20 +706,19 @@ This finding also reflects the hypothesis above, women who remain in the same jo
 As we will see in the next section, this penalty related to tenure does not exist among middle aged workers, suggesting it is unique to young women in the labour market. 
 We now turn to these results.
 
-
-```{r}
+```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE, tidy=TRUE}
 df_m<- ru3 %>% 
- mutate(ln_wage = log(wage),
+ mutate(ln_hrwage = log(wage/hours),
        t= year - 2011) %>% 
 filter(gender=="Male",
-        ln_wage !=-Inf,
+        ln_hrwage !=-Inf,
         age_groups=="36-55")
 
 
 
 df_m <- pdata.frame(df_m, index=c("idind", "round"))
 
-pm_m <- plm(ln_wage ~ mob_final + age + tenure + super + factor(esec_simple) +factor(marr) + hours, 
+pm_m <- plm(ln_hrwage ~ mob_final + age + tenure + super + factor(esec_simple) +factor(marr) + firm_size, 
                    data = df_m,
                    index = c("idind", "round"), 
                     model = "within")
@@ -728,10 +727,10 @@ pm_m <- plm(ln_wage ~ mob_final + age + tenure + super + factor(esec_simple) +fa
 
 
 df_f<- ru3 %>% 
- mutate(ln_wage = log(wage),
+ mutate(ln_hrwage = log(wage/hours),
        t= year - 2011) %>% 
 filter(gender=="Female",
-        ln_wage !=-Inf,
+        ln_hrwage !=-Inf,
         age_groups=="36-55")
 
 
@@ -739,7 +738,7 @@ filter(gender=="Female",
 
 df_f <- pdata.frame(df_f, index=c("idind", "round"))
 
-pm_f <- plm(ln_wage ~ mob_final + age + tenure + super + factor(esec_simple) +factor(marr) + hours, 
+pm_f <- plm(ln_hrwage ~ mob_final + age + tenure + super + factor(esec_simple) +factor(marr) + firm_size, 
                    data = df_f,
                    index = c("idind", "round"), 
                     model = "within")
@@ -755,8 +754,9 @@ female_results <- tidy(pm_f) %>%
   select(-term, -statistic) %>% 
   mutate(signif = stars.pval(p.value)) 
 
+```
 
-##knit
+```{r}
 
 kable(cbind(male_results, female_results), 
       digits=3,
@@ -767,8 +767,9 @@ kable(cbind(male_results, female_results),
   footnote(number = c("RLMS rounds 20-25. Models consider gender separately", "*** p < 0.001, ** p < 0.01, * p < 0.05, . p < 0.1"))
 
 
-
 ```
+
+
 
 Starting with men, we note that the effect of promotion is now significant.
 Middle-aged men now report roughly a 6 per cent increase in wages after the change, further they do not see a change in wages after a lateral change, or a firm exit.
