@@ -1,6 +1,6 @@
 ---
 title: "Gender Differences in Russia's Job Mobility and Its Rewards"
-author: "Ivan Privalko"
+author: "Author"
 date: \today
 output:
   pdf_document: null
@@ -9,7 +9,7 @@ bibliography: C:/Users/ivan.privalko/Documents/RProjects/ru_mobility/biblio/ru1.
 
 
 abstract: |
- This article considers age and gender differences in the probability and consequences of job mobility; specifically firm exits and promotions in Russia. Russia's labour market should have high rates of job mobility, but IMF figures suggest the  rate in early 2010 is on par with the 1980's. Beyond this, little is known about who is mobile in Russia and whether mobility has any impact on wages once the characteristics of movers are controlled for. In other words, we will ask whether job mobility is a sorting mechanism, or whether it has premiums in pay in and of itself. Results  show a gender difference in the likelihood of firm exit but not in the likelihood of promotion. When several personal and job characteristics are held constant, young men and women have similar odds of promotion. However, promotions have a positive effect only on the wages of young women; young men's wages are not affected  by promotion. On the topic of firm exits, when several personal and job characteristics are held constant, exit is more common among young men when compared to young women;  this is also true of middle aged men and women. Further, young men see a significant  decrease in wages following an exit, while young women are not affected by firm   exit. These results are flipped for middle aged workers; middle aged men see no change in wages following an exit, but middle aged women see significant declines in wages following an exit.Using these results, the article shows that the early   stages of a respondent's career are marked by periods of high mobility, which is similar to the experience of young workers in other countries. After this period,  mobility becomes increasingly unlikely. Part of this result could stem from the premiums tied to promotion. Results help to understand processes of inequality in wages and conditions that occur due to sorting, and the importance of promotions  (internal job changes with the same employer) as 'life chances' which improve  earnings in the immediate sense. Gender differences in securing these life chances  may help to understand wider gender gaps in earnings, which emerge later.
+ This article considers age and gender differences in the probability and consequences of job mobility; specifically firm exits and promotions in Russia. Russia's labour market should have high rates of job mobility, but we will show using IMF figures that the  rate in early 2010 is on par with the 1980's. Beyond this, little is known about who is mobile in Russia and whether mobility has any impact on wages once the characteristics of movers are controlled for. In other words, we will ask whether job mobility is a sorting mechanism, or whether it has premiums in pay in and of itself. Results  show a gender difference in the likelihood of firm exit but not in the likelihood of promotion. When several personal and job characteristics are held constant, young men and women have similar odds of promotion. However, promotions have a positive effect only on the wages of young women; young men's wages are not affected  by promotion. On the topic of firm exits, when several personal and job characteristics are held constant, exit is more common among young men when compared to young women;  this is also true of middle aged men and women. Further, young men see a significant  decrease in wages following an exit, while young women are not affected by firm   exit. These results are flipped for middle aged workers; middle aged men see no change in wages following an exit, but middle aged women see significant declines in wages following an exit.Using these results, the article shows that the early   stages of a respondent's career are marked by periods of high mobility, which is similar to the experience of young workers in other countries. After this period,  mobility becomes increasingly unlikely. Part of this result could stem from the premiums tied to promotion. Results help to understand processes of inequality in wages and conditions that occur due to sorting, and the importance of promotions  (internal job changes with the same employer) as 'life chances' which improve  earnings in the immediate sense. Gender differences in securing these life chances  may help to understand wider gender gaps in earnings, which emerge later.
  
 ---
 
@@ -70,7 +70,8 @@ First, the survey explicitly measures firm exits and promotions which occurred i
 Previous authors discussing mobility often operationalise promotions and exits in complex ways [@kalleberg2001satisfied; @keith1995wage; @keith1997job], but we will avoid these issues with clear measures of promotion and exit.
 Second, longitudinal data lets us focus on the effects of mobility on wages, instead of comparing the wages of movers to the wages of non-movers [@cha2014job; @reichelt2017occupational; @privalko2019quits]. Since mobility is not a random event, we will remove the influence of unmeasured person-specific characteristics and consider the net gains produced by job mobility. 
 
-The article has three findings. First, mobility is most likely in the earliest stages of one's career. 
+The article has three findings. 
+First, mobility is most likely in the earliest stages of one's career. 
 For young and middle aged workers, age and firm tenure are negatively correlated with mobility. 
 This is true of both promotions and firm exits and suggests that young workers are especially reliant on job changes to find the right position.
 Second, there is no difference between young women and young men in terms of promotion after controlling for a range of factors like working time and marital status.
@@ -140,10 +141,19 @@ Most importantly neither theory explicitly states why men and women would differ
 
 We now turn to the empirical literature, where we will first consider gender differences in mobility (either a quit or a promotion). 
 The findings are generally mixed, even when authors focus on young workers alone. 
-Blau and Duncan [-@blau1981race] find that young women are more likely to exit when compared to young men in a sample of US workers. 
-Using more recent data, Hachen [-@hachen1988gender] finds the opposite result, women are less likely to exit a firm when compared to men. 
+Blau and Duncan [-@blau1981race] find that young women are more likely to exit a firm when compared to young men in a sample of US workers. 
+Using more recent ut similar data, Hachen [-@hachen1988gender] finds the opposite result, women are less likely to exit a firm when compared to men. 
 Further, he finds that women are also less likely to receive a promotion when compared to men, even in highly feminized occupations.
 This suggests that a shift has taken place where women may have become less mobile, at least in the United States.
+
+More recent data suggests that gender differences in promotion are slight, once job seeking efforts are considered. 
+For example, Bosquet et al., [-@bosquet2019gender] explore gender differences in chances of promotion using a sample of French economists.
+They note that female economists are less likely to be promoted when compared to their male counterparts, but this difference is not statistically significant. 
+Further, the authors note that women are significantly less likely to seek out promotion, which suggests they are less likely to job search. 
+This gap in promotion seeking may be a key factor in wage and occupational attainment gaps, which occur later in women's careers.
+Elsewhere, Hospido et al., [-@hospido2019gender] use job history data for economists at the European Central Bank. 
+The authors find a gender gap in promotion prior to 2010, after 2010 however, this gap disappears most likely due to internal efforts to close gender differences and promote diversity.
+Once again, the authors note that women are significantly less likely to apply for promotion when compared to men, and although there was no difference in the likelihood of promotion genders, this lack of application likely plays a part in earnings differences which occur later. 
 
 Gesthuizen [-@gesthuizen2009job] finds that women in the Netherlands are more likely to exit the firm and more likely to secure promotion when compared to men in the Netherlands. 
 However, measures of workplace dissatisfaction explain both of these differences, which suggests that women are more likely to cite dissatisfaction with conditions, and are also more likely to move.
@@ -151,7 +161,8 @@ Keith and McWilliam [-@keith1995wage] also do not find a gender difference when 
 However, they find that "family-related quits" are more common among young women when compared to young men.
 This suggests that previous studies noting a gender difference in mobility, like Blau and Duncan [-@blau1981race] must consider different types of voluntary mobility, like those for family reasons and those for economic reasons.
 However, this does not explain the results reported by Hachen [-@hachen1988gender] who claims that women are particularly immobile when compared to men.
-In general, the literature suggests that differences between genders in their likelihood of mobility are uncommon and when they exist, they can often be explained by additional measures.
+
+In general, the literature suggests that differences between genders in their likelihood of mobility are uncommon and when they exist, they can often be explained by additional measures, such as the type of job mobility experienced.
 
 ### Gender and returns to mobility
 
