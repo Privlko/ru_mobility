@@ -402,29 +402,30 @@ sum3 <- ru3 %>%
   filter(!is.na(mob_final),
          !is.na(wage)) %>% 
   group_by(gender, mob_final) %>% 
-  summarise(wage_mean = mean(wage, na.rm=TRUE),
-            wage_sd = sd(wage, na.rm = TRUE),
+  mutate(hr_wage = wage/hours) %>% 
+  summarise(hr_wage_mean = mean(hr_wage, na.rm=TRUE),
+            hr_wage_sd = sd(hr_wage, na.rm = TRUE),
             n= n(),
-            wage_se = wage_sd/sqrt(n)) 
+            hr_wage_se = hr_wage_sd/sqrt(n)) 
  
 
 sum3 %>% 
 ggplot(aes(x=mob_final, 
-             y= wage_mean,
+             y= hr_wage_mean,
              col=gender))+
   geom_line(aes(group=gender))+
   geom_point(aes(group=mob_final,
                  size=3))+
-  geom_errorbar(aes(ymin=wage_mean-(wage_se*1.96),
-                    ymax=wage_mean+(wage_se*1.96)),
+  geom_errorbar(aes(ymin=hr_wage_mean-(hr_wage_se*1.96),
+                    ymax=hr_wage_mean+(hr_wage_se*1.96)),
                 width=0.25)+
   scale_y_continuous(labels = scales::comma)+
   labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
-       y= "Average monthly wages in rubles",
+       y= "Average hourly wage in rubles",
        x="Mobility type",
        caption="RLMS rounds 2011 to 2015 \nAuthor's own calculation")+
   guides(size=FALSE)+
-  geom_text(data = sum3, aes(color = gender, label = round(wage_mean, 0)),
+  geom_text(data = sum3, aes(color = gender, label = round(hr_wage_mean, 0)),
             size = 3, hjust = -.6)+
   theme_minimal()
 
@@ -444,26 +445,27 @@ We consider the age differences in this effect below.
 sum4 <- ru3 %>%
   filter(!is.na(mob_final),
          !is.na(wage)) %>% 
+  mutate(hr_wage=wage/hours) %>% 
   group_by(gender, age_groups, mob_final) %>% 
-  summarise(wage_mean = mean(wage, na.rm=TRUE),
-            wage_sd = sd(wage, na.rm = TRUE),
+  summarise(hr_wage_mean = mean(hr_wage, na.rm=TRUE),
+            hr_wage_sd = sd(hr_wage, na.rm = TRUE),
             n= n(),
-            wage_se = wage_sd/sqrt(n)) 
+            hr_wage_se = hr_wage_sd/sqrt(n)) 
  
 
 sum4 %>% 
 ggplot(aes(x=mob_final, 
-             y= wage_mean,
+             y= hr_wage_mean,
              col=gender))+
   geom_line(aes(group=gender))+
   geom_point(aes(group=mob_final,
                  size=3))+
-  geom_errorbar(aes(ymin=wage_mean-(wage_se*1.96),
-                    ymax=wage_mean+(wage_se*1.96)),
+  geom_errorbar(aes(ymin=hr_wage_mean-(hr_wage_se*1.96),
+                    ymax=hr_wage_mean+(hr_wage_se*1.96)),
                 width=0.25)+
   scale_y_continuous(labels = scales::comma)+
   labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
-       y= "Average monthly wages in rubles",
+       y= "Average hourly wages in rubles",
        x="Mobility type",
        caption="RLMS rounds 2015 to 2011 \nAuthor's own calculation")+
   guides(size=FALSE)+
@@ -497,8 +499,8 @@ d2<- ru3 %>%
   filter(age_groups=="36-55")
 
 
-m1 <- multinom(mob_final ~  gender + age  + tenure + super + factor(esec_simple) +factor(marr) + hours, data=d1)
-m2 <- multinom(mob_final ~  gender + age  + tenure + super + factor(esec_simple) +factor(marr) + hours, data=d2)
+m1 <- multinom(mob_final ~  gender + age  + tenure + super + factor(esec_simple) +factor(marr) + hours + factor(size), data=d1)
+m2 <- multinom(mob_final ~  gender + age  + tenure + super + factor(esec_simple) +factor(marr) + hours + factor(size), data=d2)
 
 t1<- tidy(m1) %>% 
   select(-statistic, -y.level) %>% 
@@ -518,10 +520,10 @@ kable(cbind(t1, t2),
       booktabs=TRUE,
       caption = "Multinomial logistic regression models, split by age") %>% 
   kable_styling(latex_options = c("scale_down","repeat_header")) %>% 
-  add_header_above(c(" " = 1, "Age 18-35" = 4, "Age 36-55" = 4)) %>% 
-  pack_rows("Promotion", 1, 10) %>% 
-  pack_rows("Lateral change", 11, 20) %>% 
-  pack_rows("Exit", 21, 30) %>% 
+  #add_header_above(c(" " = 1, "Age 18-35" = 4, "Age 36-55" = 4)) %>% 
+  #pack_rows("Promotion", 1, 11) %>% 
+  #pack_rows("Lateral change", 12, 22) %>% 
+  #pack_rows("Exit", 23, 33) %>% 
   footnote(number = c("RLMS rounds 20-25. Models consider two separate age groups", "*** p < 0.001, ** p < 0.01, * p < 0.05, . p < 0.1"))
 
 ```

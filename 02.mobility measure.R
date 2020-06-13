@@ -2,25 +2,7 @@ library(forcats)
 library(tidyverse)
 library(broom)
 library(gtools)
-library(ggrepel)
-
-
-
-# load the data, don't use ru1!! -----------------------------------------------------------
-ru2 <- tbl_df(ru1)
-ru2
-
-
-
-
-ru2 %>% 
-  count(promotion, lateral)
-
-ru2 %>% count(newjob)
-
-ru2 %>% count(newjob, promotion, lateral)
-# convert mobility measures to factors ------------------------------------
-
+library(ggrepel)  
 ru2$newjob <- factor(ru2$newjob, levels = unique(ru2$newjob))
 ru2$promotion <- factor(ru2$promotion, levels = unique(ru2$promotion))
 ru2$lateral <- factor(ru2$lateral, levels = unique(ru2$lateral))

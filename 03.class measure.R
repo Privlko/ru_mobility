@@ -291,6 +291,14 @@ ru3 %>%
   count(marr)
 
 
+# create categorical measure for firm size --------------------------------
 
+ru3$size <- cut(ru3$firm_size,
+                     breaks=c(-Inf, 100, 200, Inf),
+                     labels=c("0-99","100-199","200+"))
+
+
+ru3 %>% 
+  count(size)
 
 save(ru3, file = "genderpaper.RData")
