@@ -467,7 +467,8 @@ ggplot(aes(x=mob_final,
   labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
        y= "Average hourly wages in rubles",
        x="Mobility type",
-       caption="RLMS rounds 2015 to 2011 \nAuthor's own calculation")+
+       caption="RLMS rounds 2015 to 2011 \nAuthor's own calculation",
+       guide="Gender")+
   guides(size=FALSE)+
   facet_wrap(~age_groups)+
   scale_x_discrete(labels = abbreviate)+
