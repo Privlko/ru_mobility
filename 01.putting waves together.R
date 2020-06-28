@@ -4,7 +4,7 @@ library(tidyverse)
 ##start with 2015
 ##do not touch
 
-load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2015x.RData")
+load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2015x.RData")
 
 
 ix <-  x %>%
@@ -23,7 +23,7 @@ ix <-  x %>%
 ix
 ##open 2014
 
-load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2014w.RData")
+load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2014w.RData")
 
 
 iw <-  x %>%
@@ -39,7 +39,7 @@ iw <-  x %>%
 
 ##open 2013 
 
-load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2013v.RData")
+load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2013v.RData")
 iv <- x %>% 
   select(round, idind, wage = ivwagelm,
              income=ivinclmo, marr_stat=ivmarist, 
@@ -54,7 +54,7 @@ iv <- x %>%
 
 
 ### open 2012 
-load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2012u.RData")
+load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2012u.RData")
 iu <- x %>% 
   select(round, idind, wage = iuwagelm,
          income=iuinclmo, marr_stat=iumarist, 
@@ -69,7 +69,7 @@ iu <- x %>%
 
 ### open 2011
 
-load("C:/Users/Ivan.Privalko/Documents/Russia/data/adult2011t.RData")
+load("C:/Users/Ivan/Desktop/dir/data/rlms/adult2011t.RData")
 it <- x %>% 
   select(round, idind, wage = itwagelm,
          income=itinclmo, marr_stat=itmarist, 
@@ -115,7 +115,9 @@ ru1 %>%
   count(year)
 
 
-ru1 <- ru1 %>% arrange(idind, round)
+ru1 %>% 
+  count(gov)
+
 
 ru1 %>% 
   ggplot(aes(x=hours))+
@@ -126,7 +128,8 @@ ru1 %>%
 
 ru1 <- ru1 %>% 
   group_by(idind) %>% 
-  mutate(n=n())
+  mutate(n=n()) %>% 
+  ungroup()
 
 ru1
 # create a measure for ever promoted, lateral, or lower --------------------------------------
@@ -136,7 +139,8 @@ ru1 <- ru1 %>%
   mutate(ever_promoted = min(promotion, na.rm=TRUE),
          ever_lateral = min(lateral, na.rm=TRUE),
          ever_lowered = min(lower, na.rm=TRUE),
-         never_moved = max(newjob, na.rm = TRUE))
+         never_moved = max(newjob, na.rm = TRUE)) %>% 
+  ungroup()
 
 #check
 ru1 %>% 

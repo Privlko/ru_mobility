@@ -45,7 +45,7 @@ ru4 %>% count(n)
 
 # panel analysis ----------------------------------------------------------
 
-  
+
 (p1 <- pdata.frame(ru3, c("idind","round"), drop.index = FALSE, row.names = TRUE))
 (pbal <- pdata.frame(ru4, c("idind","round"), drop.index = FALSE, row.names = TRUE))
 

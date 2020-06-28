@@ -4,16 +4,15 @@ author: "Author"
 date: \today
 output:
   pdf_document: null
+  word_document: default
 always_allow_html: yes
 bibliography: C:/Users/ivan.privalko/Documents/RProjects/ru_mobility/biblio/ru1.bib
-
-
 abstract: |
- This article considers age and gender differences in the probability and consequences of job mobility; specifically firm exits and promotions in Russia. Russia's labour market should have high rates of job mobility, but we will show using IMF figures that the  rate in early 2010 is on par with the 1980's. Beyond this, little is known about who is mobile in Russia and whether mobility has any impact on wages once the characteristics of movers are controlled for. In other words, we will ask whether job mobility is a sorting mechanism, or whether it has premiums in pay in and of itself. Results  show a gender difference in the likelihood of firm exit but not in the likelihood of promotion. When several personal and job characteristics are held constant, young men and women have similar odds of promotion. However, promotions have a positive effect only on the wages of young women; young men's wages are not affected  by promotion. On the topic of firm exits, when several personal and job characteristics are held constant, exit is more common among young men when compared to young women;  this is also true of middle aged men and women. Further, young men see a significant  decrease in wages following an exit, while young women are not affected by firm   exit. These results are flipped for middle aged workers; middle aged men see no change in wages following an exit, but middle aged women see significant declines in wages following an exit.Using these results, the article shows that the early   stages of a respondent's career are marked by periods of high mobility, which is similar to the experience of young workers in other countries. After this period,  mobility becomes increasingly unlikely. Part of this result could stem from the premiums tied to promotion. Results help to understand processes of inequality in wages and conditions that occur due to sorting, and the importance of promotions  (internal job changes with the same employer) as 'life chances' which improve  earnings in the immediate sense. Gender differences in securing these life chances  may help to understand wider gender gaps in earnings, which emerge later.
- 
+  This article considers age and gender differences in the probability and consequences of job mobility; specifically firm exits and promotions in Russia. Russia's labour market should have high rates of job mobility, but we will show using IMF figures that the  rate in early 2010 is on par with the 1980's. Beyond this, little is known about who is mobile in Russia and whether mobility has any impact on wages once the characteristics of movers are controlled for. In other words, we will ask whether job mobility is a sorting mechanism, or whether it has premiums in pay in and of itself. Results  show a gender difference in the likelihood of firm exit but not in the likelihood of promotion. When several personal and job characteristics are held constant, young men and women have similar odds of promotion. However, promotions have a positive effect only on the wages of young women; young men's wages are not affected  by promotion. On the topic of firm exits, when several personal and job characteristics are held constant, exit is more common among young men when compared to young women;  this is also true of middle aged men and women. Further, young men see a significant  decrease in wages following an exit, while young women are not affected by firm   exit. These results are flipped for middle aged workers; middle aged men see no change in wages following an exit, but middle aged women see significant declines in wages following an exit.Using these results, the article shows that the early   stages of a respondent's career are marked by periods of high mobility, which is similar to the experience of young workers in other countries. After this period,  mobility becomes increasingly unlikely. Part of this result could stem from the premiums tied to promotion. Results help to understand processes of inequality in wages and conditions that occur due to sorting, and the importance of promotions  (internal job changes with the same employer) as 'life chances' which improve  earnings in the immediate sense. Gender differences in securing these life chances  may help to understand wider gender gaps in earnings, which emerge later.
 ---
 
 ```{r, echo=FALSE, warning=FALSE, include=FALSE}
+
 library(tidyverse)
 library(forcats) 
 library(gtools)
@@ -23,6 +22,7 @@ library(nnet)
 library(broom)
 library(plm)
 
+options(kableExtra.auto_format = FALSE)
 
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
@@ -34,10 +34,10 @@ ru3 <- ru3 %>%
     age %in% 0:35 ~  "0-35",
     age %in% 36:55 ~ "36-55",
     age %in% 56:100 ~ "56+")) %>% 
-  filter(hours > 0)
+  filter(hours > 0,
+         tenure > -1)
 
-
-
+# https://www.elibrary.imf.org/view/IMF071/00119-9789264134683/00119-9789264134683/pt04ch06.xml
 ```
 
 \newpage
@@ -45,10 +45,12 @@ ru3 <- ru3 %>%
 # Introduction 
 
 Russia's liberalized economy gave workers more employment options and a wider spectrum of potential wages and conditions [@imf1991study; @clarke2002market; @clarke2000closure; @kozyreva2015economic], at least when compared to the Soviet Union. 
-When countries liberalize in this way, theorists often assume that workers will increase their mobility in order to correct earnings and conditions [@keith1995wage; @keith1997job; @cha2014job; @clarke2002market; @privalko2019quits].
+When countries liberalize in this way, theorists often assume that workers will increase their mobility in order to correct earnings and conditions [@keith1995wage; @keith1997job; @cha2014job; @clarke2002market].
 Such corrections are an important part of *job searching* and *job matching* theories of inequality [@schmelzer2012consequences; @schmelzer2011consequences].
-Despite these predictions, Russian job mobility in 2010 was lower than the rate in 1980's Soviet Union [@imf1991study]. 
-Although Russians saw significant labour churn immediately after the reforms of the 1990's, this rate gradually declined and returned to previous levels, with workers remaining in the same job with the same employer [@clarke2000closure]. 
+Despite these predictions, we will show that Russian job mobility in 2010 was on par with the same rate in 1980's Soviet Union [@imf1991study].
+In a summary of the Soviet economy, the IMF [-@imf1991study, Table IV.6.5] estimate that the separation rate in manufacturing (a key sector) was approximately 17%, and that voluntary exits accounted for roughly 45% of these transfers.
+Although Russians saw significant labour churn immediately after the reforms of the 1990's, this rate gradually declined and returned to previous levels, with workers remaining in the same job with the same employer [@clarke2000closure].
+We will show that job exits between 2010 and 2015 are roughly on par with the separation rate captured by the IMF.
 For this reason Russia presents an interesting puzzle for researchers, one where high wage inequality exists parallel to low job mobility.
 
 Russia experienced significant economic change throughout the 1990's, but has moved to a period of (relative) stability during the 2010 decade. 
@@ -127,64 +129,87 @@ The job-matching approach is slightly different in that it does not expect a wag
 Given that younger workers know little about the labour market until they experience it first hand, they are expected to move to gather this experience and to make judgement themselves.
 Hence this approach has a slightly different explanation for the negative correlation between age and mobility.
 
-Regarding gender, these differences are less clear. 
+Regarding gender, these differences are less clear.
 In the job-matching approach it's possible that women have less bargaining power in securing *wage y*, and so are less likely to move. 
 It is also possible that women have different networks when compared to men, and so are less likely to have access to opportunities which contain *wage y*.
 In terms of the job-matching approach, men may have fewer facets of work to consider when evaluating a good fit, and so they may be less interested in the general fit between their skills and their work environment.
 Women, who must often balance both work and care as well as the anticipation of combining work and care in the future, may have several more facets of work which they must consider in order to find a "good match".
-Facets like the ability to work part-time, and access to flexibility in working time more generally.
+Facets like the ability to work part-time, and access to flexibility in working time more generally [@javdani2019moving, @cha2014job].
 Most importantly neither theory explicitly states why men and women would differ in terms of job mobility. 
 
 ## Gender differences in mobility and its returns
 
 ### Gender and mobility
 
-We now turn to the empirical literature, where we will first consider gender differences in mobility (either a quit or a promotion). 
-The findings are generally mixed, even when authors focus on young workers alone. 
-Blau and Duncan [-@blau1981race] find that young women are more likely to exit a firm when compared to young men in a sample of US workers. 
-Using more recent ut similar data, Hachen [-@hachen1988gender] finds the opposite result, women are less likely to exit a firm when compared to men. 
-Further, he finds that women are also less likely to receive a promotion when compared to men, even in highly feminized occupations.
-This suggests that a shift has taken place where women may have become less mobile, at least in the United States.
+We now turn to the empirical literature, where we first consider gender differences in mobility (either a quit or a promotion). 
+The findings are generally mixed, even when authors focus on young workers alone.
+Several authors find a gender difference in promotion and quitting [@javdani2019moving,  @blau1981race, @hachen1988gender], and several others report no significant difference in these, when comparing men and women [@cha2014job, @gesthuizen2009job]. 
 
-More recent data suggests that gender differences in promotion are slight, once job seeking efforts are considered. 
-For example, Bosquet et al., [-@bosquet2019gender] explore gender differences in chances of promotion using a sample of French economists.
-They note that female economists are less likely to be promoted when compared to their male counterparts, but this difference is not statistically significant. 
-Further, the authors note that women are significantly less likely to seek out promotion, which suggests they are less likely to job search. 
-This gap in promotion seeking may be a key factor in wage and occupational attainment gaps, which occur later in women's careers.
-Elsewhere, Hospido et al., [-@hospido2019gender] use job history data for economists at the European Central Bank. 
-The authors find a gender gap in promotion prior to 2010, after 2010 however, this gap disappears most likely due to internal efforts to close gender differences and promote diversity.
-Once again, the authors note that women are significantly less likely to apply for promotion when compared to men, and although there was no difference in the likelihood of promotion genders, this lack of application likely plays a part in earnings differences which occur later. 
+In a wide study of US job mobility Hachen [-@hachen1988gender] notes that women are particularly immobile in the labour market, being less likely to quit a job, and also less likely to receive a promotion, when comapred to men. 
+This finding stands even in highly feminised occupations.
 
-Gesthuizen [-@gesthuizen2009job] finds that women in the Netherlands are more likely to exit the firm and more likely to secure promotion when compared to men in the Netherlands. 
-However, measures of workplace dissatisfaction explain both of these differences, which suggests that women are more likely to cite dissatisfaction with conditions, and are also more likely to move.
-Keith and McWilliam [-@keith1995wage] also do not find a gender difference when predicting "economic quits", suggesting that young men and young women are equally likely to leave a firm for a better opportunity elsewhere.
+In a more recent paper, Javdani and McGee [-@javdani2019moving] find a similar result using a Canadian sample of workers.
+They note singificant gender difference in the chances of experiencing a promotion, one that cannot be explained by hours worked, overtime, or supervisory position.
+This gap is also significant for women without children when compared to men without children. 
+Women with children on the other hand, typically see a similar chance of experiencing promotion when compared to men with children, but their earnings growth is slower than that of men with children who experience the change. 
+Crucially, controlling for supervisory roles, working time, and overtime does not explain the difference in either promotion or earnings growth following a promotion. 
+The finding tied to women without children suggests that women in the earlier stages of their career may find it hard to secure promotion, but once this is secured, their earnings typically rise at the same pace as men's.
+
+Several authors do not report gender gaps in promotion.
+Bosquet et al., [-@bosquet2019gender] explore these differences using a sample of French economists.
+They find no significant difference in promotion between men and women. 
+However, they note that women are significantly less likely to seek out promotion, which suggests they are less likely to participate in job search.
+This may mean they are better able to secure well matched jobs, or better matched reservation wages.
+Once models control for pursuit or application of promotion, results between men and women are similar, for this particular occupation. 
+
+Elsewhere, Hospido et al., [-@hospido2019gender] note the importance of firm level measures and policies when predicting women's mobility likelihood.
+They also use economists' job history data at the European Central Bank to consider gender differences in promotion. 
+The authors find a gap in favour of men, prior to 2010.
+After 2010 this difference disappears most likely due to internal efforts to close gender differences and promote diversity.
+Once again, the authors note that women are significantly less likely to apply for promotion when compared to men, and although there was no difference in the likelihood of promotion between genders after the policy change, this lack of application likely plays a part in earnings differences which are exaccerbated over time.
+
+Regarding firm exits and voluntary quits, Gesthuizen [-@gesthuizen2009job] at first finds that women in the Netherlands are more likely to exit the firm and more likely to secure promotion when compared to men. 
+However, this difference disappears once Gesthuizen [-@gesthuizen2009job] controls for dissatisfaction with work.
+This suggests dissatisfaction explains both of difference between men and women in promotion, and the difference between men and women in voluntary quits; in short, women in the Dutch sample are more likely to cite dissatisfaction with conditions, and are also more likely to move.
+
+A key factor in discussions ofgender differences in firm exit, is the type of mobility considered.
+Keith and McWilliam [-@keith1995wage] do not find a gender difference when predicting "economic quits", suggesting that young men and young women are equally likely to leave a firm for a better opportunity with a new employer or firm.
 However, they find that "family-related quits" are more common among young women when compared to young men.
-This suggests that previous studies noting a gender difference in mobility, like Blau and Duncan [-@blau1981race] must consider different types of voluntary mobility, like those for family reasons and those for economic reasons.
+This suggests that previous studies noting a gender difference in mobility, like Blau and Duncan [-@blau1981race] may over-state gender differences in certain voluntary firm exits or quits.
+Not all of these changes may be strictly economic quits, as presented by Keith and McWilliam [-@keith1995wage], and some may occur for family reasons or other obligations which may disproportionately fall on women.
 However, this does not explain the results reported by Hachen [-@hachen1988gender] who claims that women are particularly immobile when compared to men.
 
-In general, the literature suggests that differences between genders in their likelihood of mobility are uncommon and when they exist, they can often be explained by additional measures, such as the type of job mobility experienced.
+In general, the literature suggests that gender differences in mobility are uncommon and often may be explained by additional measures, such as the type of job mobility experienced.
 
 ### Gender and returns to mobility
 
 We will also consider the literature on gender differences in returns to mobility. 
-Here too, authors have produced mixed findings, although the majority of authors report no gender difference in the premium of firm exits or promotions.
+Here too, authors have produced mixed findings, although most report no gender difference in the premium tied to firm exits or promotions.
 Keith and McWilliams [-@keith1999returns; -@keith1997job] report no such difference, assuming mobility occurs for "economic reasons" and not "family-related" reasons.
 They do not consider the impact of promotions.
-Gesthuizen [-@gesthuizen2009job] also finds no significant difference between men and women in subjective premiums tied to mobility within or between firms.
-Fuller [-@fuller2008job] too considers this difference, finding that early quits  during the first five years of one's career yield an equally positive result in the wages of both men and women.
+Gesthuizen [-@gesthuizen2009job] too finds no significant difference between men and women in subjective premiums tied to mobility within or between firms.
+Fuller [-@fuller2008job] also considers this difference, finding that early quits  during the first five years of one's career yield an equally positive result in the wages of both men and women.
 She explores this difference further, comparing early career movers with children and finding that both men and women see positive changes in wages after the change.
 When Fuller [@fuller2008job] substitutes marital status for children a similar result emerges, men and women see similar returns to job mobility regardless of their marital status. 
 In short, results suggest some premium tied to voluntary mobility exists, however, this premium appears equally likely for both men and women.
+As with gender differences in mobility, this premium applies strictly to economic quits related to the reservation wage.
 
+However, a number of authors do find a gender difference in the effect of changing jobs.
 Kronberg [-@kronberg2013stay] is one of the few authors who notes a gender difference in mobility's effect on earnings. 
 She notes that men gain more from a voluntary exit to a new employer when compared to women, although women also see a premium in wages. 
 Crucially, Kronberg [-@kronberg2013stay] notes that the effect applies only to men and women in "good jobs", characterised as those in high paying occupations with benefits and insurance.
 In the UK, Lup [-@lup2018something] reports that women who take a promotion see no change in their subjective satisfaction with work, whereas men see an improvement in this measure.
-Lastly, Cha [-@cha2014job] reports a difference between single women and women with children regarding the effect of a quit on earnings. 
+Cha [-@cha2014job] reports a difference between single women and women with children regarding the effect of a quit on earnings. 
 According to Cha [-@cha2014job] women with children see almost no rewards after the change, compared to women without children who see significant premiums.
 However, since the study does not consider men, and so it is not possible to comment on gender differences in quit and promotion premiums.
-In general, it appears that gender differences in the return to mobility are minor, and likely affect specific type of women, such as married women or mothers, rather than young workers more broadly. 
 
+Javdani and McGee [-@javdani2019moving. p.219] also find that women experience less wage growth following a promotion, *"a woman in Canada needs to be promoted just to experience the same wage growth in a year as a non-promoted man."* 
+However, this finding largely depends on whether women have children or not. 
+Women without children see similar earnings growth when compared to men after a promotion.
+Women with children see slower earnings growth following a promotion, when compared to similar men who experience promotion. 
+They also argue that working hours are a crucial factor in determining promotion and return on promotion, concluding that more flexible forms of work will likely close some of the gender differences in promotion and return on promotion. 
+
+In general, it appears that gender differences in the return to mobility are minor, and likely affect specific type of women, such as married women or mothers, rather than young workers more broadly. 
 
 ### Gender and Russia's labour market, as a case
 
@@ -194,15 +219,14 @@ These wage differences are particularly important because they exist within occu
 Clarke [-@clarke2000closure] also notes that despite the high rates of wage inequality and job mobility in the 1990's, job mobility has declined without a corresponding fall in wage differences.
 He hypothesizes that Russia is a country where *"there are significant barriers to labour mobility that are preventing the erosion of these differentials"* [in wages].
 Again, this large inequality in wages is particularly strange because it occurs within occupations and within regions, suggesting that workers have much to gain from local job mobility, if only in terms of wages and not other factors like housing or access to employer sponsored childcare.
-Clarke concludes [-@clarke2000closure] that personal acquaintances and individual networks are particularly important in securing high wages in the wider labour market, this mechanism has led to a "closing" of the Russian labour market since the 1990's, making Russia a particularly interesting case for study.
+Clarke concludes [-@clarke2000closure] that personal acquaintances and individual networks are particularly important in securing high wages in the wider labour market, this mechanism has led to a *"closing"* of the Russian labour market since the 1990's, making Russia a particularly interesting case for study.
 This is somewhat backed up by Turunen [-@turunen2004leaving], who finds that during that time, many well educated white collar workers who were based in the public sector, hesitated in taking jobs in the newly formed private sector. 
 Since many of these firms were new or lacked clear career paths, many workers, especially those with high human capital, considered these to be "bad" jobs.
 
 On the topic of gender differences in mobility, Gerber and Mayorova [-@gerber2006dynamic] contradict many of the US and British findings above, reporting that throughout the 1990's women relative to men, had higher rates of layoff and labour market exit, and higher odds of starting in low-quality jobs. 
 Further, they find that women reported lower odds of voluntary job mobility overall, and lower odds of holding good quality jobs.
-In short, while Russia's transition to a market economy may have improved women's access to jobs, women remain at a disadvantage relative to men [@gerber2006dynamic].
-In general, this topic has not received much attention in Russia.
-
+In short, while Russia's transition to a market economy may have improved women's access to jobs, women remain at a disadvantage relative to men, according to the authors [@gerber2006dynamic].
+In general, the topic of job mobility and its wage premiums has not received much attention in Russia.
 
 # Methodology
 
@@ -219,14 +243,14 @@ We discuss each of these details in the subsections below.
 The RLMS is a representative and longitudinal study of the Russian population [@kozyreva2015economic; @kozyreva2016data]. 
 Data is collected at the household level annually.
 The survey contains a rich range of questions on employment and earnings, including measures of job mobility over the last twelve months.
-The survey is particularly useful to this article because it captures both internal and external job changes.
+It is particularly useful because it captures both internal and external job changes.
 We will focus on the following sample throughout; observations where respondents are in employment; observations where respondents are not in self-employment, education, or inactivity; and observations where respondents have no missing values for job history or mobility.
 The final data frame takes the form of a person-year file, which contains 15,700+ respondents and 42,400+ observations.
-The final dataset is also nt balanced, in that some respondents have a single observation, while others have several.
+The final dataset is also not balanced, in that some respondents have a single observation, while others have several.
 
 ## Variables
 
-This section considers three different sets of variables; job mobility, wages, and a standard set of controls.
+This section considers three different sets of variables; job mobility, wages, and a standard set of controls,personal and firm specific.
 Starting with measures of job mobility, we will rely on three variables within the RLMS dataset. 
 The first asks respondents whether they changed jobs since November of the previous year (IXNEWJOB).
 Using this measure we can capture the most basic form of mobility, whether respondents remain in the same job with the same employer, whether they changed jobs with their employer, and whether they changed employers. 
@@ -235,23 +259,54 @@ The final measure asks respondents whether they experienced a lateral move since
 As a result we are left with a four category measure of mobility, capturing (1) respondents in the same job with the same employer, (2) respondents who exit the firm, (3) respondents who receive a promotion, and (4) respondents who experience a lateral move within the same firm. 
 One limitation of this measure is that we cannot distinguish between voluntary and involuntary firm exits. 
 
-Regarding wages, we consider monthly net wages from the respondent's primary job (IXWAGELM). This considers monthly earnings in rubles; if respondents are paid in a different currency they are asked to convert the monthly amount to rubles. 
-We specifically focus on wages from the main job; and ignore other measures like total monthly income (IXINCLMO). 
-This is to capture the reservation wage mentioned above. 
+Regarding wages, we consider a combination hourly net wages from the respondent's primary job.
+We create this measure by dividing monthly wages (IXWAGELM) by weekly working time (IXPWRKWH). 
+This measure is a rough ratio of hourly wages; if respondents are paid in a different currency they are asked to convert the monthly amount to rubles. 
+We specifically focus on wages from the main job; and ignore other measures like total monthly income (IXINCLMO), this is to capture the reservation wage mentioned above. 
 Income from other sources like returns on savings, or returns on rental properties, do not encompass a reservation wage, and should be ignored.
+Our final outcome in fixed-effects models will be the natural log if hourly wages, due to their non-normal distribution. 
 
 Finally, we consider a set of controls for models predicting mobility and models predicting wages.
 Our main control of interest are gender and age.
 We will consider groups of young (18-35), middle aged (36-55), and older workers (55+) separately. 
-As mobility is uncommon among older workers, we will focus mostly on younger and middle aged workers.
-Beyond this, authors mention the importance of human capital and experience; while we cannot measure a respondents full labour market experience directly, we can capture some of this effect using a respondent's age (IXAGE) measured on a linear scale.
+As mobility is uncommon among older workers, we will focus mostly on younger and middle aged workers throughout the article.
+Beyond this, authors above mention the importance of human capital and experience; while we cannot measure a respondents full labour market experience directly, we can capture some of this effect using a respondent's age (IXAGE) measured on a linear scale.
 Further, we note the importance of tenure as a measure of firm specific human capital, or the level of internal labour market experience reported by respondents.
 We capture this measure using the year the respondent started with their current employer (IXJBSYR), and the current survey year.
 We also want to capture "pure" mobility effects [@le2002job], and so we controls for occupational differences (IXILPJB8) in mobility as well as the effects of occupational mobility on wages.
 Since occupations have multiple values, we simplify this group into High, Medium, and Low EsEC groups [@rose2010social], in an effort to control for white, blue, and no collar jobs.
 Further, we consider whether respondents hold supervisory positions within the same occupation (IXPRISUB), in an effort to avoid changes in responsibility within the same role.
-We also control for the number of weekly hours worked (IXPWRKWH), since job mobility can often lead to changes in working time, and with it changes in pay that have little to do with the original mobility itself [@privalko2019quits].
-Lastly, we will control for changes in marital status (IXMARIST) in an effort to anticipate changing social roles which may impact wages.
+In addition, we will control for changes in marital status (IXMARIST) in an effort to anticipate changing social roles which may impact wages.
+Finally, we include two firm level measures, the size of the firm (IXPJEMPS), and whether the government is an owner or partial owner of the enterprise where the respondent works (IXENTGOV).
+We will only include these firm-level measures into the multinomial logistic regression, because these factors rarely change over time.
+A table of summary statistics is listed below. 
+
+```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE, tidy=TRUE, results='hide'}
+
+
+set.seed(42)
+library(magrittr)
+library(qwraps2)
+options(qwraps2_markup = "markdown")
+
+summary <- ru3 %>%
+   dplyr::select(.data$mob_final, .data$wage, 
+                 .data$gender, .data$age, 
+                 .data$tenure, .data$super, 
+                 .data$esec_simple, .data$marr, 
+                 .data$hours, .data$gov,
+                 .data$size) %>% 
+  dplyr::group_by(.data$gender) %>%
+  summary_table(.)
+```
+
+
+
+```{r, results = "asis"}
+
+summary
+```
+
 
 ## Estimation
 
@@ -259,55 +314,69 @@ We will consider two sets of models throughout the article.
 The first predicts the likelihood of promotion or firm exit, relative to staying in the same job with the same employer. 
 The second estimates the effects of job mobility on the wages of respondents. 
 
-We first consider group differences in mobility events, using logistic regression. We can start by thinking about a simple binary regression which considers the likelihood of a mobility event, like a quit $(y_i = 1 | x_i)$, compared to it not occurring, like staying in the same job with the same employer $(y_i = 0 | x_i)$. This model is shown below.
-
-$$Pr(y_i = 1 | x_i) = \frac{exp(\beta_0 + \beta_1 x_i)}{1 + exp(\beta_0 + \beta_1x_i)}$$
-
-This model depends on an intercept $(\beta_0)$, a set of estimated effects $(\beta_n)$, and a set of predictors $(x_n)$. Rabe and Hesketh [-@rabe2008multilevel] show how this model can be extended to include more than one outcome. For example, if the number of outcomes is three $(S=3)$, they propose the following model.
+On the first point, we will use multinomial logistic regression.
+Rabe and Hesketh [-@rabe2008multilevel] show how binary logistic regression models can be extended to include more than one outcome.
 
 $$Pr(y_i = 1 | x_i) = \frac{1}{1 + exp(\beta_0^{[2]} + \beta_1^{[2]}x_i) + exp(\beta_0^{[3]} + \beta_1^{[3]}x_i)} $$
+
 $$Pr(y_i = 2 | x_i) = \frac{exp(\beta_0^{[2]} + \beta_1^{[2]}x_i)}{1 + exp(\beta_0^{[2]} + \beta_1^{[2]}x_i) + exp(\beta_0^{[3]} + \beta_1^{[3]}x_i)} $$
+
 $$Pr(y_i = 3 | x_i) = \frac{exp(\beta_0^{[3]} + \beta_1^{[3]}x_i)}{1 + exp(\beta_0^{[2]} + \beta_1^{[2]}x_i) + exp(\beta_0^{[3]} + \beta_1^{[3]}x_i)} $$
 
-In the binary case we rely only on one intercept $(\beta_0)$ and one estimated coefficient $(\beta_1)$. 
-With multiple outcomes we rely on an intercept for the two non-referee outcomes $(\beta_0^{[2]}, \beta_0^{[3]})$, and an estimated coefficient for each outcome $(\beta_1^{[2]}, \beta_1^{[3]})$. 
+ 
+We will rely on an intercept for the two non-referee outcomes $(\beta_0^{[2]}, \beta_0^{[3]})$, and an estimated coefficient for each outcome $(\beta_1^{[2]}, \beta_1^{[3]})$. 
 This model will allow us to consider group differences in mobility events relative to staying in the same job with the same employer.
 
-Next, in order to estimate the predicted effect of mobility on  wages, we will turn to fixed effects linear regression.
-We can think of a model that predicts wages as having two error-terms, one specific to individual $i$ which does not vary over time $t$, and one which varies over $i$ and $t$ [@longhi2014practical; @rabe2008multilevel].
-The resulting model is listed below.
-
-$$y_{it}^* = \beta_1 X_{1it} +\beta_2 X_{2it} + ... + \beta_n X_{nit} + \alpha_i + u_{it}$$
-This model predicts wages $(y_{it})$ for individual $i$ at time $t$, given the estimated effect $(\beta_n)$ of each control $(x_{nit})$, and two error terms; one varying between individuals $(\alpha_i)$, and one varying between and within individuals $(u_{it})$.
-However, we are interested mostly in the effects of mobility within individuals, in that we want to know the effect of moving, rather than the difference between movers and non-movers. 
+Next, we will consider linear fixed effects regression, which will control for person-specific unmeasured variables. 
+We are interested mostly in the effects of mobility within individuals, in that we want to know the effect of moving, rather than the difference between movers and non-movers.
+As mentioned above, our outcome will be the natural log of monthly wages, divided by weekly working hours.
 Since mobility is not a random process personal, time-fixed, error terms of respondents $(\alpha_i)$, things like motivation, upbringing, or self-sufficiency for example, will likely correlate with a person's chance of exiting a firm or taking a promotion.
 We can remove their influence on mobility using a "within-estimator", by subtracting each terms from its cluster mean [@longhi2014practical; @rabe2008multilevel; @allison2009fixed].
-This formula is listed below.
 
-$$y_{it} - \overline{y_i} = \beta(X_{it} - \overline{X_i}) + (\alpha_i - \overline{\alpha_i}) + (u_{it} - \overline{u_i})$$
+$$ \log(y_{it}) - \log(\overline{y_i}) = \beta(X_{it} - \overline{X_i}) + (\alpha_i - \overline{\alpha_i}) + (u_{it} - \overline{u_i})$$
 
-This approach models average deviation in wages $(y_{it} - \overline{y_i})$ for individual $i$ at a given time $t$.
+This approach models average deviation in wages $(\log(y_{it}) - \log(\overline{y_i}))$ for individual $i$ at a given time $t$.
 The model also considers person specific deviations from a set of controls, which include job mobility $\beta(X_{it} - \overline{X_i})$. 
 Importantly, this model omits person-specific errors and avoids individual heterogeneity tied to job mobility $(\alpha_i - \overline{\alpha_i})$.
-The remaining level-2 errors are tied to differences over time that are not person-specific $(u_{it} - \overline{u_i})$.
+The remaining level-2 errors are tied to person-specific differences over time $(u_{it} - \overline{u_i})$.
+A final note considers the number of waves recorded by each participant, summarised in Table 2. 
+\newpage
+
+```{r}
+ru3 %>% 
+  group_by(idind) %>% 
+  mutate( n1 = n()) %>% 
+  ungroup() %>% 
+  count(n1) %>% 
+  mutate(prop = n / sum(n),
+         observations=n,
+         Total_waves=n1,
+         Proportion = prop) %>% 
+  select(-n1, -n, -prop) %>% 
+  kable(booktabs=T,
+        caption = "Total number of waves recorded out of five")
+```
+
+
 
 # Results
 
 This section is split into three parts. 
 First, we will discuss summary statistics which look at gender differences in mobility, and gender differences in wages by movers and non-movers.
 Second, we estimate gender differences in mobility using multinomial logistic regression.
-Finally, we will explore the effects of mobility on earnings using fixed-effects linear regression, as mentioned above.
+Finally, we will explore the effects of mobility on log hourly earnings using fixed-effects linear regression, as mentioned previously.
 
 ## Descriptive statistics
 
 Figure 1  considers gender differences in mobility types focusing on observations rather than individuals.
 We are primarily interested in whether men and women move at a similar rate using observations alone.
-Overall, respondents are largely immobile although women (0.814) are less mobile compared to men (0.762). 
-This difference mainly stems from men's higher likelihood of listing a firm exit, when compared to women.
+Overall, respondents are largely immobile although women (0.813) are less mobile when compared to men (0.760). 
+This difference mainly stems from men's higher likelihood of firm exit, when compared to women.
 Both men and women (0.044) are equally likely to list a promotion in a given year, although promotions are uncommon in general if we consider cross-sectional data alone.
-Respondents are much more likely to list exiting a firm, with men (0.182) listing more exits than women (0.130).
+Respondents are much more likely to list exiting a firm, with men (0.183) listing more exits than women (0.129).
 Lateral changes within the firm are the least common mobility type and appear not to have a gender difference. 
 Considering the confidence intervals in Figure 1, it seems gender differences are most prominent in terms of firm exits.
+Thinking back to the job mobility rate reported for Soviet manufacturing in the 1980's (17%)  [@imf1991study], the rate below is similar despite significant changes to the Russian labour market. 
 
 ```{r, fig.cap="Proportion of respondents citing mobility type by gender"}
 
@@ -339,20 +408,21 @@ ggplot(aes(x=mob_final,
   labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
        x="Mobility type",
        y="Proportion of respondents",
-       caption="RLMS rounds 2011 to 2015 \nAuthor's own calculation")+
+       caption="RLMS rounds 2011 to 2015 \nAuthor's own calculation",
+       colour="")+
   guides(size=FALSE)+
   geom_text(data = right_label, aes(color = gender, label = round(prop, 3)),
                                size = 3, hjust = -.6) +
   geom_text(data = left_label, aes(color = gender, label = round(prop, 3)),
             size = 3, hjust = 1.8)+
-  theme_minimal()
+  theme_minimal() 
 
 ```
 
 
-Figure 2 considers the same information, but splits the date by broad age category of respondents. 
-Younger respondents are more mobile and more likely to list both promotion and firm exit than older groups. 
-Both of these measures gradually decline when we consider older groups. 
+Figure 2 considers the same information, but splits the sample by broad age categories of workers. 
+Younger respondents are more mobile and more likely to list both promotion and firm exit than older groups, who are even less mobile than younger workers. 
+Both of these measures gradually decline as we consider older groups. 
 Notably, the gender difference in firm exits disappears for older groups, but remains for the youngest group. 
 
 
@@ -393,16 +463,17 @@ ggplot(aes(x=mob_final,
 
 ```
 
-Both figures make an important point, there are gender and age effects tied job mobility, with younger workers being more mobile than older workers, and younger men being more mobile than younger women. 
+Both figures make a key point, there are gender and age effects tied job mobility, with younger workers being more mobile than older workers, and younger men being more mobile than younger women. 
 We now turn to the wage differences between these groups. 
-As mentioned throughout, we will not consider the effect of promotion or exit on wages. Instead we will look at group differences in wages, by gender. 
+As mentioned throughout, we will not consider the effect of promotion or exit on wages here. 
+Instead we will consider group differences in average wages, by gender. 
 
 ```{r, fig.cap="Wage differences between gender and mobility groups"}
 sum3 <- ru3 %>%
   filter(!is.na(mob_final),
          !is.na(wage)) %>% 
   group_by(gender, mob_final) %>% 
-  mutate(hr_wage = wage/hours) %>% 
+  mutate(hr_wage = wage/(hours*4)) %>% 
   summarise(hr_wage_mean = mean(hr_wage, na.rm=TRUE),
             hr_wage_sd = sd(hr_wage, na.rm = TRUE),
             n= n(),
@@ -433,11 +504,11 @@ ggplot(aes(x=mob_final,
 ```
 
 Figure 3 captures three important differences. 
-First, there is a gender difference in pay, with men earning more than women in each mobility category. 
+First, there is a gender difference in hourly pay, with men earning more than women in each mobility category. 
 Second, there are differences in pay between mobility groups. 
-For example respondents who experience a promotion in a given year cite higher wages than those with the same job and the same employer.
+For example respondents who experience a promotion in a given year typically cite higher hourly wages than those with the same job and the same employer.
 Third, there is a pay penalty among respondents who exit a firm, but this penalty is only apparent for men. 
-This effect likely stems from women's pay reaching a "floor", in that pay for women is already low and has little "distance" to travel after an exit.
+This may stem from women's pay reaching a "floor", in that pay for women is already low and has little "distance" to travel after an exit, while men's pay sees more "distnace" between their earnings and the floor.
 We consider the age differences in this effect below.
 
 
@@ -445,7 +516,7 @@ We consider the age differences in this effect below.
 sum4 <- ru3 %>%
   filter(!is.na(mob_final),
          !is.na(wage)) %>% 
-  mutate(hr_wage=wage/hours) %>% 
+  mutate(hr_wage=wage/(hours*4)) %>% 
   group_by(gender, age_groups, mob_final) %>% 
   summarise(hr_wage_mean = mean(hr_wage, na.rm=TRUE),
             hr_wage_sd = sd(hr_wage, na.rm = TRUE),
@@ -467,9 +538,8 @@ ggplot(aes(x=mob_final,
   labs(subtitle= "Estimates contain 95% confidence intervals (Standard error*1.96)",
        y= "Average hourly wages in rubles",
        x="Mobility type",
-       caption="RLMS rounds 2015 to 2011 \nAuthor's own calculation",
-       guide="Gender")+
-  guides(size=FALSE)+
+       caption="RLMS rounds 2011 to 2015 \nAuthor's own calculation")+
+    guides(size=FALSE)+
   facet_wrap(~age_groups)+
   scale_x_discrete(labels = abbreviate)+
   theme_minimal()
@@ -483,15 +553,15 @@ Older women appear to make significant gains when citing promotion, however the 
 These wide confidence intervals likely stem from the fact that mobility is uncommon among older workers.
 Regardless of this effect, we are primarily interested in the experience of younger and middle aged workers.
 
-Generally we find a difference between age and gender groups in the likelihood of mobility.
+Generally ,we find a difference between age and gender groups in the likelihood of mobility.
 We also find that respondents who cite mobility tend to have higher wages in the years when they experience mobility. 
-However, the graphs above only lay out the baseline differences between men and women, without considering gender differences in hours worked, experience, and occupations. 
-The section below turns to these explanations, predicting mobility events using the controls described throughout.  
+However, the graphs above only lay out the baseline differences between men and women, without considering differences in experience, firm tenure, and occupational status. 
+The section below turns to these explanations, predicting mobility events using the controls described previously.  
 
 ## Multinomial logistic regression
 
 We now consider the effects of other explanatory variables, besides age and gender, in predicting mobility differences.
-The multinomial logistic regression considers the controls discussed above, as well as gender and age. 
+The multinomial logistic regression considers the controls discussed above, as well as gender and age, these are listed in Table 2. 
 
 ```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE, tidy=TRUE, results='hide'}
 d1<- ru3 %>% 
@@ -500,8 +570,8 @@ d2<- ru3 %>%
   filter(age_groups=="36-55")
 
 
-m1 <- multinom(mob_final ~  gender + age  + tenure + super + factor(esec_simple) +factor(marr) + hours + factor(size), data=d1)
-m2 <- multinom(mob_final ~  gender + age  + tenure + super + factor(esec_simple) +factor(marr) + hours + factor(size), data=d2)
+m1 <- multinom(mob_final ~  gender + age  + tenure + factor(super) + factor(esec_simple) +factor(marr) + hours + factor(size) +factor(gov), data=d1)
+m2 <- multinom(mob_final ~  gender + age  + tenure + factor(super) + factor(esec_simple) +factor(marr) + hours + factor(size) +factor(gov) , data=d2)
 
 t1<- tidy(m1) %>% 
   select(-statistic, -y.level) %>% 
@@ -521,72 +591,76 @@ kable(cbind(t1, t2),
       booktabs=TRUE,
       caption = "Multinomial logistic regression models, split by age") %>% 
   kable_styling(latex_options = c("scale_down","repeat_header")) %>% 
-  #add_header_above(c(" " = 1, "Age 18-35" = 4, "Age 36-55" = 4)) %>% 
-  #pack_rows("Promotion", 1, 11) %>% 
-  #pack_rows("Lateral change", 12, 22) %>% 
-  #pack_rows("Exit", 23, 33) %>% 
+  add_header_above(c(" " = 1, "Age 18-35" = 4, "Age 36-55" = 4)) %>% 
+  pack_rows("Promotion", 1, 13) %>% 
+  pack_rows("Lateral change", 14, 26) %>% 
+  pack_rows("Exit", 27, 39) %>% 
   footnote(number = c("RLMS rounds 20-25. Models consider two separate age groups", "*** p < 0.001, ** p < 0.01, * p < 0.05, . p < 0.1"))
 
 ```
 
-We discuss the main findings in turn, focusing on one mobility outcome at a time. 
+We discuss the main findings in turn, focusing on one mobility outcome at a time.
 Regarding promotions, we first look at models for respondents aged 18-35. 
 There is no significant gender difference between young men and women when it comes to promotion, who both have similar odds of experiencing this change.
-This difference remains even when we control for differences in age, firm tenure, supervisory position, the occupation of respondents, their marital status, and their normal hours of work.
+This difference remains even when we control for differences in age, firm tenure, supervisory position, the occupation of respondents, their marital status, their normal hours of work, and the sector and size of the firm where they work.
+
 Beyond this, the controls have their own impact on promotions. 
 Younger respondents are more likely to receive a promotion than older respondents, as are respondents with less firm experience compared to respondents with more firm experience. 
 Respondents in supervisor positions are also more likely to cite a promotion when compared to respondents without a supervisor position. 
 Regarding occupations, those in the low occupational group cite lower odds of experiencing a promotion, when compared to the upper occupational group.
-Finally, regarding weekly working time, we find that respondents who work longer hours are more likely to experience a promotion, when compared to respondents who work fewer hours. 
-However this effect is only significant at the $0.1$ level.
+However there is no significant difference between the middle ESEC group, and the Higher ESEC group. 
+Regarding weekly working time, we find that respondents who work longer hours are more likely to experience a promotion, when compared to respondents who work fewer hours, this also makes sense given that full-time workers may be more likely to pursue promotion when comapred to those who work part-time.
+Finally, there is a difference between respondents in smaller firms (1-99 employees) and larger firms (200+ employees).
+Those in large firms are more likely to experience a promotion when compared to those in small firms, most likely because of greater opportunities and career ladders.
+
 In general, promotions occur most often among young respondents with supervisory positions, in higher occupations. 
-These results suggest that the early stages of one's career are crucial to establishing chance of promotion, and that young women and young men have roughly similar chances of experiencing the event.
+These results suggest that the early stages of one's career are crucial to establishing chance of promotion, and that young women and young men have roughly similar chances of experiencing the event, even when controlling for compositional and firm level differences between men and women.
 These findings reflect Figure 1 and Figure 2 outlined above, which show a similar rate of promotions for men and women.
 
 We now turn to respondents aged 36-55. 
 Here too, we find no gender difference in the likelihood of promotion.
-As before, the remaining controls have an impact on promotion. 
-Younger respondents are again most likely to cite a promotion, as are respondents with less tenure than more established workers. 
+However, the remaining controls once again have an impact. 
+Younger respondents (within the age group) are again most likely to cite a promotion, as are respondents with less tenure than more established workers. 
 Those who are in supervisor positions are more likely to experience promotion when compared to respondents without a supervisory position.
-There are significant differences between occupational groups in terms of promotion, with low and middle occupational groups being significantly less likely of citing promotion when compared to higher groups. 
-Lastly, as for the younger respondents, those who work longer hours are more likely to cite a promotion when compared to respondents who work fewer hours. 
+There are also significant differences between occupational groups in terms of promotion, with low ESEC occupational groups being significantly less likely to experience promotion when compared to those in higher groups. 
+Lastly, there are firm level differences in workers' chances of citing a promotion.
+Once again, those in large firms are more likely to experience a promotion when compared to those in smaller firms, and those in government owned firms or organisations are more likely to experience promotion, when compared to those in strictly private firms. 
+This latter effect could stem from more narrowly defined jobs in the government sector, compared to the private sector. 
 
-We now move on to consider lateral changes within the firm, focusing on younger respondents first.
+We now  consider lateral changes within the firm, focusing on younger respondents first.
 We find no gender difference between men and women regarding their odds of experiencing lateral change.
-There is a minor age effect $(p < 0.1)$, which suggests that older respondents are less likely to change jobs laterally, when compared to older respondents.
-However, this effect is likely insignificant. 
-Respondents with higher firm tenure are also less likely to experience lateral mobility when compared to respondents with lower tenure.
+Respondents with higher firm tenure are less likely to experience lateral mobility when compared to respondents with lower tenure.
+The remaining person specific controls are insignificant, but several firm-level measures report significant results. 
+Regarding firm size, workers in larger firms are more likely to experience lateral change, when comapred to workers in smaller forms. 
+Further, workers in government owner firms and organisations are significantly more likely to report lateral changes, possibly to similar roles in new departments, given that models control for occupational status.
 There are no other significant effects in the model for younger respondents.
 
-Considering workers aged 36-55, the majority of measures are insignificant which is due to the fact that lateral job mobility is particularly uncommon and particularly uncommon for this group of respondents. 
-There is one curious result in the model, which suggests that separated respondents are two times more likely to move laterally when compared to respondents who never married. 
-This could stem from the need to suddenly change to more flexible forms of work, wither to balance work and care, or to increase work to support children. 
+Considering workers aged 36-55, the majority of measures are insignificant which is due to the fact that lateral job mobility is particularly uncommon and especially uncommon for this age group. 
+Results suggest that higher tenure decreases the chance of citing a lateral change.
+Results also suggest that working in an irganisation with over 200 workers increases a respondent's chances of citing a lateral change. 
 
 Finally, we will focus on respondents who exit a firm. 
 Starting with younger respondents (aged 18-35), we find a gender difference in firm exits. 
-Women are less likely to cite an exit (0.74) when compared to men (1.0).
-This effect remains even when we control for age, firm level tenure, supervisory positions, occupational differences, marital status, and weekly working hours.
+Women are less likely to cite an exit (0.77) when compared to men (1.0).
+This effect remains even when we control for age, firm level tenure, supervisory positions, occupational differences, marital status, weekly working hours, and the size and ownership of the firm.
 Further, some of the listed controls have their own impact on exit. 
 The age of respondents has no effect on exit, although we only consider a brief range of age.
-Firm tenure has an impact on exit but this is an artifact in the data, since respondents who exited a firm in the last 12 months will also have low tenure.
-Hours have a minor effect on firm exit with those working longer hours being less likely to cite an exit when compared to respondents on shorter hours. 
-However this effect is only significant at the 0.1 level. 
-The remaining measures have no effect on predicting firm exit, which is surprising.
+Firm tenure has an impact on exit but this is an artifact in the data, since respondents who exit a firm in the last 12 months will also have low tenure.
+Government ownership appears to decrease the odds of a worker citing exit, compared to firms that are privately owned.
+The remaining measures have no effect on predicting firm exit.
 For example respondents with and without a supervisory position are equally likely to exit a firm, as are respondents in High, Medium, and Low group occupations.
 
-Considering respondents who are aged 36-55, we find some subtle differences in the estimates. 
-Once again women are less likely to cite firm exit when compared to men, even when controlling for a range of factors associated with firm level exit. 
-Age is now a significant predictor, with older respondents being less likely to experience an exit when compared to younger respondents.
-Tenure is also significant, but as we noted this is an artifact in the data.
-Respondents who are not supervisors are also more likely to leave a firm when compared to respondents who are supervisors. 
-The remaining measures are insignificant. 
+Considering respondents who are aged 36-55, we find slightly different estimates with fewer significant measures. 
+Women are no longer less likely to cite firm exit when compared to men.
+Tenure is again a significant measure, but as we noted this is an artifact in the data. 
+The only other significant measure is government ownership of the firm, which which shows lower odds of exiting a firm, possibly due to stronger job protection rules. 
 
 We note two important results from the models above. First, mobility is most prominent and most common in the earliest stages of one's career, with younger respondents being more likely to cite a change than older respondents.
 This is especially true when the outcome is a promotion, where both age and tenure are negatively correlated with promotion for both young and middle aged workers.
-We would argue that once respondents secure a good position, they likely hold on to it. 
-After a certain age mobility becomes far more rare.
-Second, young women are less likely to  exit a firm when compared to young men, and this difference cannot be explained by age, tenure, supervisory status, marital status, or regular hours worked. 
-Even after controlling for these differences young women (and middle aged women) are still less likely to leave a firm, when compared to men. 
+We would argue that once respondents secure a good position, they hold on to it by limiting mobility as much as possible. 
+This is reflected in the coefficient for age, which shows lower odds of changing jobs among older respondents compared to younger respondents.
+Second, young women are less likely to  exit a firm when compared to young men, and this difference cannot be explained by age, tenure, supervisory status, marital status, hours worked, or firm level measures. 
+Even after controlling for these differences young women (but not middle aged women) are still less likely to leave a firm, when compared to men. 
 
 These findings contradict a number of previous authors, both those writing about Russia and those writing about other countries.
 Blau and Duncan [-@blau1981race] reported a gender difference in exit, with young women being more likely to exit when compared to young men.
@@ -595,6 +669,9 @@ Other authors reported no difference between young men and women [@hachen1988gen
 Our results do not confirm this, at least in the case of Russia.
 However, Gerber and Mayorova [-@gerber2006dynamic] use Russian data and report that women experience more layoffs and less "voluntary" job mobility when compared to men.
 We find instead that women are overall much less mobile when compared to men, although the labour market context in Russia has changed dramatically since the 1990's.
+
+On the topic of promotions, our findings reflect several previous authors, who find no relationship between gender and promotion, assuming that application for promotion is controlled. 
+We do not have such a measure in the dataset, but report a roughly similar relationship, in that men and women who are employed, report roughly similar rates of promotion.
 We now turn to the wage effect of job mobility.
 
 
@@ -604,14 +681,14 @@ We now turn to the wage effect of job mobility.
 Having established the major age and gender differences between quits and promotions, we now turn to their effects on earnings. 
 As mentioned we consider linear fixed-effects estimation throughout.
 We start by considering respondents aged between 18-35, before considering respondents aged 36-55.
-We discuss the results for men and women separately since gender is a time-invariant variable.
+We discuss the results for men and women separately since gender is a time-invariant variable, and so cannot be controlled for.
 
 
 ```{r, warning=F, echo=FALSE, message=FALSE, error=FALSE, tidy=TRUE}
 
 
 df_m<- ru3 %>% 
- mutate(ln_hrwage = log(wage/hours),
+ mutate(ln_hrwage = log(wage/(hours*4)),
        t= year - 2011) %>% 
 filter(gender=="Male",
         ln_hrwage !=-Inf,
@@ -630,7 +707,7 @@ pm_m <- plm(ln_hrwage ~ 1 + mob_final + age + tenure + super + factor(esec_simpl
 
 
 df_f<- ru3 %>% 
- mutate(ln_hrwage = log(wage/hours),
+ mutate(ln_hrwage = log(wage/(hours*4)),
        t= year - 2011) %>% 
 filter(gender=="Female",
         ln_hrwage !=-Inf,
@@ -672,28 +749,29 @@ kable(cbind(male_results, female_results),
 
 ```
 
-The table above focuses on respondents aged 18-35, and the results are separated by gender.
+Table 3 focuses on respondents aged 18-35, and the results are separated by gender.
 Throughout we are searching for gender differences in the return on mobility (Promotions, lateral changes, and firm exits).
-Young men who experience a promotion report no change in monthly wages; although the estimated effect is positive, it is not statistically significant.  
-Further, lateral changes and firm exits have a negative effect on men's monthly wages, suggesting that workers who experience these changes see a fall in earnings, at least in the short term.
-This is surprising since it contradicts the predictions made by the *reservation wage* hypothesis.
-These effects remain even when we control for changes in age, tenure, supervisory position, occupational group, marital status, and working time; some of which often occur after a change of position.
-This suggests when all of these factors are held constant, young men who quit a firm for a new position elsewhere see roughly a 5 per cent fall in their monthly wages.
+Young men who experience a promotion report no change in monthly wages, which suggests that any benefits tied to promotion can be explained by person specific characteristics of movers.  
+Lateral changes have a negative but statistically insignificant effect on earnings, suggesting that workers are able to recreate their earnings after a lateral change within the firm.
+Firm exits appear to have a negative effect on earnings, suggesting that instance where workers leave a firm for a new employer result in lower earnings (over 5%).
+This finding runs contradictory to the recservation wage hypothesis, and could reflect a mix of voluntary and involuntary changes to a new employer. 
+The effects remain even when we control for changes in age, tenure, supervisory position, occupational group, marital status, and firm size.
+
 Beyond this, the listed controls have their own impact on earnings. 
 Male respondents see a strong positive effect of ageing on earnings, but an insignificant effect of job tenure on earnings.
 This tenure effect and age effect are likely correlated given Russia's low rates of job mobility. 
 As respondents age, they see an averse increase in their earnings at roughly 10 per cent.
 However this effect also likely reflects the general increase in earnings that happens over time.
-There is a relationship between moving from a supervisory role to a non-supervisory role, suggesting that respondents who become supervisors see a positive change in earnings after the change, and respondents who move from a supervisory role to a non-supervisory role see a fall in earnings. 
-Controlling for occupational change has no effect on earnings, which is a strange result, but may reflect the fact that occupational mobility is uncommon among young workers. 
-Finally there is a weak but positive effect $(p < 0.1)$ of marriage on earnings.
+There is also a relationship between moving to a supervisory position from a non-supervisory position, suggesting that respondents who become supervisors see a positive change in earnings after the change even when their occupation or initial position has not changed. 
+Further, controlling for occupational change has no effect on earnings, which is a strange result, but may reflect the fact that occupational mobility is uncommon among young workers (aged 18-35). 
+Finally there is a weak but positive effect of marriage on earnings.
 This suggests that respondents who move from being unmarried to married are able to secure a minor premium after the change. 
-Such a result is common in sociological studies of the labour market, and reflects a *signalling-effect* where married respondents are perceived as more efficient or more trust-worthy when compared to unmarried workers with similar skills. 
+Such a result is common in sociological studies of the labour market, and may reflect a *signalling-effect* where married respondents are perceived as more efficient or more trust-worthy when compared to unmarried workers with similar skills. 
 
 We will compare these results to those of women aged 18-35 which are somewhat different.
-Young women see a large and significant increase in wages following a promotion, seeing roughly a 15 per cent increase in their wages after the change. 
-Women who move laterally within the firm see a 10 per cent increase in pay, but the effect is not significant.
-Lastly, women who exit the firm for a new employer report a 2 per cent rise in pay, but this effect too is not significant.
+Young women see a large and significant increase in wages following a promotion, seeing roughly a 13 per cent increase in wages after the change. 
+Women who move laterally within the firm see a 15 per cent increase in pay, but the effect is not significant at the 0.5 level.
+Lastly, women who exit the firm for a new employer report a 1 per cent rise in pay, but this effect is also insignificant.
 These findings suggest that promotions, within the firm or with the same employer, are particularly important for young women, who in the early stages of their career must quickly establish themselves. 
 These results do not emerge for men.
 Again, this result is significant even when we control for women's changes in age, tenure, supervisory position, occupational group, marital status, and hours worked; many of which are related to job mobility.
@@ -702,16 +780,15 @@ First, age has a positive and significant effect on women's earnings.
 This effect is similar in size to that of men's age on earnings. 
 However, tenure has a negative and significant effect on women's earnings.
 This further supports the idea that mobility is crucial to women's earnings in the early stages of their careers, since women who remain in the same job with the same employer see a gradual fall in earnings over time, even if their working hours and occupation remain roughly the same.
-As with men, there is a pay penalty tied to moving to a position without being a supervisor, which suggests a pay premium to becoming a supervisor. 
-There is also a minor and weak premium tied to moving from a high occupation category to a medium occupation category. 
-However this effect is only significant at the $0.1$ level.
-Further, the weak and minor marriage premium that we noted for men, is now a strong and significant penalty for young women. 
+As with men, there is a ppremium tied to moving to a supervisory role, even when the occuaption and position does not change. 
+
+Further, the weak marriage premium that we noted for men, is now a strong and significant penalty for young women, even when we consider hourly wages as an outcome. 
 This result could also reflect the *signalling-theory* hypothesis, where married women are misperceived as less efficient, compared to unmarried women.
-This effect moves in a strikingly different direction for women when compared to men, and this effect remains for women who remain in the same job with the same employer, and roughly the same occupation with the same hours.
+This effect moves in a strikingly different direction for women when compared to men.
 
 There are two important results in Table 2. 
 First, the gender difference in the effect of mobility, where women are rewarded for promotion while men are penalized for exit. 
-These results likely stems from the sharp differences in earnings between men and women noted in Figure 3 and Figure 4. 
+These results likely stem from the sharp differences in earnings between men and women noted in Figure 3 and Figure 4. 
 Women's earnings are at a floor, and so promotion yield large and significant returns as they are using this mobility to leave that floor.
 Parallel to this, firm exit has no positive or negative effect, most likely because the "distance" between women's wages and the floor is low.
 This distance is not low for men, and so young men who exit the firm early see a sudden fall in earnings, at least in the short term, because there is more "distance" between their earnings and the floor. 

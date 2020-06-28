@@ -9,7 +9,7 @@ ru3
 ru3 %>% count(sub)
 ru3 %>% count(isco)
 ru3 %>% count(sub_n)
-
+ru3 %>% count(gov)
 
 # recoding isco to a 2-digit figure --------------------
 
@@ -65,7 +65,7 @@ table(ru3$sub_n,ru3$ten_employees, useNA='ifany')
 ru3$econ <- factor(ru3$econ, levels = c('Employed','Self-employed',
                                     'Unemployed', 'Inactive'))
 
-ru3$super <- factor(ru3$super, levels = c('Yes','No'))
+ru3$super <- factor(ru3$super, levels = c('No','Yes'))
 
 
 
@@ -291,6 +291,22 @@ ru3 %>%
   count(marr)
 
 
+# government owned firm ---------------------------------------------------
+
+ru3$gov <- factor(ru3$gov, levels = unique(ru3$gov)) 
+
+levels(ru3$gov)
+
+
+ru3 <- ru3 %>% 
+  mutate(gov = fct_recode(gov,
+                          'Not government owned' = '2',
+                          'Government owned or co-owned' = '1'))
+
+
+levels(ru3$gov)
+
+
 # create categorical measure for firm size --------------------------------
 
 ru3$size <- cut(ru3$firm_size,
@@ -300,5 +316,9 @@ ru3$size <- cut(ru3$firm_size,
 
 ru3 %>% 
   count(size)
+
+ru3 %>% 
+  count(gov)
+
 
 save(ru3, file = "genderpaper.RData")

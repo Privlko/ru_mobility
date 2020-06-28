@@ -3,6 +3,9 @@ library(tidyverse)
 library(broom)
 library(gtools)
 library(ggrepel)  
+
+ru2 <- ru1
+
 ru2$newjob <- factor(ru2$newjob, levels = unique(ru2$newjob))
 ru2$promotion <- factor(ru2$promotion, levels = unique(ru2$promotion))
 ru2$lateral <- factor(ru2$lateral, levels = unique(ru2$lateral))

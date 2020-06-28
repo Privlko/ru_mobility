@@ -1,16 +1,27 @@
 ---
 title: "Gender Differences in Russia's Job Mobility and Its Rewards"
+<<<<<<< HEAD:gender difference paper/gender paper.Rmd
+author: Ivan Privalko
+=======
 author: "Ivan Privalko"
+>>>>>>> 023bfd73248c1e7d8a76001e9efddf4b69996a5d:gender difference paper/draft1/gender paper.Rmd
 date: \today
 output:
   pdf_document: null
 always_allow_html: yes
+<<<<<<< HEAD:gender difference paper/gender paper.Rmd
+bibliography: C:/Users/Ivan/Desktop/R projects/ru_mobility/biblio/ru1.bib
+thanks: null
+abstract: "This article considers age and gender differences in the probability and consequences of job mobility; specifically firm exits and promotions in Russia. Russia's labour market should have high rates of mobility, but IMF figures suggest the  rate in early 2010 is on par with the 1980's. Beyond this, little is known about who is mobile in Russia and whether mobility has an impact on wages once the characteristics of movers are controlled for. In other words, we will ask whether job mobility is a sorting mechanism, or whether it has premiums in pay in and of itself. Results  show a gender difference in the likelihood of firm exit but not in the likelihood of promotion. When several personal and job characteristics are held constant, young men and women have similar odds of promotion. However, promotion has a positive effect only on the wages of young women; young men's wages are not affected. On the topic of firm exits, when several personal and job characteristics are held constant, exit is more common among young men when compared to young women;  this is also true of middle aged men and women. Further, young men see a significant  decrease in wages following an exit, while young women are not affected by firm exit. These results are flipped for middle aged workers; middle aged men see no change in wages following an exit, but middle aged women see significant declines in wages following an exit. Using these results, the article shows that the early stages of a respondent's career are marked by periods of high mobility, which is similar to the experience of young workers in other countries. After this period  mobility becomes increasingly unlikely. Part of this result could stem from the premiums tied to promotion. Results help to understand processes of inequality in wages and conditions that occur due to sorting, and the importance of promotions  (internal job changes with the same employer) as 'life chances' which improve  earnings in the immediate sense.\nGender differences in securing these life chances  may help to understand wider gender gaps in earnings, which emerge later."
+
+=======
 bibliography: C:/Users/ivan.privalko/Documents/RProjects/ru_mobility/biblio/ru1.bib
 
 
 abstract: |
  This article considers age and gender differences in the probability and consequences of job mobility; specifically firm exits and promotions in Russia. Russia's labour market should have high rates of job mobility, but IMF figures suggest the  rate in early 2010 is on par with the 1980's. Beyond this, little is known about who is mobile in Russia and whether mobility has any impact on wages once the characteristics of movers are controlled for. In other words, we will ask whether job mobility is a sorting mechanism, or whether it has premiums in pay in and of itself. Results  show a gender difference in the likelihood of firm exit but not in the likelihood of promotion. When several personal and job characteristics are held constant, young men and women have similar odds of promotion. However, promotions have a positive effect only on the wages of young women; young men's wages are not affected  by promotion. On the topic of firm exits, when several personal and job characteristics are held constant, exit is more common among young men when compared to young women;  this is also true of middle aged men and women. Further, young men see a significant  decrease in wages following an exit, while young women are not affected by firm   exit. These results are flipped for middle aged workers; middle aged men see no change in wages following an exit, but middle aged women see significant declines in wages following an exit.Using these results, the article shows that the early   stages of a respondent's career are marked by periods of high mobility, which is similar to the experience of young workers in other countries. After this period,  mobility becomes increasingly unlikely. Part of this result could stem from the premiums tied to promotion. Results help to understand processes of inequality in wages and conditions that occur due to sorting, and the importance of promotions  (internal job changes with the same employer) as 'life chances' which improve  earnings in the immediate sense. Gender differences in securing these life chances  may help to understand wider gender gaps in earnings, which emerge later.
  
+>>>>>>> 023bfd73248c1e7d8a76001e9efddf4b69996a5d:gender difference paper/draft1/gender paper.Rmd
 ---
 
 ```{r, echo=FALSE, warning=FALSE, include=FALSE}
@@ -27,7 +38,11 @@ library(plm)
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 
+<<<<<<< HEAD:gender difference paper/gender paper.Rmd
+load("C:/Users/Ivan/Desktop/R projects/ru_mobility/genderpaper.RData")
+=======
 load("C:/Users/ivan.privalko/Documents/RProjects/ru_mobility/genderpaper.RData")
+>>>>>>> 023bfd73248c1e7d8a76001e9efddf4b69996a5d:gender difference paper/draft1/gender paper.Rmd
 
 ru3 <- ru3 %>% 
   mutate(age_groups=case_when(
