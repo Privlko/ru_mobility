@@ -320,5 +320,36 @@ ru3 %>%
 ru3 %>% 
   count(gov)
 
+# kids ---------------------------------------------------
+
+ru3$kids <- factor(ru3$kids, levels = unique(ru3$kids)) 
+
+levels(ru3$kids)
+
+
+ru3 <- ru3 %>% 
+  mutate(kids = fct_recode(kids,
+                          'No kids' = '2',
+                          'Kids' = '1'))
+
+
+levels(ru3$kids)
+
+
+# recode numbr of kids = 0 ---------------------------------------------------
+
+ru3 <- ru3 %>% 
+  mutate(n_kids = replace_na(n_kids, 0)) 
+
+ru3 %>% 
+  count(kids)
+
+
+table(ru3$kids,ru3$n_kids)
+
+
+
+# save --------------------------------------------------------------------
+
 
 save(ru3, file = "genderpaper.RData")

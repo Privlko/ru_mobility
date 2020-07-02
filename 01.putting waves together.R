@@ -16,7 +16,8 @@ ix <-  x %>%
          mainoc=ixmainoc, isco=ixilpjb8, firm_size=ixpjemps,
          sub=ixprisub, sub_n=ixnpsub, 
          hours= ixpwrkwh, job_year=ixjobsyr,
-         w1 =inwgt_x, gov= ixentgov) %>% 
+         w1 =inwgt_x, gov= ixentgov, kids = ixkids,
+         n_kids= ixnkids) %>% 
   mutate(year = 2015)
 
 
@@ -34,7 +35,8 @@ iw <-  x %>%
          newjob = iwnewjob, age = iwage,
          mainoc= iwmainoc, isco=iwilpjb8, firm_size=iwpjemps,
          sub=iwprisub, sub_n=iwnpsub, hours=iwpwrkwh, 
-         job_year=iwjobsyr, w1 =inwgt_w, gov= iwentgov) %>% 
+         job_year=iwjobsyr, w1 =inwgt_w, gov= iwentgov,
+         kids = iwkids, n_kids= iwnkids) %>% 
   mutate(year = 2014)
 
 ##open 2013 
@@ -48,7 +50,8 @@ iv <- x %>%
          newjob = ivnewjob, age = ivage,
          mainoc=ivmainoc, isco=ivilpjb8, firm_size=ivpjemps,
          sub=ivprisub, sub_n=ivnpsub, hours=ivpwrkwh, 
-         job_year=ivjobsyr, w1 =inwgt_v, gov= iventgov ) %>% 
+         job_year=ivjobsyr, w1 =inwgt_v, gov= iventgov,
+         kids = ivkids, n_kids= ivnkids) %>% 
   mutate(year = 2013)
 
 
@@ -63,7 +66,8 @@ iu <- x %>%
          newjob = iunewjob, age = iuage,
          mainoc=iumainoc, isco=iuilopjb, firm_size=iupjemps,
          sub=iuprisub, sub_n=iunpsub, hours=iupwrkwh, 
-         job_year=iujobsyr, w1 =inwgt_u, gov= iuentgov ) %>% 
+         job_year=iujobsyr, w1 =inwgt_u, gov= iuentgov ,
+         kids = iukids,   n_kids= iunkids) %>% 
   mutate(year = 2012)
 
 
@@ -79,7 +83,8 @@ it <- x %>%
          mainoc=itmainoc, isco=itilopjb, firm_size=itpjemps,
          sub=itprisub, sub_n=itnpsub, 
          hours=itpwrkwh, job_year=itjobsyr, 
-         w1 =inwgt_t , gov= itentgov) %>% 
+         w1 =inwgt_t , gov= itentgov,
+         kids = itkids,      n_kids= itnkids) %>% 
   mutate(year = 2011)
 
 
@@ -117,6 +122,10 @@ ru1 %>%
 
 ru1 %>% 
   count(gov)
+
+ru1 %>% 
+  count(kids)
+
 
 
 ru1 %>% 
